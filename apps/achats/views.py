@@ -183,7 +183,7 @@ def commande_edit(request, pk=None):
     if request.method == 'POST':
         form = CommandeForm(request.POST, instance=commande)
         if form.is_valid():
-            obj = form.save()
+            form.save()
             return HttpResponse(status=204, headers={'HX-Refresh': 'true'})
     else:
         form = CommandeForm(instance=commande)
