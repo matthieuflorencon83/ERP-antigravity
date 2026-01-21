@@ -342,7 +342,7 @@ def htmx_delete_ligne_commande(request, pk):
 def update_commande_totals(commande):
     # Helper simple
     lines = commande.lignes.all()
-    total_ht = sum(l.quantite * l.prix_unitaire for l in lines)
+    total_ht = sum(line.quantite * line.prix_unitaire for line in lines)
     commande.total_ht = total_ht
     commande.tva = total_ht * Decimal('0.20') # Hardcoded 20% for now
     commande.total_ttc = commande.total_ht + commande.tva
