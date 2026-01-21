@@ -73,6 +73,14 @@ jobs:
         pip install -r requirements.txt
         pip install coverage
     
+    - name: Debug environment
+      run: |
+        echo "DB_NAME=$DB_NAME"
+        echo "DB_USER=$DB_USER"
+        echo "DB_HOST=$DB_HOST"
+        echo "DB_PORT=$DB_PORT"
+        pg_isready -h localhost -p 5432
+    
     - name: Run migrations
       run: |
         python manage.py migrate --noinput
