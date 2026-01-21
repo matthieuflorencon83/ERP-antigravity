@@ -67,4 +67,4 @@ jobs:
     
     - name: Run tests
       run: |
-        python manage.py test apps.achats apps.ventes apps.ged apps.catalogue apps.tiers
+        python manage.py test apps.achats apps.ventes apps.ged apps.catalogue apps.tiers --verbosity=2
