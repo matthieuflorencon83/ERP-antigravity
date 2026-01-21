@@ -53,6 +53,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
+    - name: Debug CI environment
+      run: |
+        pwd
+        ls -la
+        python --version
+        python -c "import django; print(f'Django {django.get_version()}')"
+        python manage.py --version
+    
     - name: Run migrations
       run: |
         python manage.py migrate --noinput
