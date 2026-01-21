@@ -2,7 +2,9 @@ import os
 import json
 import uuid
 from django.core.management.base import BaseCommand
-from apps.core.models import Document, Fournisseur, Commande, Lignecommande
+from apps.ged.models import Document
+from apps.tiers.models import Fournisseur
+from apps.achats.models import Commande, LigneCommande
 from apps.ged.services import analyze_document, save_extracted_data
 
 class Command(BaseCommand):
@@ -116,7 +118,7 @@ class Command(BaseCommand):
                      self.stdout.write(self.style.SUCCESS(f"✅ Commande liée à l'Affaire : {commande.affaire.nom_affaire}"))
 
                 # Check Lignes & Article Link
-                lignes_commande = Lignecommande.objects.filter(commande=commande)
+                lignes_commande = LigneCommande.objects.filter(commande=commande)
                 if lignes_commande.count() != len(extracted_data['lignes']):
                      self.stdout.write(self.style.ERROR(f"❌ Nombre de lignes incorrect : {lignes_commande.count()}"))
                 else:

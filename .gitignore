@@ -47,3 +47,8 @@ sauvegarde/
 *.rar
 *.7z
 *.sql
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
