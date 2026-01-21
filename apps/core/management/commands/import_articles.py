@@ -7,7 +7,8 @@ import os
 try:
     from tqdm import tqdm
 except ImportError:
-    tqdm = lambda x, **kwargs: x
+    def tqdm(x, **kwargs):
+        return x
 
 class Command(BaseCommand):
     help = 'Import articles from Excel file (Articles-fournisseur.xlsm)'
@@ -63,7 +64,7 @@ class Command(BaseCommand):
                     raw_price = row.get('Prix/U HT', 0)
                     try:
                         prix_ht = Decimal(str(raw_price).replace(',', '.')) if pd.notnull(raw_price) else Decimal('0.00')
-                    except:
+                    except Exception:
                         prix_ht = Decimal('0.00')
 
                     # 3. Stock Logique (Oui -> 1 (quantity?) or just separate field handling? 
