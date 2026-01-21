@@ -5,8 +5,7 @@ from apps.ged.models import Document
 from apps.achats.models import Commande
 from apps.ventes.models import Affaire
 from apps.tiers.models import Client, Fournisseur
-from apps.ged.services import analyze_document, archive_document_locally
-import uuid
+from apps.ged.services import analyze_document
 
 class GEDTestCase(TestCase):
     def setUp(self):
