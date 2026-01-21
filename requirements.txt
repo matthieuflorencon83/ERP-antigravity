@@ -8,4 +8,5 @@ Pillow>=10.2
 colorlog>=6.8
 ruff>=0.1.0
 djlint==1.36.4
-coverage==7.4.0.0
+coverage==7.4.0
+google-generativeai>=0.3.0.0
