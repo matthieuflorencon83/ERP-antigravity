@@ -1,166 +1,198 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
-<div class="container-fluid h-100 d-flex flex-column p-0 overflow-hidden">
-
-    <!-- HEADER (Minimal) -->
-    <div class="d-flex align-items-center justify-content-between p-3 border-bottom bg-body flex-shrink-0 z-2">
-        <div>
-            <h5 class="fw-bold mb-0">
-                <span class="text-muted fw-light">Besoins /</span> {{ affaire.nom_affaire }}
-            </h5>
-        </div>
-        <div>
-            <span class="badge bg-body-tertiary text-body-secondary border me-2">
-                <i class="bi bi-list-ol me-1"></i> {{ stats.total_lignes }} lignes
-            </span>
-            <a href="#" class="btn btn-sm btn-outline-secondary" title="Retour">
-                <i class="bi bi-arrow-left"></i>
-            </a>
-        </div>
-    </div>
-
-    <!-- MAIN CONTENT (Split View) -->
-    <div class="row g-0 flex-grow-1 overflow-hidden h-100">
-
-        <!-- LEFT PANEL: DATAGRID (Col-8) -->
-        <div class="col-md-8 h-100 d-flex flex-column border-end bg-body-tertiary" x-data="{ selected: [] }">
-            <div class="table-responsive flex-grow-1 position-relative">
-                <form id="commandeForm" action="{% url 'generer_commande' affaire.id %}" method="POST">
-                    {% csrf_token %}
-                    <table class="table table-hover table-nowrap align-middle mb-0 bg-body shadow-sm min-h-100">
-                        <thead class="bg-body-tertiary text-muted text-uppercase small sticky-top z-1">
-                            <tr>
-                                <th class="w-5pct ps-4">
-                                    <input type="checkbox" class="form-check-input" aria-label="Tout sélectionner"
-                                        @change="document.querySelectorAll('.row-checkbox').forEach(el => { el.checked = $event.target.checked; if(el.checked) { if(!selected.includes(el.value)) selected.push(el.value) } else { selected = [] } })">
-                                </th>
-                                <th class="w-10pct">Réf.</th>
-                                <th class="w-30pct">Désignation</th>
-                                <th class="w-15pct">Fournisseur</th>
-                                <th class="w-10pct text-center">Qté</th>
-                                <th class="w-5pct text-center">Unité</th>
-                                <th class="w-10pct text-center">Finition/RAL</th>
-                                <th class="w-10pct text-center">Statut</th>
-                                <th class="w-5pct text-end pe-4">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="besoinsTableBody" class="bg-body">
-                            {% include 'ventes/partials/besoins_table_body.html' %}
-                        </tbody>
-                    </table>
-                </form>
+    <div class="container-fluid h-100 d-flex flex-column p-0 overflow-hidden">
+        <!-- HEADER (Minimal) -->
+        <div class="d-flex align-items-center justify-content-between p-3 border-bottom bg-body flex-shrink-0 z-2">
+            <div>
+                <h5 class="fw-bold mb-0">
+                    <span class="text-muted fw-light">Besoins /</span> {{ affaire.nom_affaire }}
+                </h5>
             </div>
-
-            <!-- STICKY ACTION BAR -->
-            <div class="fixed-bottom start-0 w-80pct p-3 z-3 pointer-events-none">
-                <!-- pointer-events:none allows clicking through empty space -->
-                <div class="container-fluid d-flex justify-content-center">
-                    <div class="card shadow-lg border-0 bg-dark text-white rounded-pill px-4 py-3 d-flex flex-row align-items-center gap-4 pointer-events-auto"
-                        x-show="selected.length > 0" x-transition:enter="transition ease-out duration-300"
-                        x-transition:enter-start="transform translate-y-full opacity-0"
-                        x-transition:enter-end="transform translate-y-0 opacity-100"
-                        x-transition:leave="transition ease-in duration-200"
-                        x-transition:leave-start="transform translate-y-0 opacity-100"
-                        x-transition:leave-end="transform translate-y-full opacity-0">
-
-                        <div class="d-flex align-items-center">
-                            <span class="badge bg-primary rounded-circle me-2 fs-6" x-text="selected.length">0</span>
-                            <span class="fw-bold">Besoins sélectionnés</span>
-                        </div>
-
-                        <div class="vr bg-secondary mx-2"></div>
-
-                        <button type="submit" form="commandeForm" class="btn btn-primary rounded-pill fw-bold px-4">
-                            <i class="bi bi-cart-plus me-2"></i>Commander la sélection
-                        </button>
-                    </div>
+            <div>
+                <span class="badge bg-body-tertiary text-body-secondary border me-2">
+                    <i class="bi bi-list-ol me-1"></i> {{ stats.total_lignes }} lignes
+                </span>
+                <a href="#" class="btn btn-sm btn-outline-secondary" title="Retour">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+            </div>
+        </div>
+        <!-- MAIN CONTENT (Split View) -->
+        <div class="row g-0 flex-grow-1 overflow-hidden h-100">
+            <!-- LEFT PANEL: DATAGRID (Col-8) -->
+            <div class="col-md-8 h-100 d-flex flex-column border-end bg-body-tertiary"
+                 x-data="{ selected: [] }">
+                <div class="table-responsive flex-grow-1 position-relative">
+                    <form id="commandeForm"
+                          action="{% url 'generer_commande' affaire.id %}"
+                          method="POST">
+                        {% csrf_token %}
+                        <table class="table table-hover table-nowrap align-middle mb-0 bg-body shadow-sm min-h-100">
+                            <thead class="bg-body-tertiary text-muted text-uppercase small sticky-top z-1">
+                                <tr>
+                                    <th class="w-5pct ps-4">
+                                        <input type="checkbox"
+                                               class="form-check-input"
+                                               aria-label="Tout sélectionner"
+                                               @change="document.querySelectorAll('.row-checkbox').forEach(el => { el.checked = $event.target.checked; if(el.checked) { if(!selected.includes(el.value)) selected.push(el.value) } else { selected = [] } })">
+                                    </th>
+                                    <th class="w-10pct">
+                                        Réf.
+                                    </th>
+                                    <th class="w-30pct">
+                                        Désignation
+                                    </th>
+                                    <th class="w-15pct">
+                                        Fournisseur
+                                    </th>
+                                    <th class="w-10pct text-center">
+                                        Qté
+                                    </th>
+                                    <th class="w-5pct text-center">
+                                        Unité
+                                    </th>
+                                    <th class="w-10pct text-center">
+                                        Finition/RAL
+                                    </th>
+                                    <th class="w-10pct text-center">
+                                        Statut
+                                    </th>
+                                    <th class="w-5pct text-end pe-4">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="besoinsTableBody" class="bg-body">
+                                {% include 'ventes/partials/besoins_table_body.html' %}
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
-            </div>
-        </div>
-
-        <!-- RIGHT PANEL: COCKPIT (Col-4) -->
-        <div class="col-md-4 h-100 d-flex flex-column bg-body-tertiary border-start shadow-lg position-relative z-3">
-
-            <!-- STICKY HEADER: Search & Filters -->
-            <div class="p-3 bg-body border-bottom shadow-sm z-2">
-                <form id="searchGridForm" hx-get="{% url 'htmx_search_articles' %}" hx-target="#searchResults"
-                    hx-trigger="change, keyup delay:300ms from:#searchInput, search" hx-indicator="#searchIndicator">
-
-                    <input type="hidden" name="affaire_id" value="{{ affaire.id }}">
-
-                    <!-- Search Input -->
-                    <div class="input-group mb-3">
-                        <span class="input-group-text bg-body-tertiary border-end-0"><i
-                                class="bi bi-search text-muted"></i></span>
-                        <input type="text" name="search" id="searchInput"
-                            class="form-control border-start-0 bg-body-tertiary fw-bold"
-                            placeholder="Chercher un article..." autocomplete="off">
-                        <!-- Loading Indicator -->
-                        <span id="searchIndicator" class="input-group-text bg-white border-start-0 htmx-indicator">
-                            <div class="spinner-border spinner-border-sm text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                <!-- STICKY ACTION BAR -->
+                <div class="fixed-bottom start-0 w-80pct p-3 z-3 pointer-events-none">
+                    <!-- pointer-events:none allows clicking through empty space -->
+                    <div class="container-fluid d-flex justify-content-center">
+                        <div class="card shadow-lg border-0 bg-dark text-white rounded-pill px-4 py-3 d-flex flex-row align-items-center gap-4 pointer-events-auto"
+                             x-show="selected.length > 0"
+                             x-transition:enter="transition ease-out duration-300"
+                             x-transition:enter-start="transform translate-y-full opacity-0"
+                             x-transition:enter-end="transform translate-y-0 opacity-100"
+                             x-transition:leave="transition ease-in duration-200"
+                             x-transition:leave-start="transform translate-y-0 opacity-100"
+                             x-transition:leave-end="transform translate-y-full opacity-0">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-primary rounded-circle me-2 fs-6"
+                                      x-text="selected.length">0</span>
+                                <span class="fw-bold">Besoins sélectionnés</span>
                             </div>
-                        </span>
-                    </div>
-
-                    <!-- Filters as Badges/Selects -->
-                    <div class="d-flex flex-wrap gap-2">
-
-                        <!-- Fournisseur -->
-                        <div class="btn-group btn-group-sm w-100">
-                            <!-- Cascade AND Search Trigger -->
-                            <select name="fournisseur" id="id_fournisseur"
-                                class="form-select form-select-sm fw-bold border-secondary-subtle"
-                                aria-label="Fournisseur" hx-get="{% url 'htmx_load_familles' %}" hx-target="#id_famille"
-                                hx-on:change="document.getElementById('id_sous_famille').innerHTML = '<option value=\'\'>-- Sous-Famille --</option>'; htmx.trigger('#searchInput', 'search')">
-                                <option value="">-- Fournisseur --</option>
-                                {% for f in fournisseurs %}
-                                <option value="{{ f.id }}">{{ f.nom_fournisseur }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-
-                        <!-- Famille & Sous-Famille Row -->
-                        <div class="d-flex gap-2 w-100">
-                            <select name="famille" id="id_famille"
-                                class="form-select form-select-sm border-secondary-subtle"
-                                hx-get="{% url 'htmx_load_sous_familles' %}" hx-target="#id_sous_famille"
-                                hx-include="#id_fournisseur" aria-label="Famille"
-                                hx-on:change="htmx.trigger('#searchInput', 'search')">
-                                <option value="">-- Famille --</option>
-                                {% for fam in familles %}
-                                <option value="{{ fam }}">{{ fam }}</option>
-                                {% endfor %}
-                            </select>
-
-                            <select name="sous_famille" id="id_sous_famille"
-                                class="form-select form-select-sm border-secondary-subtle" aria-label="Sous-famille"
-                                onchange="htmx.trigger('#searchInput', 'search')">
-                                <option value="">-- Sous-Famille --</option>
-                            </select>
+                            <div class="vr bg-secondary mx-2">
+                            </div>
+                            <button type="submit"
+                                    form="commandeForm"
+                                    class="btn btn-primary rounded-pill fw-bold px-4">
+                                <i class="bi bi-cart-plus me-2"></i>Commander la sélection
+                            </button>
                         </div>
                     </div>
-                </form>
-            </div>
-
-            <!-- RESULTS AREA (Scrollable) -->
-            <div id="searchResults" class="flex-grow-1 overflow-y-auto p-3 bg-secondary-subtle min-h-0">
-                <!-- Initial Empty State or Top Results -->
-                <div class="text-center text-muted py-5">
-                    <i class="bi bi-arrow-up-circle fs-1 opacity-25"></i>
-                    <p class="mt-2 small">Utilisez la recherche ou les filtres pour trouver des articles.</p>
                 </div>
             </div>
-
+            <!-- RIGHT PANEL: COCKPIT (Col-4) -->
+            <div class="col-md-4 h-100 d-flex flex-column bg-body-tertiary border-start shadow-lg position-relative z-3">
+                <!-- STICKY HEADER: Search & Filters -->
+                <div class="p-3 bg-body border-bottom shadow-sm z-2">
+                    <form id="searchGridForm"
+                          hx-get="{% url 'htmx_search_articles' %}"
+                          hx-target="#searchResults"
+                          hx-trigger="change, keyup delay:300ms from:#searchInput, search"
+                          hx-indicator="#searchIndicator">
+                        <input type="hidden" name="affaire_id" value="{{ affaire.id }}">
+                        <!-- Search Input -->
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-body-tertiary border-end-0"><i class="bi bi-search text-muted"></i></span>
+                            <input type="text"
+                                   name="search"
+                                   id="searchInput"
+                                   class="form-control border-start-0 bg-body-tertiary fw-bold"
+                                   placeholder="Chercher un article..."
+                                   autocomplete="off">
+                            <!-- Loading Indicator -->
+                            <span id="searchIndicator"
+                                  class="input-group-text bg-white border-start-0 htmx-indicator">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </span>
+                        </div>
+                        <!-- Filters as Badges/Selects -->
+                        <div class="d-flex flex-wrap gap-2">
+                            <!-- Fournisseur -->
+                            <div class="btn-group btn-group-sm w-100">
+                                <!-- Cascade AND Search Trigger -->
+                                <select name="fournisseur"
+                                        id="id_fournisseur"
+                                        class="form-select form-select-sm fw-bold border-secondary-subtle"
+                                        aria-label="Fournisseur"
+                                        hx-get="{% url 'htmx_load_familles' %}"
+                                        hx-target="#id_famille"
+                                        hx-on:change="document.getElementById('id_sous_famille').innerHTML = '<option value=\'\'>-- Sous-Famille --</option>'; htmx.trigger('#searchInput', 'search')">
+                                    <option value="">
+                                        -- Fournisseur --
+                                    </option>
+                                    {% for f in fournisseurs %}
+                                        <option value="{{ f.id }}">
+                                            {{ f.nom_fournisseur }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <!-- Famille & Sous-Famille Row -->
+                            <div class="d-flex gap-2 w-100">
+                                <select name="famille"
+                                        id="id_famille"
+                                        class="form-select form-select-sm border-secondary-subtle"
+                                        hx-get="{% url 'htmx_load_sous_familles' %}"
+                                        hx-target="#id_sous_famille"
+                                        hx-include="#id_fournisseur"
+                                        aria-label="Famille"
+                                        hx-on:change="htmx.trigger('#searchInput', 'search')">
+                                    <option value="">
+                                        -- Famille --
+                                    </option>
+                                    {% for fam in familles %}
+                                        <option value="{{ fam }}">
+                                            {{ fam }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <select name="sous_famille"
+                                        id="id_sous_famille"
+                                        class="form-select form-select-sm border-secondary-subtle"
+                                        aria-label="Sous-famille"
+                                        onchange="htmx.trigger('#searchInput', 'search')">
+                                    <option value="">
+                                        -- Sous-Famille --
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- RESULTS AREA (Scrollable) -->
+                <div id="searchResults"
+                     class="flex-grow-1 overflow-y-auto p-3 bg-secondary-subtle min-h-0">
+                    <!-- Initial Empty State or Top Results -->
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-arrow-up-circle fs-1 opacity-25"></i>
+                        <p class="mt-2 small">
+                            Utilisez la recherche ou les filtres pour trouver des articles.
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
-
-
-<script>
+    <script>
     // Force Close Generic Sidebar on Load
     document.addEventListener('DOMContentLoaded', function () {
         // Disable the global toggle function to prevent accidental opening
@@ -173,11 +205,11 @@
             sidebar.style.display = 'none';
         }
     });
-</script>
-<!-- Modal Container -->
-<div id="modal-container"></div>
+    </script>
+    <!-- Modal Container -->
+    <div id="modal-container">
+    </div>
 {% endblock %}
-
 {% block extra_js %}
-<!-- ... specific scripts ... -->
+    <!-- ... specific scripts ... -->
 {% endblock %}

@@ -1,6 +1,5 @@
 import pandas as pd
 import os
-import sys
 
 file_path = "Articles-fournisseur.xlsm"
 output_file = "audit_result.txt"

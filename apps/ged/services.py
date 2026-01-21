@@ -4,7 +4,7 @@ import logging
 import random
 import os
 import shutil
-from typing import Dict, Any, List, Optional, Union, TYPE_CHECKING
+from typing import Dict, Any, List, Optional, TYPE_CHECKING
 from decimal import Decimal
 import datetime
 import uuid
@@ -13,15 +13,14 @@ import google.generativeai as genai
 from django.conf import settings
 from django.db import transaction
 from django.core.files import File
-from apps.ged.models import Document
 from apps.tiers.models import Client, Fournisseur
-from apps.ventes.models import Affaire, Besoin
+from apps.ventes.models import Affaire
 from apps.achats.models import Commande, LigneCommande
 from apps.catalogue.models import Article
 from apps.core.models import CoreParametre 
 
 if TYPE_CHECKING:
-    from apps.tiers.models import CoreContact
+    pass
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +33,6 @@ def generate_readable_id(prefix: str, name: Optional[str]) -> str:
 def normalize_date_ou_semaine(val: str) -> Optional[str]:
     """Convertit 'Semaine X/YYYY' ou 'X/YYYY' en date (Lundi de la semaine)."""
     if not val: return None
-    import datetime
     
     # Format YYYY-MM-DD direct
     if re.match(r'^\d{4}-\d{2}-\d{2}$', val):

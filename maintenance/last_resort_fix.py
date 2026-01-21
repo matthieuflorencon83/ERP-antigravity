@@ -1,5 +1,4 @@
 
-import os
 
 path = r'c:\Dev\templates\documents\upload_v3.html'
 with open(path, 'r', encoding='utf-8') as f:

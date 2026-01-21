@@ -1,6 +1,5 @@
 
 import psycopg2
-from psycopg2.extras import RealDictCursor
 
 DB_CONFIG = {
     "dbname": "antigravity_db",

@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
-
 {% block extra_css %}
-<style>
+    <style>
     /* 
      * SAAS PRO 2026 - Compact DataGrid Styles
      */
@@ -198,67 +197,70 @@
         background-color: var(--primary-light) !important;
         border-bottom-color: var(--primary-border);
     }
-</style>
+    </style>
 {% endblock %}
-
 {% block content %}
-<div class="container-fluid px-4 py-3 h-100">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0 fw-bold text-dark">
-            {% block list_title %}Titre de la Liste{% endblock %}
-            <span class="badge bg-light text-secondary border ms-2 rounded-pill small">
-                {{ object_list.count|default:"0" }}
-            </span>
-        </h5>
-        <!-- Toolbar if needed -->
+    <div class="container-fluid px-4 py-3 h-100">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0 fw-bold text-dark">
+                {% block list_title %}
+                    Titre de la Liste
+                {% endblock %}
+                <span class="badge bg-light text-secondary border ms-2 rounded-pill small">
+                    {{ object_list.count|default:"0" }}
+                </span>
+            </h5>
+            <!-- Toolbar if needed -->
+        </div>
+        <!-- DataGrid -->
+        <div class="datagrid-container">
+            <form method="get" id="filter-form" class="h-100 d-flex flex-column">
+                <div class="table-responsive">
+                    <table class="table-dense">
+                        <thead>
+                            <!-- Column Headers -->
+                            <tr>
+                                {% block table_headers %}
+                                {% endblock %}
+                                <th class="text-end col-action">
+                                    Actions
+                                </th>
+                            </tr>
+                            <!-- Inline Filters -->
+                            <tr class="filter-row">
+                                {% block table_filters %}
+                                {% endblock %}
+                                <th>
+                                    <button type="submit"
+                                            class="btn btn-sm btn-light w-100 py-0 btn-filter-apply"
+                                            title="Appliquer filtres">
+                                        <i class="bi bi-funnel-fill text-muted"></i>
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% block table_rows %}
+                                <tr>
+                                    <td colspan="100%" class="text-center p-5 text-muted">
+                                        Aucune donnée définie.
+                                    </td>
+                                </tr>
+                            {% endblock %}
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <!-- Floating Action Button -->
+        {% block floating_action %}
+            <a href="#" class="fab-new">
+                <i class="bi bi-plus-lg"></i> Nouveau
+            </a>
+        {% endblock %}
     </div>
-
-    <!-- DataGrid -->
-    <div class="datagrid-container">
-        <form method="get" id="filter-form" class="h-100 d-flex flex-column">
-            <div class="table-responsive">
-                <table class="table-dense">
-                    <thead>
-                        <!-- Column Headers -->
-                        <tr>
-                            {% block table_headers %}{% endblock %}
-                            <th class="text-end col-action">Actions</th>
-                        </tr>
-                        <!-- Inline Filters -->
-                        <tr class="filter-row">
-                            {% block table_filters %}{% endblock %}
-                            <th>
-                                <button type="submit" class="btn btn-sm btn-light w-100 py-0 btn-filter-apply"
-                                    title="Appliquer filtres">
-                                    <i class="bi bi-funnel-fill text-muted"></i>
-                                </button>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% block table_rows %}
-                        <tr>
-                            <td colspan="100%" class="text-center p-5 text-muted">Aucune donnée définie.</td>
-                        </tr>
-                        {% endblock %}
-                    </tbody>
-                </table>
-            </div>
-        </form>
-    </div>
-
-    <!-- Floating Action Button -->
-    {% block floating_action %}
-    <a href="#" class="fab-new">
-        <i class="bi bi-plus-lg"></i> Nouveau
-    </a>
-    {% endblock %}
-</div>
-
-
-
-<script>
+    <script>
     // Auto-submit on Enter in filters
     document.querySelectorAll('.filter-input').forEach(input => {
         input.addEventListener('keypress', function (e) {
@@ -332,5 +334,5 @@
             }
         }
     });
-</script>
+    </script>
 {% endblock %}

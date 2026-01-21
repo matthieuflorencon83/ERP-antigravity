@@ -1,35 +1,59 @@
 {% load custom_filters %}
 <tr>
     <td>
-        <div class="fw-bold text-truncate max-w-200">{{ line.article.designation }}</div>
-        <div class="text-muted fs-075">{{ line.article.ref_fournisseur }} - {{ line.designation }}</div>
+        <div class="fw-bold text-truncate max-w-200">
+            {{ line.article.designation }}
+        </div>
+        <div class="text-muted fs-075">
+            {{ line.article.ref_fournisseur }} - {{ line.designation }}
+        </div>
     </td>
     <td class="text-center align-middle w-100px">
-        <input type="number" step="0.5" name="quantite" class="form-control form-control-sm text-center fw-bold"
-            value="{{ line.quantite }}" aria-label="Quantité" hx-post="{% url 'htmx_update_ligne_commande' line.pk %}"
-            hx-trigger="change delay:500ms" hx-target="closest tr" hx-swap="outerHTML">
+        <input type="number"
+               step="0.5"
+               name="quantite"
+               class="form-control form-control-sm text-center fw-bold"
+               value="{{ line.quantite }}"
+               aria-label="Quantité"
+               hx-post="{% url 'htmx_update_ligne_commande' line.pk %}"
+               hx-trigger="change delay:500ms"
+               hx-target="closest tr"
+               hx-swap="outerHTML">
     </td>
     <td class="text-end align-middle w-120px">
-        <input type="number" step="0.01" name="prix_unitaire" class="form-control form-control-sm text-end"
-            value="{{ line.prix_unitaire }}" aria-label="Prix Unitaire"
-            hx-post="{% url 'htmx_update_ligne_commande' line.pk %}" hx-trigger="change delay:500ms"
-            hx-target="closest tr" hx-swap="outerHTML">
+        <input type="number"
+               step="0.01"
+               name="prix_unitaire"
+               class="form-control form-control-sm text-end"
+               value="{{ line.prix_unitaire }}"
+               aria-label="Prix Unitaire"
+               hx-post="{% url 'htmx_update_ligne_commande' line.pk %}"
+               hx-trigger="change delay:500ms"
+               hx-target="closest tr"
+               hx-swap="outerHTML">
     </td>
     <td class="text-end align-middle fw-bold">
         {{ line.quantite|multiply:line.prix_unitaire|floatformat:2 }} €
     </td>
     <td class="text-end align-middle">
-        <button class="btn btn-sm btn-link text-danger p-0" title="Supprimer la ligne"
-            hx-post="{% url 'htmx_delete_ligne_commande' line.pk %}" hx-confirm="Supprimer cette ligne ?"
-            hx-target="closest tr" hx-swap="outerHTML">
+        <button class="btn btn-sm btn-link text-danger p-0"
+                title="Supprimer la ligne"
+                hx-post="{% url 'htmx_delete_ligne_commande' line.pk %}"
+                hx-confirm="Supprimer cette ligne ?"
+                hx-target="closest tr"
+                hx-swap="outerHTML">
             <i class="bi bi-x-lg"></i>
         </button>
     </td>
 </tr>
-
 <!-- OOB Update for Totals Footer -->
 <tr id="commande-footer-totals" hx-swap-oob="true">
-    <td colspan="3" class="text-end">Total HT</td>
-    <td class="text-end fw-bold fs-6">{{ form.instance.total_ht|floatformat:2 }} €</td>
-    <td></td>
+    <td colspan="3" class="text-end">
+        Total HT
+    </td>
+    <td class="text-end fw-bold fs-6">
+        {{ form.instance.total_ht|floatformat:2 }} €
+    </td>
+    <td>
+    </td>
 </tr>

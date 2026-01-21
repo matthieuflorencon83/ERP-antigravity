@@ -1,105 +1,114 @@
 {% for obj in object_list %}
-<tr class="cursor-pointer" onclick="handleRowClick(event, this)" hx-get="{% url 'commande_edit' obj.pk %}"
-    hx-target="#detailSidebarContent" hx-swap="innerHTML">
-
-    <!-- Date -->
-    <td class="text-nowrap">
-        <div class="fw-medium text-dark">{{ obj.date_commande|date:"d/m/Y"|default:"-" }}</div>
-        <div class="small text-muted fs-075">{{ obj.date_creation|timesince }}</div>
-    </td>
-
-    <!-- N° BDC / ARC -->
-    <td>
-        <div class="d-flex flex-column">
-            <span class="fw-bold text-primary">{{ obj.numero_bdc|default:"-" }}</span>
-            {% if obj.numero_arc %}
-            <span class="small text-muted" title="N° ARC"><i class="bi bi-check-all me-1"></i>{{ obj.numero_arc
-                }}</span>
-            {% endif %}
-        </div>
-    </td>
-
-    <!-- Client / Affaire -->
-    <td>
-        <div class="d-flex flex-column">
-            {% if obj.affaire and obj.affaire.client %}
-            <span class="fw-medium text-dark">{{ obj.affaire.client.nom }}</span>
+    <tr class="cursor-pointer"
+        onclick="handleRowClick(event, this)"
+        hx-get="{% url 'commande_edit' obj.pk %}"
+        hx-target="#detailSidebarContent"
+        hx-swap="innerHTML">
+        <!-- Date -->
+        <td class="text-nowrap">
+            <div class="fw-medium text-dark">
+                {{ obj.date_commande|date:"d/m/Y"|default:"-" }}
+            </div>
+            <div class="small text-muted fs-075">
+                {{ obj.date_creation|timesince }}
+            </div>
+        </td>
+        <!-- N° BDC / ARC -->
+        <td>
+            <div class="d-flex flex-column">
+                <span class="fw-bold text-primary">{{ obj.numero_bdc|default:"-" }}</span>
+                {% if obj.numero_arc %}
+                    <span class="small text-muted" title="N° ARC"><i class="bi bi-check-all me-1"></i>{{ obj.numero_arc
+                    }}</span>
+                {% endif %}
+            </div>
+        </td>
+        <!-- Client / Affaire -->
+        <td>
+            <div class="d-flex flex-column">
+                {% if obj.affaire and obj.affaire.client %}
+                    <span class="fw-medium text-dark">{{ obj.affaire.client.nom }}</span>
+                {% else %}
+                    <span class="text-muted fst-italic">Client inconnu</span>
+                {% endif %}
+                {% if obj.affaire %}
+                    <span class="small text-muted text-truncate max-w-200"
+                          title="{{ obj.affaire.nom_affaire }}">
+                        {{ obj.affaire.nom_affaire }}
+                    </span>
+                {% endif %}
+            </div>
+        </td>
+        <!-- Montant HT -->
+        <td class="text-center font-monospace text-dark">
+            {{ obj.prix_total_ht|default:"0" }} €
+        </td>
+        <!-- Statut -->
+        <td class="text-center">
+            {% if obj.statut == 'BROUILLON' %}
+                <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle badge-pill-text">
+                    <i class="bi bi-pencil me-1"></i>Brouillon
+                </span>
+            {% elif obj.statut == 'COMMANDE' %}
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle badge-pill-text">
+                    <i class="bi bi-send me-1"></i>En Cours
+                </span>
+            {% elif obj.statut == 'CONFIRME_ARC' %}
+                <span class="badge bg-info-subtle text-info border border-info-subtle badge-pill-text">
+                    <i class="bi bi-file-earmark-check me-1"></i>ARC Reçu
+                </span>
+            {% elif obj.statut == 'LIVRE' %}
+                <span class="badge bg-success-subtle text-success border border-success-subtle badge-pill-text">
+                    <i class="bi bi-box-seam me-1"></i>Livré
+                </span>
             {% else %}
-            <span class="text-muted fst-italic">Client inconnu</span>
+                <span class="badge bg-light text-dark border badge-pill-text">{{ obj.statut }}</span>
             {% endif %}
-
-            {% if obj.affaire %}
-            <span class="small text-muted text-truncate max-w-200" title="{{ obj.affaire.nom_affaire }}">
-                {{ obj.affaire.nom_affaire }}
-            </span>
+        </td>
+        <!-- Livraison -->
+        <td>
+            {% if obj.date_livraison_prevue %}
+                <div class="d-flex align-items-center gap-2 text-muted small">
+                    <i class="bi bi-calendar-event"></i>
+                    <span>{{ obj.date_livraison_prevue|date:"d/m/Y" }}</span>
+                </div>
+            {% else %}
+                <span class="text-muted small italic">-</span>
             {% endif %}
-        </div>
-    </td>
-
-    <!-- Montant HT -->
-    <td class="text-center font-monospace text-dark">
-        {{ obj.prix_total_ht|default:"0" }} €
-    </td>
-
-    <!-- Statut -->
-    <td class="text-center">
-        {% if obj.statut == 'BROUILLON' %}
-        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle badge-pill-text">
-            <i class="bi bi-pencil me-1"></i>Brouillon
-        </span>
-        {% elif obj.statut == 'COMMANDE' %}
-        <span class="badge bg-primary-subtle text-primary border border-primary-subtle badge-pill-text">
-            <i class="bi bi-send me-1"></i>En Cours
-        </span>
-        {% elif obj.statut == 'CONFIRME_ARC' %}
-        <span class="badge bg-info-subtle text-info border border-info-subtle badge-pill-text">
-            <i class="bi bi-file-earmark-check me-1"></i>ARC Reçu
-        </span>
-        {% elif obj.statut == 'LIVRE' %}
-        <span class="badge bg-success-subtle text-success border border-success-subtle badge-pill-text">
-            <i class="bi bi-box-seam me-1"></i>Livré
-        </span>
-        {% else %}
-        <span class="badge bg-light text-dark border badge-pill-text">{{ obj.statut }}</span>
-        {% endif %}
-    </td>
-
-    <!-- Livraison -->
-    <td>
-        {% if obj.date_livraison_prevue %}
-        <div class="d-flex align-items-center gap-2 text-muted small">
-            <i class="bi bi-calendar-event"></i>
-            <span>{{ obj.date_livraison_prevue|date:"d/m/Y" }}</span>
-        </div>
-        {% else %}
-        <span class="text-muted small italic">-</span>
-        {% endif %}
-    </td>
-
-    <!-- Actions -->
-    <td class="text-end">
-        <div class="row-actions">
-            <button class="btn btn-sm btn-icon action-btn" title="Modifier" hx-get="{% url 'commande_edit' obj.pk %}"
-                hx-target="#detailSidebarContent" hx-swap="innerHTML"
-                onclick="event.stopPropagation(); toggleDetailPanel(true);">
-                <i class="bi bi-pencil-fill"></i>
-            </button>
-            <button class="btn btn-sm btn-icon action-btn text-danger" title="Supprimer"
-                hx-delete="{% url 'commande_edit' obj.pk %}"
-                hx-confirm="Voulez-vous vraiment supprimer cette commande ?" onclick="event.stopPropagation();">
-                <i class="bi bi-trash"></i>
-            </button>
-        </div>
-    </td>
-</tr>
+        </td>
+        <!-- Actions -->
+        <td class="text-end">
+            <div class="row-actions">
+                <button class="btn btn-sm btn-icon action-btn"
+                        title="Modifier"
+                        hx-get="{% url 'commande_edit' obj.pk %}"
+                        hx-target="#detailSidebarContent"
+                        hx-swap="innerHTML"
+                        onclick="event.stopPropagation(); toggleDetailPanel(true);">
+                    <i class="bi bi-pencil-fill"></i>
+                </button>
+                <button class="btn btn-sm btn-icon action-btn text-danger"
+                        title="Supprimer"
+                        hx-delete="{% url 'commande_edit' obj.pk %}"
+                        hx-confirm="Voulez-vous vraiment supprimer cette commande ?"
+                        onclick="event.stopPropagation();">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
 {% empty %}
-<tr>
-    <td colspan="7" class="text-center py-5">
-        <div class="d-flex flex-column align-items-center justify-content-center opacity-50">
-            <i class="bi bi-cart-x fs-1 mb-3"></i>
-            <p class="mb-0 fw-medium">Aucune commande trouvée.</p>
-            <p class="small">Essayez de modifier vos filtres.</p>
-        </div>
-    </td>
-</tr>
+    <tr>
+        <td colspan="7" class="text-center py-5">
+            <div class="d-flex flex-column align-items-center justify-content-center opacity-50">
+                <i class="bi bi-cart-x fs-1 mb-3"></i>
+                <p class="mb-0 fw-medium">
+                    Aucune commande trouvée.
+                </p>
+                <p class="small">
+                    Essayez de modifier vos filtres.
+                </p>
+            </div>
+        </td>
+    </tr>
 {% endfor %}

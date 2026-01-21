@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
-
 {% block extra_css %}
-<style>
+    <style>
     :root {
         --form-bg: #ffffff;
         --form-border: #e9ecef;
@@ -83,13 +82,11 @@
     .field-full-width {
         grid-column: 1 / -1;
     }
-</style>
+    </style>
 {% endblock %}
-
 {% block content %}
-
-<!-- Standalone Form Clean Design -->
-<style>
+    <!-- Standalone Form Clean Design -->
+    <style>
     :root {
         --bg-body: #fdfdfd;
     }
@@ -124,40 +121,36 @@
     .form-clean-body {
         background: transparent;
     }
-</style>
-
-<div class="container-fluid min-vh-100 d-flex flex-column" style="background-color: var(--bg-body);">
-    <div class="form-clean-wrapper w-100">
-
-        <div class="form-clean-header">
-            <h1 class="form-clean-title">
-                {% if form.instance.pk %}
-                Modifier l'élément
-                {% else %}
-                Nouveau
-                {% endif %}
-            </h1>
-            <div class="form-clean-subtitle">
-                {% if form.instance.pk %}
-                Mettez à jour les informations ci-dessous.
-                {% else %}
-                Remplissez les informations pour créer un nouvel enregistrement.
-                {% endif %}
+    </style>
+    <div class="container-fluid min-vh-100 d-flex flex-column"
+         style="background-color: var(--bg-body)">
+        <div class="form-clean-wrapper w-100">
+            <div class="form-clean-header">
+                <h1 class="form-clean-title">
+                    {% if form.instance.pk %}
+                        Modifier l'élément
+                    {% else %}
+                        Nouveau
+                    {% endif %}
+                </h1>
+                <div class="form-clean-subtitle">
+                    {% if form.instance.pk %}
+                        Mettez à jour les informations ci-dessous.
+                    {% else %}
+                        Remplissez les informations pour créer un nouvel enregistrement.
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-clean-body">
+                {% include 'core/partials/form_snippet.html' with is_htmx=False %}
             </div>
         </div>
-
-        <div class="form-clean-body">
-            {% include 'core/partials/form_snippet.html' with is_htmx=False %}
-        </div>
-
     </div>
-</div>
-
-<script>
+    <script>
     // Petit boost UX : Focus sur le premier champ input visible
     document.addEventListener('DOMContentLoaded', function () {
         const firstInput = document.querySelector('.form-control:not([type="hidden"]):not([disabled])');
         if (firstInput) firstInput.focus();
     });
-</script>
+    </script>
 {% endblock %}

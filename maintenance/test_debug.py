@@ -2,7 +2,6 @@
 import os
 import sys
 import django
-from django.conf import settings
 from django.template.loader import render_to_string
 
 # Add apps to path
@@ -22,7 +21,7 @@ def test_templates():
         render_to_string('core/article_list.html', {'articles': []}) 
         print("PASS: article_list.html")
     except Exception as e:
-        print(f"FAIL: article_list.html")
+        print("FAIL: article_list.html")
         print(e)
 
     # 2. Article Form Partial
@@ -38,7 +37,7 @@ def test_templates():
         render_to_string('core/partials/article_form_partial.html', {'form': form})
         print("PASS: article_form_partial.html")
     except Exception as e:
-        print(f"FAIL: article_form_partial.html")
+        print("FAIL: article_form_partial.html")
         print(e)
 
 if __name__ == "__main__":

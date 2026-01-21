@@ -1,75 +1,82 @@
 {% for f in fournisseurs %}
-<tr class="cursor-pointer" onclick="handleRowClick(event, this)" hx-get="{% url 'fournisseur_edit' f.pk %}"
-    hx-target="#detailSidebarContent" hx-swap="innerHTML">
-
-    <!-- Name & Usage -->
-    <td>
-        <div class="d-flex align-items-center gap-3">
-            <div class="avatar-circle-sm bg-info-subtle text-info fw-bold">
-                {{ f.nom_fournisseur|slice:":2"|upper }}
-            </div>
-            <div>
-                <div class="fw-bold text-body">{{ f.nom_fournisseur }}</div>
-                {% if f.nom_usage and f.nom_usage != f.nom_fournisseur %}
-                <div class="text-muted small fs-075">
-                    (Alias: {{ f.nom_usage }})
+    <tr class="cursor-pointer"
+        onclick="handleRowClick(event, this)"
+        hx-get="{% url 'fournisseur_edit' f.pk %}"
+        hx-target="#detailSidebarContent"
+        hx-swap="innerHTML">
+        <!-- Name & Usage -->
+        <td>
+            <div class="d-flex align-items-center gap-3">
+                <div class="avatar-circle-sm bg-info-subtle text-info fw-bold">
+                    {{ f.nom_fournisseur|slice:":2"|upper }}
                 </div>
-                {% endif %}
+                <div>
+                    <div class="fw-bold text-body">
+                        {{ f.nom_fournisseur }}
+                    </div>
+                    {% if f.nom_usage and f.nom_usage != f.nom_fournisseur %}
+                        <div class="text-muted small fs-075">
+                            (Alias: {{ f.nom_usage }})
+                        </div>
+                    {% endif %}
+                </div>
             </div>
-        </div>
-    </td>
-
-    <!-- Code -->
-
-
-    <!-- Contact -->
-    <td>
-        {% for contact in f.corecontact_set.all %}
-        {% if forloop.first %}
-        <div class="fw-medium text-body small">{{ contact.prenom|default:"" }} {{ contact.nom }}</div>
-        {% if contact.telephone %}
-        <div class="text-muted text-xxs">{{ contact.telephone }}</div>
-        {% endif %}
-        {% endif %}
-        {% empty %}
-        <span class="text-muted small italic">-</span>
-        {% endfor %}
-    </td>
-
-    <!-- Address -->
-    <td>
-        {% if f.adresse %}
-        <div class="d-flex align-items-center gap-2 text-muted small">
-            <i class="bi bi-geo-alt"></i>
-            <span class="text-truncate max-w-200" title="{{ f.adresse }}">
-                {{ f.adresse|truncatechars:40 }}
-            </span>
-        </div>
-        {% else %}
-        <span class="text-muted small italic">-</span>
-        {% endif %}
-    </td>
-
-    <!-- Actions -->
-    <td class="text-end">
-        <div class="row-actions">
-
-            <button class="btn btn-sm btn-icon action-btn text-danger" title="Supprimer"
-                hx-post="{% url 'fournisseur_delete' f.pk %}"
-                hx-confirm="Êtes-vous sûr de vouloir supprimer ce fournisseur ?" hx-target="#fournisseur-table-body"
-                hx-swap="innerHTML" onclick="event.stopPropagation()">
-                <i class="bi bi-trash"></i>
-            </button>
-        </div>
-    </td>
-</tr>
+        </td>
+        <!-- Code -->
+        <!-- Contact -->
+        <td>
+            {% for contact in f.corecontact_set.all %}
+                {% if forloop.first %}
+                    <div class="fw-medium text-body small">
+                        {{ contact.prenom|default:"" }} {{ contact.nom }}
+                    </div>
+                    {% if contact.telephone %}
+                        <div class="text-muted text-xxs">
+                            {{ contact.telephone }}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% empty %}
+                <span class="text-muted small italic">-</span>
+            {% endfor %}
+        </td>
+        <!-- Address -->
+        <td>
+            {% if f.adresse %}
+                <div class="d-flex align-items-center gap-2 text-muted small">
+                    <i class="bi bi-geo-alt"></i>
+                    <span class="text-truncate max-w-200" title="{{ f.adresse }}">
+                        {{ f.adresse|truncatechars:40 }}
+                    </span>
+                </div>
+            {% else %}
+                <span class="text-muted small italic">-</span>
+            {% endif %}
+        </td>
+        <!-- Actions -->
+        <td class="text-end">
+            <div class="row-actions">
+                <button class="btn btn-sm btn-icon action-btn text-danger"
+                        title="Supprimer"
+                        hx-post="{% url 'fournisseur_delete' f.pk %}"
+                        hx-confirm="Êtes-vous sûr de vouloir supprimer ce fournisseur ?"
+                        hx-target="#fournisseur-table-body"
+                        hx-swap="innerHTML"
+                        onclick="event.stopPropagation()">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </td>
+    </tr>
 {% empty %}
-<tr>
-    <td colspan="5" class="text-center py-5">
-        <div class="d-flex flex-column align-items-center justify-content-center opacity-50">
-            <i class="bi bi-truck fs-1 mb-3"></i>
-            <p class="mb-0 fw-medium">Aucun fournisseur trouvé.</p>
-        </div>
-    </td>
-</tr>
+    <tr>
+        <td colspan="5" class="text-center py-5">
+            <div class="d-flex flex-column align-items-center justify-content-center opacity-50">
+                <i class="bi bi-truck fs-1 mb-3"></i>
+                <p class="mb-0 fw-medium">
+                    Aucun fournisseur trouvé.
+                </p>
+            </div>
+        </td>
+    </tr>
 {% endfor %}

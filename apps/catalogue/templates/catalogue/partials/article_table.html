@@ -2,64 +2,75 @@
     <table class="table table-striped table-hover align-middle mb-0">
         <thead class="table-light">
             <tr>
-                <th scope="col">Article</th>
-                <th scope="col">Fournisseur</th>
-                <th scope="col">Réf Usine</th>
-                <th scope="col" class="text-end">Prix Achat</th>
-                <th scope="col" class="text-center">Unité</th>
-                <th scope="col" class="text-end">Actions</th>
+                <th scope="col">
+                    Article
+                </th>
+                <th scope="col">
+                    Fournisseur
+                </th>
+                <th scope="col">
+                    Réf Usine
+                </th>
+                <th scope="col" class="text-end">
+                    Prix Achat
+                </th>
+                <th scope="col" class="text-center">
+                    Unité
+                </th>
+                <th scope="col" class="text-end">
+                    Actions
+                </th>
             </tr>
         </thead>
         <tbody>
             {% for art in articles %}
-            <tr>
-                <td>
-                    <div class="fw-bold text-dark">{{ art.designation }}</div>
-                    {% if art.code_article %}
-                    <small class="text-muted"><i class="bi bi-upc-scan me-1"></i>{{ art.code_article }}</small>
-                    {% endif %}
-                </td>
-
-                <td>
-                    {% if art.fournisseur %}
-                    <span class="text-secondary small">
-                        <i class="bi bi-box-seam me-1"></i>{{ art.fournisseur.nom_fournisseur|truncatechars:20 }}
-                    </span>
-                    {% else %}
-                    <span class="text-muted small fst-italic">-</span>
-                    {% endif %}
-                </td>
-
-                <td>
-                    <span class="text-muted small font-monospace">{{ art.ref_fournisseur|default:"-" }}</span>
-                </td>
-
-                <td class="text-end">
-                    <span class="fw-bold text-primary">
-                        {{ art.prix_unitaire_ht|floatformat:2 }} €
-                    </span>
-                </td>
-
-                <td class="text-center">
-                    <span class="badge bg-secondary-subtle text-secondary-emphasis border">{{
+                <tr>
+                    <td>
+                        <div class="fw-bold text-dark">
+                            {{ art.designation }}
+                        </div>
+                        {% if art.code_article %}
+                            <small class="text-muted"><i class="bi bi-upc-scan me-1"></i>{{ art.code_article }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if art.fournisseur %}
+                            <span class="text-secondary small">
+                                <i class="bi bi-box-seam me-1"></i>{{ art.fournisseur.nom_fournisseur|truncatechars:20 }}
+                            </span>
+                        {% else %}
+                            <span class="text-muted small fst-italic">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="text-muted small font-monospace">{{ art.ref_fournisseur|default:"-" }}</span>
+                    </td>
+                    <td class="text-end">
+                        <span class="fw-bold text-primary">
+                            {{ art.prix_unitaire_ht|floatformat:2 }} €
+                        </span>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge bg-secondary-subtle text-secondary-emphasis border">{{
                         art.unite|upper|default:"U" }}</span>
-                </td>
-
-                <td class="text-end">
-                    <div class="btn-group btn-group-sm">
-                        <a href="{% url 'article_edit' art.pk %}" class="btn btn-outline-secondary" title="Modifier">
-                            <i class="bi bi-pencil-square"></i>
-                        </a>
-                    </div>
-                </td>
-            </tr>
+                    </td>
+                    <td class="text-end">
+                        <div class="btn-group btn-group-sm">
+                            <a href="{% url 'article_edit' art.pk %}"
+                               class="btn btn-outline-secondary"
+                               title="Modifier">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
             {% empty %}
-            <tr>
-                <td colspan="6" class="text-center py-5 text-muted">
-                    <i class="bi bi-search display-6 d-block mb-3 opacity-50"></i>
-                    Aucun article trouvé pour <strong>"{{ query }}"</strong>.
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="6" class="text-center py-5 text-muted">
+                        <i class="bi bi-search display-6 d-block mb-3 opacity-50"></i>
+                        Aucun article trouvé pour <strong>"{{ query }}"</strong>.
+                    </td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>

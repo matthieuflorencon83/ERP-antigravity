@@ -1,61 +1,107 @@
 {% extends 'base.html' %}
-
-{% block extra_css %}{% endblock %}
-
-{% block page_title %}Ajouter un Article{% endblock %}
-
+{% block extra_css %}
+{% endblock %}
+{% block page_title %}
+    Ajouter un Article
+{% endblock %}
 {% block content %}
-<div class="container py-4">
-    <div class="card shadow-sm border-0 mx-auto form-card-container">
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-box me-2" aria-hidden="true"></i>Nouvel Article Catalogue
-            </h5>
-        </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="code_article" class="form-label">Code Article (Référence)</label>
-                        <input type="text" id="code_article" name="code_article" class="form-control" required
-                            placeholder="Ex: PRF-70-ALU" title="Entrez le code de l'article">
+    <div class="container py-4">
+        <div class="card shadow-sm border-0 mx-auto form-card-container">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-dark">
+                    <i class="bi bi-box me-2" aria-hidden="true"></i>Nouvel Article Catalogue
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="code_article" class="form-label">
+                                Code Article (Référence)
+                            </label>
+                            <input type="text"
+                                   id="code_article"
+                                   name="code_article"
+                                   class="form-control"
+                                   required
+                                   placeholder="Ex: PRF-70-ALU"
+                                   title="Entrez le code de l'article">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="unite" class="form-label">
+                                Unité
+                            </label>
+                            <select id="unite"
+                                    name="unite"
+                                    class="form-select"
+                                    title="Sélectionnez l'unité de mesure">
+                                <option value="U">
+                                    Unité (pce)
+                                </option>
+                                <option value="M">
+                                    Mètre (m)
+                                </option>
+                                <option value="M2">
+                                    Mètre Carré (m2)
+                                </option>
+                                <option value="ML">
+                                    Mètre Linéaire (ml)
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="designation" class="form-label">
+                                Désignation complète
+                            </label>
+                            <input type="text"
+                                   id="designation"
+                                   name="designation"
+                                   class="form-control"
+                                   required
+                                   placeholder="Ex: Profilé Dormant 70mm - Standard"
+                                   title="Entrez la désignation complète">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="prix_achat" class="form-label">
+                                Prix Achat HT (€)
+                            </label>
+                            <input type="number"
+                                   id="prix_achat"
+                                   step="0.01"
+                                   name="prix_achat"
+                                   class="form-control"
+                                   value="0.00"
+                                   title="Prix d'achat hors taxes"
+                                   placeholder="0.00">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="fournisseur" class="form-label">
+                                Fournisseur
+                            </label>
+                            <select id="fournisseur"
+                                    name="fournisseur"
+                                    class="form-select"
+                                    title="Sélectionnez le fournisseur associé">
+                                <option value="">
+                                    -- Sans --
+                                </option>
+                                {% for f in fournisseurs %}
+                                    <option value="{{ f.id }}">
+                                        {{ f.nom }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="unite" class="form-label">Unité</label>
-                        <select id="unite" name="unite" class="form-select" title="Sélectionnez l'unité de mesure">
-                            <option value="U">Unité (pce)</option>
-                            <option value="M">Mètre (m)</option>
-                            <option value="M2">Mètre Carré (m2)</option>
-                            <option value="ML">Mètre Linéaire (ml)</option>
-                        </select>
+                    <div class="mt-4 pt-3 border-top d-flex justify-content-between">
+                        <a href="{% url 'article_list' %}" class="btn btn-light">Annuler</a>
+                        <button type="submit" class="btn btn-dark px-4">
+                            Créer l'Article
+                        </button>
                     </div>
-                    <div class="col-md-12">
-                        <label for="designation" class="form-label">Désignation complète</label>
-                        <input type="text" id="designation" name="designation" class="form-control" required
-                            placeholder="Ex: Profilé Dormant 70mm - Standard" title="Entrez la désignation complète">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="prix_achat" class="form-label">Prix Achat HT (€)</label>
-                        <input type="number" id="prix_achat" step="0.01" name="prix_achat" class="form-control"
-                            value="0.00" title="Prix d'achat hors taxes" placeholder="0.00">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="fournisseur" class="form-label">Fournisseur</label>
-                        <select id="fournisseur" name="fournisseur" class="form-select"
-                            title="Sélectionnez le fournisseur associé">
-                            <option value="">-- Sans --</option>
-                            {% for f in fournisseurs %}
-                            <option value="{{ f.id }}">{{ f.nom }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="mt-4 pt-3 border-top d-flex justify-content-between">
-                    <a href="{% url 'article_list' %}" class="btn btn-light">Annuler</a>
-                    <button type="submit" class="btn btn-dark px-4">Créer l'Article</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

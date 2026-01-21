@@ -1,7 +1,6 @@
 
 from django.core.management.base import BaseCommand
 from apps.core.models import Article, Fournisseur
-from django.db.models import Q
 
 class Command(BaseCommand):
     help = 'Clean and normalize Article families and Suppliers'

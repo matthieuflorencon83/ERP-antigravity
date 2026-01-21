@@ -1,23 +1,21 @@
 <!DOCTYPE html>
 <html lang="fr" data-bs-theme="light">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    <title>Antigravity ERP</title>
-
-    <!-- Bootstrap 5.3 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-
-    {% block extra_css %}{% endblock %}
-
-    <style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% load static %}
+        <title>Antigravity ERP</title>
+        <!-- Bootstrap 5.3 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+              rel="stylesheet">
+        <!-- Bootstrap Icons -->
+        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <!-- Custom Styles -->
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+        {% block extra_css %}
+        {% endblock %}
+        <style>
         body {
             min-height: 100vh;
             overflow-x: hidden;
@@ -212,222 +210,305 @@
         .main-content {
             transition: margin-right 0.3s;
         }
-    </style>
-</head>
-
-<body>
-
-    <!-- Mobile Toggle Button (Visible only on mobile) -->
-    <button class="btn btn-primary d-lg-none position-fixed top-0 start-0 m-3 z-3" type="button"
-        data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" title="Toggle Sidebar">
-        <i class="bi bi-list"></i>
-    </button>
-
-    <!-- Sidebar (Desktop & Mobile Offcanvas) -->
-    <!-- Removed offcanvas-lg to prevent conflict with custom fixed positioning -->
-    <div class="offcanvas offcanvas-start sidebar" tabindex="-1" id="sidebarMenu">
-        <div class="d-flex align-items-center p-4 border-bottom">
-            <i class="bi bi-box-seam-fill text-primary fs-3 me-2"></i>
-            <span class="fs-4 fw-bold">Antigravity</span>
-            <button type="button" class="btn-close d-lg-none ms-auto" data-bs-dismiss="offcanvas"
-                data-bs-target="#sidebarMenu" aria-label="Close"></button>
-        </div>
-
-        <div class="flex-grow-1 p-3 overflow-y-auto">
-            <nav class="nav flex-column">
-                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="/">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-                <a class="nav-link {% if 'documents' in request.path %}active{% endif %}"
-                    href="{% url 'upload_document' %}">
-                    <i class="bi bi-cpu"></i> IA & Documents
-                </a>
-                <!-- Fournisseurs Submenu -->
-                <div class="nav-item">
-                    <div class="d-flex align-items-center">
-                        <a class="nav-link flex-grow-1 {% if 'fournisseur' in request.path %}active{% endif %}"
-                            href="{% url 'fournisseur_list' %}">
-                            <i class="bi bi-truck"></i> Fournisseurs
-                        </a>
-                        <a class="nav-link px-2 ms-1 justify-content-center" href="#submenu-fournisseurs"
-                            data-bs-toggle="collapse" role="button"
-                            aria-expanded="{% if 'fournisseur' in request.path %}true{% else %}false{% endif %}"
-                            aria-controls="submenu-fournisseurs">
-                            <i class="bi bi-chevron-down small opacity-50"></i>
-                        </a>
-                    </div>
-                    <div class="collapse {% if 'fournisseur' in request.path %}show{% endif %}"
-                        id="submenu-fournisseurs">
-                        <nav class="nav flex-column ms-3 mt-1 border-start ps-2">
-                            <a class="nav-link small py-1 text-muted" href="javascript:void(0)"
-                                hx-get="{% url 'fournisseur_create' %}" hx-target="#detailSidebarContent"
-                                hx-swap="innerHTML" onclick="toggleDetailPanel(true);">
-                                <i class="bi bi-plus text-success me-1"></i>Nouveau
-                            </a>
-                        </nav>
-                    </div>
-                </div>
-
-                <!-- Clients Submenu -->
-                <div class="nav-item">
-                    <div class="d-flex align-items-center">
-                        <a class="nav-link flex-grow-1 {% if 'client' in request.path %}active{% endif %}"
-                            href="{% url 'client_list' %}">
-                            <i class="bi bi-people"></i> Clients
-                        </a>
-                        <a class="nav-link px-2 ms-1 justify-content-center" href="#submenu-clients"
-                            data-bs-toggle="collapse" role="button"
-                            aria-expanded="{% if 'client' in request.path %}true{% else %}false{% endif %}"
-                            aria-controls="submenu-clients">
-                            <i class="bi bi-chevron-down small opacity-50"></i>
-                        </a>
-                    </div>
-                    <div class="collapse {% if 'client' in request.path %}show{% endif %}" id="submenu-clients">
-                        <nav class="nav flex-column ms-3 mt-1 border-start ps-2">
-                            <a class="nav-link small py-1 text-muted" href="javascript:void(0)"
-                                hx-get="{% url 'client_create' %}" hx-target="#detailSidebarContent" hx-swap="innerHTML"
-                                onclick="toggleDetailPanel(true);">
-                                <i class="bi bi-plus text-success me-1"></i>Nouveau
-                            </a>
-                        </nav>
-                    </div>
-                </div>
-                <!-- Articles Submenu (Split Interaction) -->
-                <div class="nav-item">
-                    <div class="d-flex align-items-center">
-                        <a class="nav-link flex-grow-1 {% if 'article' in request.path %}active{% endif %}"
-                            href="{% url 'article_list' %}">
-                            <i class="bi bi-box"></i> Articles
-                        </a>
-                        <a class="nav-link px-2 ms-1 justify-content-center" href="#submenu-articles"
-                            data-bs-toggle="collapse" role="button"
-                            aria-expanded="{% if 'article' in request.path %}true{% else %}false{% endif %}"
-                            aria-controls="submenu-articles">
-                            <i class="bi bi-chevron-down small opacity-50"></i>
-                        </a>
-                    </div>
-                    <div class="collapse {% if 'article' in request.path %}show{% endif %}" id="submenu-articles">
-                        <nav class="nav flex-column ms-3 mt-1 border-start ps-2">
-                            <!-- Link 'Liste' removed as parent link handles it. Only 'Nouveau' remains -->
-                            <a class="nav-link small py-1 text-muted" href="javascript:void(0)"
-                                hx-get="{% url 'article_create' %}" hx-target="#detailSidebarContent"
-                                hx-swap="innerHTML" onclick="toggleDetailPanel(true);">
-                                <i class="bi bi-plus text-success me-1"></i>Nouveau
-                            </a>
-                        </nav>
-                    </div>
-                </div>
-                <a class="nav-link {% if 'commandes' in request.path %}active{% endif %}"
-                    href="{% url 'commande_list' %}">
-                    <i class="bi bi-cart"></i> Commandes
-                </a>
-
-                <!-- Affaires / Besoins (Demo) -->
-                <div class="nav-item mt-3">
-                    <span class="text-uppercase text-muted fw-bold small ps-3 mb-2 d-block"
-                        style="font-size: 0.7rem;">Chantiers</span>
-                    <a class="nav-link {% if 'besoins' in request.path %}active{% endif %}"
-                        href="{% url 'besoins_affaire' 1 %}">
-                        <i class="bi bi-grid-3x3-gap"></i> Saisie Rapide (Demo)
+        </style>
+    </head>
+    <body>
+        <!-- Mobile Toggle Button (Visible only on mobile) -->
+        <button class="btn btn-primary d-lg-none position-fixed top-0 start-0 m-3 z-3"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#sidebarMenu"
+                title="Toggle Sidebar">
+            <i class="bi bi-list"></i>
+        </button>
+        <!-- Sidebar (Desktop & Mobile Offcanvas) -->
+        <!-- Removed offcanvas-lg to prevent conflict with custom fixed positioning -->
+        <div class="offcanvas offcanvas-start sidebar"
+             tabindex="-1"
+             id="sidebarMenu">
+            <div class="d-flex align-items-center p-4 border-bottom">
+                <i class="bi bi-box-seam-fill text-primary fs-3 me-2"></i>
+                <span class="fs-4 fw-bold">Antigravity</span>
+                <button type="button"
+                        class="btn-close d-lg-none ms-auto"
+                        data-bs-dismiss="offcanvas"
+                        data-bs-target="#sidebarMenu"
+                        aria-label="Close">
+                </button>
+            </div>
+            <div class="flex-grow-1 p-3 overflow-y-auto">
+                <nav class="nav flex-column">
+                    <a class="nav-link
+                              {% if request.resolver_match.url_name == 'home' %}
+                                  active
+                              {% endif %}"
+                       href="/">
+                        <i class="bi bi-speedometer2"></i> Dashboard
                     </a>
-                </div>
-            </nav>
-        </div>
-
-        <div class="p-3 border-top d-flex align-items-center justify-content-between">
-            <div class="dropdown">
-                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle"
-                    data-bs-toggle="dropdown">
-                    <div
-                        class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2 avatar-circle">
-                        A
+                    <a class="nav-link
+                              {% if 'documents' in request.path %}
+                                  active
+                              {% endif %}"
+                       href="{% url 'upload_document' %}">
+                        <i class="bi bi-cpu"></i> IA & Documents
+                    </a>
+                    <!-- Fournisseurs Submenu -->
+                    <div class="nav-item">
+                        <div class="d-flex align-items-center">
+                            <a class="nav-link flex-grow-1
+                                      {% if 'fournisseur' in request.path %}
+                                          active
+                                      {% endif %}"
+                               href="{% url 'fournisseur_list' %}">
+                                <i class="bi bi-truck"></i> Fournisseurs
+                            </a>
+                            <a class="nav-link px-2 ms-1 justify-content-center"
+                               href="#submenu-fournisseurs"
+                               data-bs-toggle="collapse"
+                               role="button"
+                               aria-expanded="{% if 'fournisseur' in request.path %}
+                                                  true
+                                              {% else %}
+                                                  false
+                                              {% endif %}"
+                               aria-controls="submenu-fournisseurs">
+                                <i class="bi bi-chevron-down small opacity-50"></i>
+                            </a>
+                        </div>
+                        <div class="collapse
+                                    {% if 'fournisseur' in request.path %}
+                                        show
+                                    {% endif %}"
+                             id="submenu-fournisseurs">
+                            <nav class="nav flex-column ms-3 mt-1 border-start ps-2">
+                                <a class="nav-link small py-1 text-muted"
+                                   href="javascript:void(0)"
+                                   hx-get="{% url 'fournisseur_create' %}"
+                                   hx-target="#detailSidebarContent"
+                                   hx-swap="innerHTML"
+                                   onclick="toggleDetailPanel(true);">
+                                    <i class="bi bi-plus text-success me-1"></i>Nouveau
+                                </a>
+                            </nav>
+                        </div>
                     </div>
-                    <strong>Admin</strong>
-                </a>
-                <ul class="dropdown-menu text-small shadow">
-                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Sign out</a></li>
-                </ul>
+                    <!-- Clients Submenu -->
+                    <div class="nav-item">
+                        <div class="d-flex align-items-center">
+                            <a class="nav-link flex-grow-1
+                                      {% if 'client' in request.path %}
+                                          active
+                                      {% endif %}"
+                               href="{% url 'client_list' %}">
+                                <i class="bi bi-people"></i> Clients
+                            </a>
+                            <a class="nav-link px-2 ms-1 justify-content-center"
+                               href="#submenu-clients"
+                               data-bs-toggle="collapse"
+                               role="button"
+                               aria-expanded="{% if 'client' in request.path %}
+                                                  true
+                                              {% else %}
+                                                  false
+                                              {% endif %}"
+                               aria-controls="submenu-clients">
+                                <i class="bi bi-chevron-down small opacity-50"></i>
+                            </a>
+                        </div>
+                        <div class="collapse
+                                    {% if 'client' in request.path %}
+                                        show
+                                    {% endif %}"
+                             id="submenu-clients">
+                            <nav class="nav flex-column ms-3 mt-1 border-start ps-2">
+                                <a class="nav-link small py-1 text-muted"
+                                   href="javascript:void(0)"
+                                   hx-get="{% url 'client_create' %}"
+                                   hx-target="#detailSidebarContent"
+                                   hx-swap="innerHTML"
+                                   onclick="toggleDetailPanel(true);">
+                                    <i class="bi bi-plus text-success me-1"></i>Nouveau
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                    <!-- Articles Submenu (Split Interaction) -->
+                    <div class="nav-item">
+                        <div class="d-flex align-items-center">
+                            <a class="nav-link flex-grow-1
+                                      {% if 'article' in request.path %}
+                                          active
+                                      {% endif %}"
+                               href="{% url 'article_list' %}">
+                                <i class="bi bi-box"></i> Articles
+                            </a>
+                            <a class="nav-link px-2 ms-1 justify-content-center"
+                               href="#submenu-articles"
+                               data-bs-toggle="collapse"
+                               role="button"
+                               aria-expanded="{% if 'article' in request.path %}
+                                                  true
+                                              {% else %}
+                                                  false
+                                              {% endif %}"
+                               aria-controls="submenu-articles">
+                                <i class="bi bi-chevron-down small opacity-50"></i>
+                            </a>
+                        </div>
+                        <div class="collapse
+                                    {% if 'article' in request.path %}
+                                        show
+                                    {% endif %}"
+                             id="submenu-articles">
+                            <nav class="nav flex-column ms-3 mt-1 border-start ps-2">
+                                <!-- Link 'Liste' removed as parent link handles it. Only 'Nouveau' remains -->
+                                <a class="nav-link small py-1 text-muted"
+                                   href="javascript:void(0)"
+                                   hx-get="{% url 'article_create' %}"
+                                   hx-target="#detailSidebarContent"
+                                   hx-swap="innerHTML"
+                                   onclick="toggleDetailPanel(true);">
+                                    <i class="bi bi-plus text-success me-1"></i>Nouveau
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                    <a class="nav-link
+                              {% if 'commandes' in request.path %}
+                                  active
+                              {% endif %}"
+                       href="{% url 'commande_list' %}">
+                        <i class="bi bi-cart"></i> Commandes
+                    </a>
+                    <!-- Affaires / Besoins (Demo) -->
+                    <div class="nav-item mt-3">
+                        <span class="text-uppercase text-muted fw-bold small ps-3 mb-2 d-block"
+                              style="font-size: 0.7rem">Chantiers</span>
+                        <a class="nav-link
+                                  {% if 'besoins' in request.path %}
+                                      active
+                                  {% endif %}"
+                           href="{% url 'besoins_affaire' 1 %}">
+                            <i class="bi bi-grid-3x3-gap"></i> Saisie Rapide (Demo)
+                        </a>
+                    </div>
+                </nav>
             </div>
-            <!-- Moved Theme Toggle Here -->
-            <button class="btn btn-link nav-link px-2" id="bd-theme-toggle" type="button" title="Toggle theme">
-                <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- Layout Wrapper to enable Push behavior -->
-    <div id="layout-wrapper" class="d-flex w-100 h-100 overflow-hidden">
-
-        <!-- Main Content -->
-        <main class="main-content flex-grow-1" style="min-width: 0;">
-            <!-- Topbar (Minimal / Optional) -->
-            {% block header_actions_wrapper %}
-            <header class="topbar sticky-top">
-                <!-- Page Title REMOVED for space -->
-                <!-- Only actions remain -->
-                <div class="d-flex align-items-center gap-3 w-100 justify-content-end">
-                    {% block header_actions %}{% endblock %}
+            <div class="p-3 border-top d-flex align-items-center justify-content-between">
+                <div class="dropdown">
+                    <a href="#"
+                       class="d-flex align-items-center text-decoration-none dropdown-toggle"
+                       data-bs-toggle="dropdown">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2 avatar-circle">
+                            A
+                        </div>
+                        <strong>Admin</strong>
+                    </a>
+                    <ul class="dropdown-menu text-small shadow">
+                        <li>
+                            <a class="dropdown-item" href="#">Profile</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#">Sign out</a>
+                        </li>
+                    </ul>
                 </div>
-            </header>
-            {% endblock %}
-
-            <!-- Page Content -->
-            <div class="p-4" id="app-content">
-                {% if messages %}
-                <div class="container-fluid mb-3">
-                    {% for message in messages %}
-                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                {% block content %}{% endblock %}
-            </div>
-        </main>
-
-        <!-- Detail Sidebar (Right) - PUSH MODE -->
-
-        <!-- RESIZER HANDLE -->
-        <div id="resizer"
-            class="bg-body-tertiary border-start border-end d-flex align-items-center justify-content-center"
-            style="width: 16px; cursor: col-resize; flex-shrink: 0; z-index: 9999; user-select: none;">
-            <i class="bi bi-three-dots-vertical text-muted opacity-50 small"></i>
-        </div>
-
-        <div class="detail-panel bg-body" id="detailSidebar">
-            <div class="d-flex flex-column h-100">
-                <div class="p-3 border-bottom d-flex align-items-center justify-content-between bg-body-tertiary">
-                    <h5 class="m-0 fs-6 fw-bold text-uppercase text-secondary ls-1">Détails / Édition</h5>
-                    <div class="d-flex gap-2">
-                        <!-- Close button acts as 'Collapse' or 'Clear' now, or removing it if permanent -->
-                        <button type="button" class="btn-close" onclick="toggleDetailPanel()" aria-label="Close"
-                            title="Masquer/Afficher"></button>
-                    </div>
-                </div>
-                <div id="detailSidebarContent" class="flex-grow-1 d-flex flex-column overflow-hidden">
-                    <!-- HTMX Content Loads Here -->
-                    <div class="text-center text-muted mt-5">
-                        <div class="spinner-border text-primary d-none" role="status" id="sidebarSpinner"></div>
-                        <p>Chargement...</p>
-                    </div>
-                </div>
+                <!-- Moved Theme Toggle Here -->
+                <button class="btn btn-link nav-link px-2"
+                        id="bd-theme-toggle"
+                        type="button"
+                        title="Toggle theme">
+                    <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
+                </button>
             </div>
         </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-
-    <!-- Theme Toggle Script -->
-    <script>
+        <!-- Layout Wrapper to enable Push behavior -->
+        <div id="layout-wrapper" class="d-flex w-100 h-100 overflow-hidden">
+            <!-- Main Content -->
+            <main class="main-content flex-grow-1" style="min-width: 0;">
+                <!-- Topbar (Minimal / Optional) -->
+                {% block header_actions_wrapper %}
+                    <header class="topbar sticky-top">
+                        <!-- Page Title REMOVED for space -->
+                        <!-- Only actions remain -->
+                        <div class="d-flex align-items-center gap-3 w-100 justify-content-end">
+                            {% block header_actions %}
+                            {% endblock %}
+                        </div>
+                    </header>
+                {% endblock %}
+                <!-- Page Content -->
+                <div class="p-4" id="app-content">
+                    {% if messages %}
+                        <div class="container-fluid mb-3">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show"
+                                     role="alert">
+                                    {{ message }}
+                                    <button type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="alert"
+                                            aria-label="Close">
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </main>
+            <!-- Detail Sidebar (Right) - PUSH MODE -->
+            <!-- RESIZER HANDLE -->
+            <div id="resizer"
+                 class="bg-body-tertiary border-start border-end d-flex align-items-center justify-content-center"
+                 style="width: 16px;
+                        cursor: col-resize;
+                        flex-shrink: 0;
+                        z-index: 9999;
+                        user-select: none">
+                <i class="bi bi-three-dots-vertical text-muted opacity-50 small"></i>
+            </div>
+            <div class="detail-panel bg-body" id="detailSidebar">
+                <div class="d-flex flex-column h-100">
+                    <div class="p-3 border-bottom d-flex align-items-center justify-content-between bg-body-tertiary">
+                        <h5 class="m-0 fs-6 fw-bold text-uppercase text-secondary ls-1">
+                            Détails / Édition
+                        </h5>
+                        <div class="d-flex gap-2">
+                            <!-- Close button acts as 'Collapse' or 'Clear' now, or removing it if permanent -->
+                            <button type="button"
+                                    class="btn-close"
+                                    onclick="toggleDetailPanel()"
+                                    aria-label="Close"
+                                    title="Masquer/Afficher">
+                            </button>
+                        </div>
+                    </div>
+                    <div id="detailSidebarContent"
+                         class="flex-grow-1 d-flex flex-column overflow-hidden">
+                        <!-- HTMX Content Loads Here -->
+                        <div class="text-center text-muted mt-5">
+                            <div class="spinner-border text-primary d-none"
+                                 role="status"
+                                 id="sidebarSpinner">
+                            </div>
+                            <p>
+                                Chargement...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+        <!-- Theme Toggle Script -->
+        <script>
         /**
          * ANTIGRAVITY ERP - MAIN SCRIPT
          * Consolidated Logic for Theme, Sidebar, and Resizer
@@ -665,7 +746,6 @@
 
         })();
 
-    </script>
-</body>
-
+        </script>
+    </body>
 </html>

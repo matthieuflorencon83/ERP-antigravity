@@ -1,5 +1,4 @@
 import google.generativeai as genai
-import os
 
 # Clé fournie par l'utilisateur
 api_key = "AIzaSyAYR9m0CwI6at_2zS_sGN3fdOBuH64GDo8"

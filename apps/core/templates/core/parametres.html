@@ -1,118 +1,129 @@
 {% extends 'base.html' %}
-
-{% block title %}Paramètres - Antigravity ERP{% endblock %}
-
+{% block title %}
+    Paramètres - Antigravity ERP
+{% endblock %}
 {% block content %}
-<div class="container-fluid p-4">
-    <div class="row mb-4">
-        <div class="col">
-            <h2 class="fw-bold text-primary"><i class="bi bi-gear me-2"></i>Paramètres</h2>
+    <div class="container-fluid p-4">
+        <div class="row mb-4">
+            <div class="col">
+                <h2 class="fw-bold text-primary">
+                    <i class="bi bi-gear me-2"></i>Paramètres
+                </h2>
+            </div>
         </div>
-    </div>
-
-    <div class="row g-4">
-        <!-- Theme Settings -->
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-body-tertiary">
-                    <h5 class="card-title mb-0"><i class="bi bi-palette me-2"></i>Apparence</h5>
+        <div class="row g-4">
+            <!-- Theme Settings -->
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-body-tertiary">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-palette me-2"></i>Apparence
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">
+                            Choisissez le thème de l'application.
+                        </p>
+                        <div class="d-grid gap-2">
+                            <button type="button"
+                                    class="btn btn-outline-secondary d-flex align-items-center justify-content-between"
+                                    onclick="setTheme('light')">
+                                <span><i class="bi bi-sun me-2"></i>Mode Clair</span>
+                                <i class="bi bi-check-circle-fill text-primary d-none" id="check-light"></i>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-outline-secondary d-flex align-items-center justify-content-between"
+                                    onclick="setTheme('dark')">
+                                <span><i class="bi bi-moon-stars me-2"></i>Mode Sombre</span>
+                                <i class="bi bi-check-circle-fill text-primary d-none" id="check-dark"></i>
+                            </button>
+                            <button type="button"
+                                    class="btn btn-outline-secondary d-flex align-items-center justify-content-between"
+                                    onclick="setTheme('auto')">
+                                <span><i class="bi bi-circle-half me-2"></i>Système (Auto)</span>
+                                <i class="bi bi-check-circle-fill text-primary d-none" id="check-auto"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="text-muted">Choisissez le thème de l'application.</p>
-
-                    <div class="d-grid gap-2">
-                        <button type="button"
-                            class="btn btn-outline-secondary d-flex align-items-center justify-content-between"
-                            onclick="setTheme('light')">
-                            <span><i class="bi bi-sun me-2"></i>Mode Clair</span>
-                            <i class="bi bi-check-circle-fill text-primary d-none" id="check-light"></i>
-                        </button>
-
-                        <button type="button"
-                            class="btn btn-outline-secondary d-flex align-items-center justify-content-between"
-                            onclick="setTheme('dark')">
-                            <span><i class="bi bi-moon-stars me-2"></i>Mode Sombre</span>
-                            <i class="bi bi-check-circle-fill text-primary d-none" id="check-dark"></i>
-                        </button>
-
-                        <button type="button"
-                            class="btn btn-outline-secondary d-flex align-items-center justify-content-between"
-                            onclick="setTheme('auto')">
-                            <span><i class="bi bi-circle-half me-2"></i>Système (Auto)</span>
-                            <i class="bi bi-check-circle-fill text-primary d-none" id="check-auto"></i>
-                        </button>
+            </div>
+            <!-- System Settings -->
+            <div class="col-md-8">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-body-tertiary">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-sliders me-2"></i>Configuration Système
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <!-- Company Info -->
+                            <div class="mb-4">
+                                <h6 class="text-uppercase text-muted small fw-bold mb-3">
+                                    Général
+                                </h6>
+                                <div class="mb-3">
+                                    <label for="{{ form.nom_societe.id_for_label }}" class="form-label">
+                                        Nom de la
+                                        Société
+                                    </label>
+                                    {{ form.nom_societe }}
+                                    {{ form.nom_societe.errors }}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="{{ form.chemin_stockage_local.id_for_label }}"
+                                           class="form-label">
+                                        Dossier de
+                                        Stockage Local
+                                    </label>
+                                    {{ form.chemin_stockage_local }}
+                                    <div class="form-text">
+                                        Chemin absolu où seront stockés les fichiers temporaires/backups.
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-4">
+                            <!-- API Keys -->
+                            <div class="mb-4">
+                                <h6 class="text-uppercase text-muted small fw-bold mb-3">
+                                    <i class="bi bi-key me-1"></i>Clés
+                                    API & IA
+                                </h6>
+                                <div class="mb-3">
+                                    <label for="{{ form.gemini_api_key.id_for_label }}" class="form-label">
+                                        Clé API Google
+                                        Gemini
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-google"></i></span>
+                                        {{ form.gemini_api_key }}
+                                        <button class="btn btn-outline-secondary"
+                                                type="button"
+                                                id="toggleKeyVisibility"
+                                                title="Afficher/Masquer la clé">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                    <div class="form-text text-warning">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>
+                                        Cette clé est stockée en base de données et est prioritaire sur celle du fichier
+                                        <code>.env</code>.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save me-2"></i>Enregistrer les paramètres
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- System Settings -->
-        <div class="col-md-8">
-            <div class="card shadow-sm h-100">
-                <div class="card-header bg-body-tertiary">
-                    <h5 class="card-title mb-0"><i class="bi bi-sliders me-2"></i>Configuration Système</h5>
-                </div>
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
-
-                        <!-- Company Info -->
-                        <div class="mb-4">
-                            <h6 class="text-uppercase text-muted small fw-bold mb-3">Général</h6>
-                            <div class="mb-3">
-                                <label for="{{ form.nom_societe.id_for_label }}" class="form-label">Nom de la
-                                    Société</label>
-                                {{ form.nom_societe }}
-                                {{ form.nom_societe.errors }}
-                            </div>
-                            <div class="mb-3">
-                                <label for="{{ form.chemin_stockage_local.id_for_label }}" class="form-label">Dossier de
-                                    Stockage Local</label>
-                                {{ form.chemin_stockage_local }}
-                                <div class="form-text">Chemin absolu où seront stockés les fichiers temporaires/backups.
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr class="my-4">
-
-                        <!-- API Keys -->
-                        <div class="mb-4">
-                            <h6 class="text-uppercase text-muted small fw-bold mb-3"><i class="bi bi-key me-1"></i>Clés
-                                API & IA</h6>
-
-                            <div class="mb-3">
-                                <label for="{{ form.gemini_api_key.id_for_label }}" class="form-label">Clé API Google
-                                    Gemini</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bi bi-google"></i></span>
-                                    {{ form.gemini_api_key }}
-                                    <button class="btn btn-outline-secondary" type="button" id="toggleKeyVisibility"
-                                        title="Afficher/Masquer la clé">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                </div>
-                                <div class="form-text text-warning">
-                                    <i class="bi bi-exclamation-triangle me-1"></i>
-                                    Cette clé est stockée en base de données et est prioritaire sur celle du fichier
-                                    <code>.env</code>.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save me-2"></i>Enregistrer les paramètres
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
-</div>
-
-<script>
+    <script>
     // Theme Logic
     function getStoredTheme() {
         return localStorage.getItem('theme') || 'auto';
@@ -162,5 +173,5 @@
             });
         }
     });
-</script>
+    </script>
 {% endblock %}

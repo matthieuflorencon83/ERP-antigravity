@@ -2,9 +2,7 @@ import os
 import json
 import uuid
 from django.core.management.base import BaseCommand
-from django.conf import settings
-from django.core.files.uploadedfile import SimpleUploadedFile
-from apps.core.models import Document, Client, Fournisseur, Commande, Article, Lignecommande, Affaire
+from apps.core.models import Document, Fournisseur, Commande, Lignecommande
 from apps.ged.services import analyze_document, save_extracted_data
 
 class Command(BaseCommand):
@@ -16,7 +14,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         file_path = options.get('file')
         
-        self.stdout.write(self.style.WARNING(f"🚀 Démarrage du Test Pipeline E2E..."))
+        self.stdout.write(self.style.WARNING("🚀 Démarrage du Test Pipeline E2E..."))
 
         # 1. Simulation Upload ou Lecture Fichier
         if file_path and os.path.exists(file_path):

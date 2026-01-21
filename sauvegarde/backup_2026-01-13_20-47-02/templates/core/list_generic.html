@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
-
 {% block extra_css %}
-<style>
+    <style>
     /* 
      * SAAS PRO 2026 - Compact DataGrid Styles
      */
@@ -198,67 +197,71 @@
         background-color: var(--primary-light) !important;
         border-bottom-color: var(--primary-border);
     }
-</style>
+    </style>
 {% endblock %}
-
 {% block content %}
-<div class="container-fluid px-4 py-3 h-100">
-    <!-- Header Section -->
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="mb-0 fw-bold text-dark">
-            {% block list_title %}Titre de la Liste{% endblock %}
-            <span class="badge bg-light text-secondary border ms-2 rounded-pill small">
-                {{ object_list.count|default:"0" }}
-            </span>
-        </h5>
-        <!-- Toolbar if needed -->
+    <div class="container-fluid px-4 py-3 h-100">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0 fw-bold text-dark">
+                {% block list_title %}
+                    Titre de la Liste
+                {% endblock %}
+                <span class="badge bg-light text-secondary border ms-2 rounded-pill small">
+                    {{ object_list.count|default:"0" }}
+                </span>
+            </h5>
+            <!-- Toolbar if needed -->
+        </div>
+        <!-- DataGrid -->
+        <div class="datagrid-container">
+            <form method="get" id="filter-form" class="h-100 d-flex flex-column">
+                <div class="table-responsive">
+                    <table class="table-dense">
+                        <thead>
+                            <!-- Column Headers -->
+                            <tr>
+                                {% block table_headers %}
+                                {% endblock %}
+                                <th class="text-end col-action">
+                                    Actions
+                                </th>
+                            </tr>
+                            <!-- Inline Filters -->
+                            <tr class="filter-row">
+                                {% block table_filters %}
+                                {% endblock %}
+                                <th>
+                                    <button type="submit"
+                                            class="btn btn-sm btn-light w-100 py-0 btn-filter-apply"
+                                            title="Appliquer filtres">
+                                        <i class="bi bi-funnel-fill text-muted"></i>
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% block table_rows %}
+                                <tr>
+                                    <td colspan="100%" class="text-center p-5 text-muted">
+                                        Aucune donnée définie.
+                                    </td>
+                                </tr>
+                            {% endblock %}
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+        <!-- Floating Action Button -->
+        {% block floating_action %}
+            <a href="#" class="fab-new">
+                <i class="bi bi-plus-lg"></i> Nouveau
+            </a>
+        {% endblock %}
     </div>
-
-    <!-- DataGrid -->
-    <div class="datagrid-container">
-        <form method="get" id="filter-form" class="h-100 d-flex flex-column">
-            <div class="table-responsive">
-                <table class="table-dense">
-                    <thead>
-                        <!-- Column Headers -->
-                        <tr>
-                            {% block table_headers %}{% endblock %}
-                            <th class="text-end col-action">Actions</th>
-                        </tr>
-                        <!-- Inline Filters -->
-                        <tr class="filter-row">
-                            {% block table_filters %}{% endblock %}
-                            <th>
-                                <button type="submit" class="btn btn-sm btn-light w-100 py-0 btn-filter-apply"
-                                    title="Appliquer filtres">
-                                    <i class="bi bi-funnel-fill text-muted"></i>
-                                </button>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% block table_rows %}
-                        <tr>
-                            <td colspan="100%" class="text-center p-5 text-muted">Aucune donnée définie.</td>
-                        </tr>
-                        {% endblock %}
-                    </tbody>
-                </table>
-            </div>
-        </form>
-    </div>
-
-    <!-- Floating Action Button -->
-    {% block floating_action %}
-    <a href="#" class="fab-new">
-        <i class="bi bi-plus-lg"></i> Nouveau
-    </a>
-    {% endblock %}
-</div>
-
-
-<!-- Offcanvas Details Panel (Modern Sheet Design) -->
-<style>
+    <!-- Offcanvas Details Panel (Modern Sheet Design) -->
+    <style>
     /* SaaS 2026 - Sheet Offcanvas */
     .offcanvas-sheet {
         border-left: 1px solid rgba(0, 0, 0, 0.04) !important;
@@ -306,30 +309,43 @@
     .btn-close-custom:hover {
         color: #343a40;
     }
-</style>
-
-<div class="offcanvas offcanvas-end offcanvas-sheet shadow-none" tabindex="-1" id="detailPanel"
-    aria-labelledby="detailPanelLabel" data-bs-backdrop="true">
-    <div class="offcanvas-header offcanvas-header-sheet d-flex align-items-start justify-content-between">
-        <div>
-            <h5 class="sheet-title mb-0" id="detailPanelLabel">Édition</h5>
-            <div class="sheet-subtitle">Modifiez les informations ci-dessous.</div>
+    </style>
+    <div class="offcanvas offcanvas-end offcanvas-sheet shadow-none"
+         tabindex="-1"
+         id="detailPanel"
+         aria-labelledby="detailPanelLabel"
+         data-bs-backdrop="true">
+        <div class="offcanvas-header offcanvas-header-sheet d-flex align-items-start justify-content-between">
+            <div>
+                <h5 class="sheet-title mb-0" id="detailPanelLabel">
+                    Édition
+                </h5>
+                <div class="sheet-subtitle">
+                    Modifiez les informations ci-dessous.
+                </div>
+            </div>
+            <button type="button"
+                    class="btn-close-custom p-0"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+            </button>
         </div>
-        <button type="button" class="btn-close-custom p-0" data-bs-dismiss="offcanvas" aria-label="Close">
-            <i class="bi bi-x-lg"></i>
-        </button>
-    </div>
-
-    <div class="offcanvas-body px-5 py-4" id="detailContent">
-        <!-- Content loaded via HTMX -->
-        <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
-            <div class="spinner-border text-secondary mb-3" role="status" style="width: 2rem; height: 2rem;"></div>
-            <div class="small fw-medium">Chargement des données...</div>
+        <div class="offcanvas-body px-5 py-4" id="detailContent">
+            <!-- Content loaded via HTMX -->
+            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+                <div class="spinner-border text-secondary mb-3"
+                     role="status"
+                     style="width: 2rem;
+                            height: 2rem">
+                </div>
+                <div class="small fw-medium">
+                    Chargement des données...
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
-<script>
+    <script>
     // Auto-submit on Enter in filters
     document.querySelectorAll('.filter-input').forEach(input => {
         input.addEventListener('keypress', function (e) {
@@ -421,5 +437,5 @@
             if (container) container.style.filter = 'none';
         });
     });
-</script>
+    </script>
 {% endblock %}

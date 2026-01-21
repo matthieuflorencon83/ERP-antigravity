@@ -1,5 +1,4 @@
 import pandas as pd
-import sys
 
 file_path = "Articles-fournisseur.xlsm"
 output_file = "duplicates_report.txt"

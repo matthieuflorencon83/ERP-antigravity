@@ -2,96 +2,109 @@
     <table class="table table-striped table-hover align-middle mb-0">
         <thead class="table-light">
             <tr>
-                <th scope="col">Client</th>
-                <th scope="col">Type</th>
-                <th scope="col" class="min-w-250px">Contacts</th>
-                <th scope="col">Lieu</th>
-                <th scope="col" class="text-end">Actions</th>
+                <th scope="col">
+                    Client
+                </th>
+                <th scope="col">
+                    Type
+                </th>
+                <th scope="col" class="min-w-250px">
+                    Contacts
+                </th>
+                <th scope="col">
+                    Lieu
+                </th>
+                <th scope="col" class="text-end">
+                    Actions
+                </th>
             </tr>
         </thead>
         <tbody>
             {% for client in clients %}
-            <tr>
-                <td>
-                    <div class="fw-bold text-dark">{{ client.nom|upper }} {{ client.prenom|default:'' }}</div>
-                    {% if client.siret %}
-                    <small class="text-muted fs-085">SIRET: {{ client.siret }}</small>
-                    {% endif %}
-                </td>
-
-                <td>
-                    {% if client.type_tiers == 'PROFESSIONNEL' %}
-                    <span class="badge bg-primary text-white">PRO</span>
-                    {% else %}
-                    <span class="badge bg-success text-white">PARTICULIER</span>
-                    {% endif %}
-                </td>
-
-                <td>
-                    <div class="mb-1">
-                        {% if client.telephone_client %}
-                        <a href="tel:{{ client.telephone_client }}" class="text-decoration-none text-dark d-block mb-1"
-                            title="Appeler Standard">
-                            <i class="bi bi-telephone-fill me-1 text-primary"></i> {{ client.telephone_client }}
-                        </a>
+                <tr>
+                    <td>
+                        <div class="fw-bold text-dark">
+                            {{ client.nom|upper }} {{ client.prenom|default:'' }}
+                        </div>
+                        {% if client.siret %}
+                            <small class="text-muted fs-085">SIRET: {{ client.siret }}</small>
                         {% endif %}
-                        {% if client.email_client %}
-                        <a href="mailto:{{ client.email_client }}" class="text-decoration-none text-secondary d-block"
-                            title="Email Standard">
-                            <i class="bi bi-envelope-fill me-1"></i> {{ client.email_client|truncatechars:30 }}
-                        </a>
-                        {% endif %}
-                        {% if not client.telephone_client and not client.email_client %}
-                        <span class="text-muted small">- Aucun contact principal -</span>
-                        {% endif %}
-                    </div>
-
-                    {% if client.corecontact_set.all %}
-                    <hr class="my-1 border-secondary opacity-25">
-                    {% for contact in client.corecontact_set.all %}
-                    <div class="small mt-1 ps-2 border-start border-3 border-info">
-                        <strong>{{ contact.prenom }} {{ contact.nom }}</strong>
-                        <span class="badge bg-secondary-subtle text-secondary-emphasis border ms-1">{{
-                            contact.type_contact }}</span>
-                        <br>
-                        <a href="tel:{{ contact.telephone }}" class="text-muted text-decoration-none me-2">
-                            <i class="bi bi-telephone me-1"></i>{{ contact.telephone }}
-                        </a>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                </td>
-
-                <td>
-                    <div class="small text-muted">
-                        {% if client.adresse_chantier %}
-                        <i class="bi bi-geo-alt-fill text-danger me-1"></i>
-                        <strong>Chantier :</strong><br>
-                        {{ client.adresse_chantier|truncatechars:40 }}
-                        {% elif client.adresse_facturation %}
-                        <i class="bi bi-file-text me-1"></i>
-                        Facturation :<br>
-                        {{ client.adresse_facturation|truncatechars:40 }}
+                    </td>
+                    <td>
+                        {% if client.type_tiers == 'PROFESSIONNEL' %}
+                            <span class="badge bg-primary text-white">PRO</span>
                         {% else %}
-                        <span class="text-muted">-</span>
+                            <span class="badge bg-success text-white">PARTICULIER</span>
                         {% endif %}
-                    </div>
-                </td>
-
-                <td class="text-end">
-                    <a href="{% url 'client_edit' client.pk %}" class="btn btn-sm btn-outline-secondary"
-                        title="Modifier">
-                        <i class="bi bi-pencil-square"></i>
-                    </a>
-                </td>
-            </tr>
+                    </td>
+                    <td>
+                        <div class="mb-1">
+                            {% if client.telephone_client %}
+                                <a href="tel:{{ client.telephone_client }}"
+                                   class="text-decoration-none text-dark d-block mb-1"
+                                   title="Appeler Standard">
+                                    <i class="bi bi-telephone-fill me-1 text-primary"></i> {{ client.telephone_client }}
+                                </a>
+                            {% endif %}
+                            {% if client.email_client %}
+                                <a href="mailto:{{ client.email_client }}"
+                                   class="text-decoration-none text-secondary d-block"
+                                   title="Email Standard">
+                                    <i class="bi bi-envelope-fill me-1"></i> {{ client.email_client|truncatechars:30 }}
+                                </a>
+                            {% endif %}
+                            {% if not client.telephone_client and not client.email_client %}
+                                <span class="text-muted small">- Aucun contact principal -</span>
+                            {% endif %}
+                        </div>
+                        {% if client.corecontact_set.all %}
+                            <hr class="my-1 border-secondary opacity-25">
+                            {% for contact in client.corecontact_set.all %}
+                                <div class="small mt-1 ps-2 border-start border-3 border-info">
+                                    <strong>{{ contact.prenom }} {{ contact.nom }}</strong>
+                                    <span class="badge bg-secondary-subtle text-secondary-emphasis border ms-1">{{
+                                    contact.type_contact }}</span>
+                                    <br>
+                                    <a href="tel:{{ contact.telephone }}"
+                                       class="text-muted text-decoration-none me-2">
+                                        <i class="bi bi-telephone me-1"></i>{{ contact.telephone }}
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="small text-muted">
+                            {% if client.adresse_chantier %}
+                                <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                                <strong>Chantier :</strong>
+                                <br>
+                                {{ client.adresse_chantier|truncatechars:40 }}
+                            {% elif client.adresse_facturation %}
+                                <i class="bi bi-file-text me-1"></i>
+                                Facturation :
+                                <br>
+                                {{ client.adresse_facturation|truncatechars:40 }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'client_edit' client.pk %}"
+                           class="btn btn-sm btn-outline-secondary"
+                           title="Modifier">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </td>
+                </tr>
             {% empty %}
-            <tr>
-                <td colspan="5" class="text-center py-5 text-muted">
-                    <i class="bi bi-search display-6 d-block mb-3 opacity-50"></i>
-                    Aucun client trouvé pour <strong>"{{ query }}"</strong>.
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="5" class="text-center py-5 text-muted">
+                        <i class="bi bi-search display-6 d-block mb-3 opacity-50"></i>
+                        Aucun client trouvé pour <strong>"{{ query }}"</strong>.
+                    </td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>

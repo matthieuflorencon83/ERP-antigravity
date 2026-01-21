@@ -1,53 +1,77 @@
-<div class="modal fade" id="articleDetailModal" tabindex="-1" aria-hidden="true">
+<div class="modal fade"
+     id="articleDetailModal"
+     tabindex="-1"
+     aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header bg-body-tertiary">
                 <h5 class="modal-title">
                     <i class="bi bi-box me-2 opacity-50"></i>{{ article.designation }}
                 </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
             </div>
             <div class="modal-body p-0">
                 <div class="row g-0">
                     <div class="col-md-8 p-4">
                         <div class="mb-4">
-                            <label class="small text-muted text-uppercase fw-bold mb-1">Information Principale</label>
+                            <label class="small text-muted text-uppercase fw-bold mb-1">
+                                Information Principale
+                            </label>
                             <table class="table table-sm table-borderless mb-0">
                                 <tr>
-                                    <td class="text-muted w-25">Réf. Fournisseur</td>
-                                    <td class="fw-bold fs-5 font-monospace text-primary">{{
-                                        article.ref_fournisseur|default:"-" }}</td>
+                                    <td class="text-muted w-25">
+                                        Réf. Fournisseur
+                                    </td>
+                                    <td class="fw-bold fs-5 font-monospace text-primary">
+                                        {{
+                                        article.ref_fournisseur|default:"-" }}
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-muted">Unités</td>
-                                    <td class="font-monospace">{{ article.unite|default:"-" }}</td>
+                                    <td class="text-muted">
+                                        Unités
+                                    </td>
+                                    <td class="font-monospace">
+                                        {{ article.unite|default:"-" }}
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td class="text-muted">Famille / Sous-Famille</td>
+                                    <td class="text-muted">
+                                        Famille / Sous-Famille
+                                    </td>
                                     <td>
                                         <span class="badge bg-secondary-subtle text-secondary-emphasis">{{
-                                            article.famille|default:"-" }}</span>
+                                        article.famille|default:"-" }}</span>
                                         <i class="bi bi-chevron-right small text-muted mx-1"></i>
                                         <span class="badge bg-secondary-subtle text-secondary-emphasis">{{
-                                            article.sous_famille|default:"-" }}</span>
+                                        article.sous_famille|default:"-" }}</span>
                                     </td>
                                 </tr>
                             </table>
                         </div>
-
                         <div>
-                            <label class="small text-muted text-uppercase fw-bold mb-1">Détails Logistique &
-                                Achat</label>
+                            <label class="small text-muted text-uppercase fw-bold mb-1">
+                                Détails Logistique &
+                                Achat
+                            </label>
                             <div class="d-flex gap-3 mt-2">
                                 <div class="p-3 bg-body-tertiary rounded flex-grow-1 border">
-                                    <div class="small text-muted mb-1">Fournisseur</div>
+                                    <div class="small text-muted mb-1">
+                                        Fournisseur
+                                    </div>
                                     <div class="fw-bold d-flex align-items-center">
                                         <i class="bi bi-truck me-2"></i>
                                         {{ article.fournisseur.nom_fournisseur|default:"-" }}
                                     </div>
                                 </div>
                                 <div class="p-3 bg-body-tertiary rounded flex-grow-1 border">
-                                    <div class="small text-muted mb-1">Prix Achat HT</div>
+                                    <div class="small text-muted mb-1">
+                                        Prix Achat HT
+                                    </div>
                                     <div class="fw-bold text-success d-flex align-items-center">
                                         <i class="bi bi-currency-euro me-2"></i>
                                         {{ article.prix_achat|default:"-" }} €
@@ -55,28 +79,30 @@
                                 </div>
                             </div>
                         </div>
-
                         {% if article.description %}
-                        <div class="mt-4">
-                            <label class="small text-muted text-uppercase fw-bold mb-1">Description</label>
-                            <div class="p-3 bg-body-tertiary rounded text-muted small fst-italic">
-                                {{ article.description|linebreaks }}
+                            <div class="mt-4">
+                                <label class="small text-muted text-uppercase fw-bold mb-1">
+                                    Description
+                                </label>
+                                <div class="p-3 bg-body-tertiary rounded text-muted small fst-italic">
+                                    {{ article.description|linebreaks }}
+                                </div>
                             </div>
-                        </div>
                         {% endif %}
                     </div>
-
                     <!-- Sidebar Info / Image placeholder -->
-                    <div
-                        class="col-md-4 bg-body-tertiary border-start p-4 text-center d-flex flex-column justify-content-center">
+                    <div class="col-md-4 bg-body-tertiary border-start p-4 text-center d-flex flex-column justify-content-center">
                         <div class="text-muted">
                             <i class="bi bi-image display-1 opacity-25"></i>
-                            <p class="small mt-2">Aucune image disponible</p>
+                            <p class="small mt-2">
+                                Aucune image disponible
+                            </p>
                         </div>
                         <!-- Valid actions could go here -->
                         <div class="mt-auto pt-4 d-grid">
-                            <button type="button" class="btn btn-outline-primary"
-                                data-bs-dismiss="modal">Fermer</button>
+                            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">
+                                Fermer
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -84,7 +110,6 @@
         </div>
     </div>
 </div>
-
 <script>
     // Auto-show logic handled by caller or HTMX behavior
     var myModal = new bootstrap.Modal(document.getElementById('articleDetailModal'));

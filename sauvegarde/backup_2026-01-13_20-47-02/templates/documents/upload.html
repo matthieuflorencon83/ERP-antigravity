@@ -1,94 +1,143 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
-
-{% block extra_css %}{% endblock %}
-
+{% block extra_css %}
+{% endblock %}
 {% block page_title %}
-Validation Documents (V1)
+    Validation Documents (V1)
 {% endblock %}
-
 {% block header_actions %}
-<form method="post" enctype="multipart/form-data" hx-boost="false" class="d-flex align-items-center gap-2">
-    {% csrf_token %}
-    <select class="form-select form-select-sm doc-type-select-old" name="document_type" aria-label="Type de document"
-        title="Type de document">
-        <option value="" {% if not doc_type_selected %}selected{% endif %}>-- Type de Document --</option>
-        <option value="DEVIS_CLIENT" {% if doc_type_selected=="DEVIS_CLIENT" %}selected{% endif %}>Devis Client</option>
-        <option value="BON_COMMANDE" {% if doc_type_selected=="BON_COMMANDE" %}selected{% endif %}>Bon de Commande
-        </option>
-        <option value="ARC_FOURNISSEUR" {% if doc_type_selected=="ARC_FOURNISSEUR" %}selected{% endif %}>ARC Fournisseur
-        </option>
-        <option value="BON_LIVRAISON" {% if doc_type_selected=="BON_LIVRAISON" %}selected{% endif %}>Bon de Livraison
-        </option>
-        <option value="FICHE_FOURNISSEUR" {% if doc_type_selected=="FICHE_FOURNISSEUR" %}selected{% endif %}>Fiche
-            Fournisseur</option>
-        <option value="FICHE_CLIENT" {% if doc_type_selected=="FICHE_CLIENT" %}selected{% endif %}>Fiche Client</option>
-        <option value="FICHE_ARTICLE" {% if doc_type_selected=="FICHE_ARTICLE" %}selected{% endif %}>Fiche Article
-        </option>
-    </select>
-
-    <label class="btn btn-primary btn-sm d-flex align-items-center gap-2" for="headerFile">
-        <i class="bi bi-cloud-upload" aria-hidden="true"></i>
-        <span>Importer</span>
-    </label>
-    <input type="file" id="headerFile" name="file" required class="d-none" onchange="this.form.submit()"
-        aria-label="Fichier" title="Choisir un fichier">
-</form>
+    <form method="post"
+          enctype="multipart/form-data"
+          hx-boost="false"
+          class="d-flex align-items-center gap-2">
+        {% csrf_token %}
+        <select class="form-select form-select-sm doc-type-select-old"
+                name="document_type"
+                aria-label="Type de document"
+                title="Type de document">
+            <option value="" {% if not doc_type_selected %}selected{% endif %}>
+                -- Type de Document --
+            </option>
+            <option value="DEVIS_CLIENT"
+                    {% if doc_type_selected=="DEVIS_CLIENT" %}
+                        selected
+                    {% endif %}>
+                Devis Client
+            </option>
+            <option value="BON_COMMANDE"
+                    {% if doc_type_selected=="BON_COMMANDE" %}
+                        selected
+                    {% endif %}>
+                Bon de Commande
+            </option>
+            <option value="ARC_FOURNISSEUR"
+                    {% if doc_type_selected=="ARC_FOURNISSEUR" %}
+                        selected
+                    {% endif %}>
+                ARC Fournisseur
+            </option>
+            <option value="BON_LIVRAISON"
+                    {% if doc_type_selected=="BON_LIVRAISON" %}
+                        selected
+                    {% endif %}>
+                Bon de Livraison
+            </option>
+            <option value="FICHE_FOURNISSEUR"
+                    {% if doc_type_selected=="FICHE_FOURNISSEUR" %}
+                        selected
+                    {% endif %}>
+                Fiche
+                Fournisseur
+            </option>
+            <option value="FICHE_CLIENT"
+                    {% if doc_type_selected=="FICHE_CLIENT" %}
+                        selected
+                    {% endif %}>
+                Fiche Client
+            </option>
+            <option value="FICHE_ARTICLE"
+                    {% if doc_type_selected=="FICHE_ARTICLE" %}
+                        selected
+                    {% endif %}>
+                Fiche Article
+            </option>
+        </select>
+        <label class="btn btn-primary btn-sm d-flex align-items-center gap-2"
+               for="headerFile">
+            <i class="bi bi-cloud-upload" aria-hidden="true"></i>
+            <span>Importer</span>
+        </label>
+        <input type="file"
+               id="headerFile"
+               name="file"
+               required
+               class="d-none"
+               onchange="this.form.submit()"
+               aria-label="Fichier"
+               title="Choisir un fichier">
+    </form>
 {% endblock %}
-
 {% block content %}
-<div class="d-flex flex-column h-100 page-container-old">
-    <div class="flex-grow-1 overflow-hidden">
-        {% if document %}
-        <div class="row h-100 g-0">
-            <div class="col-md-5 bg-dark">
-                {% if document.fichier %}
-                <embed src="{{ document.fichier.url }}" width="100%" height="100%" type="application/pdf"
-                    title="Document PDF">
-                {% else %}
-                <div class="h-100 d-flex align-items-center justify-content-center text-white">Aucun PDF</div>
-                {% endif %}
-            </div>
-
-            <div class="col-md-7 bg-light overflow-auto">
-                <div class="p-4">
-                    <form method="post" action="{% url 'document_detail' document.id %}">
-                        {% csrf_token %}
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <h4 class="mb-0 fw-bold">Validation Document</h4>
-                            <span class="badge bg-primary fs-6">{{ document.type_document|default:"Non reconnu"
-                                }}</span>
-                        </div>
-
-                        {% include "documents/partials/articles_table_simple.html" %}
-
-                        <div
-                            class="fixed-bottom col-md-7 offset-md-5 p-3 bg-white border-top shadow-lg d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="text-muted me-2">Total Estimé HT :</span>
-                                <span class="h4 text-primary mb-0">
-                                    {{ analysis_result.commande.prix_total_ht|floatformat:2 }} €
-                                </span>
+    <div class="d-flex flex-column h-100 page-container-old">
+        <div class="flex-grow-1 overflow-hidden">
+            {% if document %}
+                <div class="row h-100 g-0">
+                    <div class="col-md-5 bg-dark">
+                        {% if document.fichier %}
+                            <embed src="{{ document.fichier.url }}"
+                                   width="100%"
+                                   height="100%"
+                                   type="application/pdf"
+                                   title="Document PDF">
+                        {% else %}
+                            <div class="h-100 d-flex align-items-center justify-content-center text-white">
+                                Aucun PDF
                             </div>
-                            <button type="submit" class="btn btn-success px-4 fw-bold">
-                                <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i> VALIDER & INTÉGRER
-                            </button>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-7 bg-light overflow-auto">
+                        <div class="p-4">
+                            <form method="post" action="{% url 'document_detail' document.id %}">
+                                {% csrf_token %}
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h4 class="mb-0 fw-bold">
+                                        Validation Document
+                                    </h4>
+                                    <span class="badge bg-primary fs-6">{{ document.type_document|default:"Non reconnu"
+                                    }}</span>
+                                </div>
+                                {% include "documents/partials/articles_table_simple.html" %}
+                                <div class="fixed-bottom col-md-7 offset-md-5 p-3 bg-white border-top shadow-lg d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="text-muted me-2">Total Estimé HT :</span>
+                                        <span class="h4 text-primary mb-0">
+                                            {{ analysis_result.commande.prix_total_ht|floatformat:2 }} €
+                                        </span>
+                                    </div>
+                                    <button type="submit" class="btn btn-success px-4 fw-bold">
+                                        <i class="bi bi-check-circle-fill me-2" aria-hidden="true"></i> VALIDER & INTÉGRER
+                                    </button>
+                                </div>
+                                <div class="footer-spacer">
+                                </div>
+                            </form>
                         </div>
-                        <div class="footer-spacer"></div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            {% else %}
+                <div class="d-flex align-items-center justify-content-center h-100 bg-light rounded-3 empty-state-old">
+                    <div class="text-center text-muted opacity-50">
+                        <i class="bi bi-arrow-up-circle display-1 mb-3" aria-hidden="true"></i>
+                        <h3>
+                            Commencez ici
+                        </h3>
+                        <p>
+                            Cliquez sur le bouton <strong>'Importer'</strong> en haut à droite
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-        {% else %}
-        <div class="d-flex align-items-center justify-content-center h-100 bg-light rounded-3 empty-state-old">
-            <div class="text-center text-muted opacity-50">
-                <i class="bi bi-arrow-up-circle display-1 mb-3" aria-hidden="true"></i>
-                <h3>Commencez ici</h3>
-                <p>Cliquez sur le bouton <strong>'Importer'</strong> en haut à droite</p>
-            </div>
-        </div>
-        {% endif %}
     </div>
-</div>
 {% endblock %}

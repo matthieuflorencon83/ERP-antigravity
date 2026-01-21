@@ -1,22 +1,26 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="h2 mb-4">Tableau de Bord</h1>
-
-            <!-- Example Card -->
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Bienvenue sur Antigravity ERP</h5>
-                    <p class="card-text">Interface initialisée avec succès.</p>
-                    <button class="btn btn-primary" hx-get="/test-htmx" hx-swap="outerHTML">
-                        Test HTMX Interaction (TODO)
-                    </button>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="h2 mb-4">
+                    Tableau de Bord
+                </h1>
+                <!-- Example Card -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Bienvenue sur Antigravity ERP
+                        </h5>
+                        <p class="card-text">
+                            Interface initialisée avec succès.
+                        </p>
+                        <button class="btn btn-primary" hx-get="/test-htmx" hx-swap="outerHTML">
+                            Test HTMX Interaction (TODO)
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

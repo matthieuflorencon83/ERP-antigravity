@@ -1,6 +1,5 @@
 <form method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
-
     <style>
         /* 2026 Form Controls - Clean & Solid */
         .form-label-clean {
@@ -57,60 +56,61 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
     </style>
-
     {% if form.non_field_errors %}
-    <div class="alert alert-danger border-0 bg-danger-subtle text-danger rounded-3 mb-4">
-        {% for error in form.non_field_errors %}
-        <div class="d-flex align-items-center"><i class="bi bi-x-circle-fill me-2"></i>{{ error }}</div>
-        {% endfor %}
-    </div>
+        <div class="alert alert-danger border-0 bg-danger-subtle text-danger rounded-3 mb-4">
+            {% for error in form.non_field_errors %}
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-x-circle-fill me-2"></i>{{ error }}
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
-
     <div class="d-grid gap-4">
         {% for field in form %}
-        <div class="form-group {% if field.field.widget.input_type == 'textarea' %}w-100{% endif %}">
-            <label for="{{ field.id_for_label }}" class="form-label-clean">
-                {{ field.label }}
-                {% if field.field.required %}<span class="text-danger ms-1">*</span>{% endif %}
-            </label>
-
-            <!-- Render Field Manual Wrapper for styling injection -->
-            <!-- We assume utilizing widget tweaks or simply targeting standard classes via JS/CSS replacers if straightforward logic fails -->
-            <!-- But here we can wrap it or just use the class defined above if we could generic class it. -->
-            <!-- Since we can't easily inject classes into django form fields without widget tweaks in python, we rely on a JS helper to add 'input-clean' OR we use CSS selector on 'input', 'select', 'textarea' inside form-group -->
-
-            {{ field }}
-
-            {% if field.help_text %}
-            <div class="form-text mt-2 text-muted" style="font-size: 0.8rem; line-height: 1.4;">
-                {{ field.help_text|safe }}
+            <div class="form-group
+                        {% if field.field.widget.input_type == 'textarea' %}
+                            w-100
+                        {% endif %}">
+                <label for="{{ field.id_for_label }}" class="form-label-clean">
+                    {{ field.label }}
+                    {% if field.field.required %}
+                        <span class="text-danger ms-1">*</span>
+                    {% endif %}
+                </label>
+                <!-- Render Field Manual Wrapper for styling injection -->
+                <!-- We assume utilizing widget tweaks or simply targeting standard classes via JS/CSS replacers if straightforward logic fails -->
+                <!-- But here we can wrap it or just use the class defined above if we could generic class it. -->
+                <!-- Since we can't easily inject classes into django form fields without widget tweaks in python, we rely on a JS helper to add 'input-clean' OR we use CSS selector on 'input', 'select', 'textarea' inside form-group -->
+                {{ field }}
+                {% if field.help_text %}
+                    <div class="form-text mt-2 text-muted"
+                         style="font-size: 0.8rem;
+                                line-height: 1.4">
+                        {{ field.help_text|safe }}
+                    </div>
+                {% endif %}
+                {% if field.errors %}
+                    <div class="invalid-feedback d-block mt-1 small fw-medium">
+                        {% for error in field.errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
-            {% endif %}
-
-            {% if field.errors %}
-            <div class="invalid-feedback d-block mt-1 small fw-medium">
-                {% for error in field.errors %}
-                {{ error }}
-                {% endfor %}
-            </div>
-            {% endif %}
-        </div>
         {% endfor %}
     </div>
-
     <!-- Actions -->
     <div class="d-flex justify-content-end align-items-center mt-5 pt-3">
         {% if not is_htmx %}
-        <a href="javascript:history.back()" class="text-decoration-none text-muted fw-medium me-auto small">
-            <i class="bi bi-arrow-left me-1"></i> Annuler
-        </a>
+            <a href="javascript:history.back()"
+               class="text-decoration-none text-muted fw-medium me-auto small">
+                <i class="bi bi-arrow-left me-1"></i> Annuler
+            </a>
         {% endif %}
-
         <button type="submit" class="btn-primary-2026 w-100 w-sm-auto">
             Enregistrer les modifications
         </button>
     </div>
-
     <script>
         // Apply 2026 styles to Django-rendered inputs automatically
         document.querySelectorAll('input:not([type=checkbox]):not([type=radio]), select, textarea').forEach(el => {

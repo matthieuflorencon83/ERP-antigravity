@@ -8,7 +8,6 @@ from apps.ventes.models import Affaire
 from apps.achats.models import Commande
 # REFACTOR: Import from new service layer
 from apps.ged.services import analyze_document, save_extracted_data, format_form_data
-from decimal import Decimal
 import logging
 
 logger = logging.getLogger(__name__)
@@ -127,7 +126,7 @@ def document_detail(request, pk):
                 elif isinstance(result_obj, Commande):
                     messages.success(request, f"Commande {result_obj.numero_bdc or result_obj.numero_arc} traitée. Statut: {result_obj.get_statut_display()}")
                 elif isinstance(result_obj, Document):
-                    messages.success(request, f"Données extraites avec succès. ARC en attente de liaison (BDC introuvable).")
+                    messages.success(request, "Données extraites avec succès. ARC en attente de liaison (BDC introuvable).")
             else:
                 messages.warning(request, "Traitement effectué, mais aucun objet principal n'a été retourné.")
 

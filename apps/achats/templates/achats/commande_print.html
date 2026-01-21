@@ -1,12 +1,11 @@
 {% load custom_filters %}
 <!DOCTYPE html>
 <html lang="fr">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bon de Commande {{ commande.numero_bdc }}</title>
-    <style>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Bon de Commande {{ commande.numero_bdc }}</title>
+        <style>
         body {
             font-family: 'Helvetica', 'Arial', sans-serif;
             font-size: 12px;
@@ -178,117 +177,153 @@
             border-top: 1px solid #ddd;
             padding-top: 10px;
         }
-    </style>
-</head>
-
-<body onload="window.print()">
-
-    <!-- Header -->
-    <div class="header">
-        <div class="logo-area">
-            {% if societe.logo %}
-            <img src="{{ societe.logo.url }}" alt="Logo Société" class="logo-img">
-            {% else %}
-            {{ societe.nom_societe }}
-            {% endif %}
-        </div>
-        <div class="doc-info">
-            <div class="title">BON DE COMMANDE</div>
-            <div>N° {{ commande.numero_bdc }}</div>
-            <div>Date : {{ commande.date_commande|date:"d/m/Y" }}</div>
-        </div>
-    </div>
-
-    <!-- Adresses -->
-    <div class="addresses">
-        <div class="addr-box">
-            <div class="addr-title">Émetteur</div>
-            <div class="addr-content">
-                <strong>{{ societe.nom_societe }}</strong><br>
-                {{ societe.adresse }}<br>
-                {{ societe.code_postal }} {{ societe.ville }}<br>
-                Tél: {{ societe.telephone }}<br>
-                Email: {{ societe.email }}
-            </div>
-        </div>
-        <div class="addr-box">
-            <div class="addr-title">Fournisseur</div>
-            <div class="addr-content">
-                <strong>{{ commande.fournisseur.nom_fournisseur }}</strong><br>
-                {{ commande.fournisseur.adresse|default:"Adresse non renseignée"|linebreaksbr }}<br>
-                {% if commande.fournisseur.contact_nom %}
-                Attn: {{ commande.fournisseur.contact_nom }}
+        </style>
+    </head>
+    <body onload="window.print()">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                {% if societe.logo %}
+                    <img src="{{ societe.logo.url }}" alt="Logo Société" class="logo-img">
+                {% else %}
+                    {{ societe.nom_societe }}
                 {% endif %}
             </div>
+            <div class="doc-info">
+                <div class="title">
+                    BON DE COMMANDE
+                </div>
+                <div>
+                    N° {{ commande.numero_bdc }}
+                </div>
+                <div>
+                    Date : {{ commande.date_commande|date:"d/m/Y" }}
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Extra Details -->
-    <div class="details-bar">
-        <div class="detail-item"><strong>Affaire :</strong> {{ commande.affaire.nom_affaire }}</div>
-        <div class="detail-item"><strong>Contact :</strong> {{ societe.contact_principal|default:"-" }}</div>
-        <div class="detail-item"><strong>Ref. Client :</strong> {{ commande.affaire.id }}</div>
-    </div>
-
-    <!-- Lines -->
-    <table>
-        <thead>
-            <tr>
-                <th class="w-15">Réf.</th>
-                <th class="w-45">Désignation</th>
-                <th class="text-center w-10">Qté</th>
-                <th class="text-center w-10">Unité</th>
-                <th class="text-end w-10">P.U. Match</th>
-                <th class="text-end w-10">Total HT</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for line in lines %}
-            <tr>
-                <td>{{ line.article.ref_fournisseur }}</td>
-                <td>
-                    <b>{{ line.article.designation }}</b><br>
-                    {% if line.designation and line.designation != line.article.designation %}
-                    <small>{{ line.designation }}</small>
+        <!-- Adresses -->
+        <div class="addresses">
+            <div class="addr-box">
+                <div class="addr-title">
+                    Émetteur
+                </div>
+                <div class="addr-content">
+                    <strong>{{ societe.nom_societe }}</strong>
+                    <br>
+                    {{ societe.adresse }}
+                    <br>
+                    {{ societe.code_postal }} {{ societe.ville }}
+                    <br>
+                    Tél: {{ societe.telephone }}
+                    <br>
+                    Email: {{ societe.email }}
+                </div>
+            </div>
+            <div class="addr-box">
+                <div class="addr-title">
+                    Fournisseur
+                </div>
+                <div class="addr-content">
+                    <strong>{{ commande.fournisseur.nom_fournisseur }}</strong>
+                    <br>
+                    {{ commande.fournisseur.adresse|default:"Adresse non renseignée"|linebreaksbr }}
+                    <br>
+                    {% if commande.fournisseur.contact_nom %}
+                        Attn: {{ commande.fournisseur.contact_nom }}
                     {% endif %}
-                </td>
-                <td class="text-center">{{ line.quantite }}</td>
-                <td class="text-center">{{ line.unite|default:"U" }}</td>
-                <td class="text-end">{{ line.prix_unitaire|floatformat:2 }} €</td>
-                <td class="text-end fw-bold">{{ line.total_ligne|floatformat:2 }} €</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <!-- Generic Box for Notes -->
-    <div class="notes-box">
-        <strong>Notes :</strong><br>
-        Merci de bien vouloir accuser réception de cette commande.
-    </div>
-
-    <!-- Totals -->
-    <div class="footer-totals">
-        <div class="total-row">
-            <span>Total HT :</span>
-            <span>{{ commande.total_ht|floatformat:2 }} €</span>
+                </div>
+            </div>
         </div>
-        <div class="total-row">
-            <span>TVA (20%) :</span>
-            <span>{{ commande.tva|floatformat:2 }} €</span>
+        <!-- Extra Details -->
+        <div class="details-bar">
+            <div class="detail-item">
+                <strong>Affaire :</strong> {{ commande.affaire.nom_affaire }}
+            </div>
+            <div class="detail-item">
+                <strong>Contact :</strong> {{ societe.contact_principal|default:"-" }}
+            </div>
+            <div class="detail-item">
+                <strong>Ref. Client :</strong> {{ commande.affaire.id }}
+            </div>
         </div>
-        <div class="total-row total-final">
-            <span>Total TTC :</span>
-            <span>{{ commande.total_ttc|floatformat:2 }} €</span>
+        <!-- Lines -->
+        <table>
+            <thead>
+                <tr>
+                    <th class="w-15">
+                        Réf.
+                    </th>
+                    <th class="w-45">
+                        Désignation
+                    </th>
+                    <th class="text-center w-10">
+                        Qté
+                    </th>
+                    <th class="text-center w-10">
+                        Unité
+                    </th>
+                    <th class="text-end w-10">
+                        P.U. Match
+                    </th>
+                    <th class="text-end w-10">
+                        Total HT
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in lines %}
+                    <tr>
+                        <td>
+                            {{ line.article.ref_fournisseur }}
+                        </td>
+                        <td>
+                            <b>{{ line.article.designation }}</b>
+                            <br>
+                            {% if line.designation and line.designation != line.article.designation %}
+                                <small>{{ line.designation }}</small>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {{ line.quantite }}
+                        </td>
+                        <td class="text-center">
+                            {{ line.unite|default:"U" }}
+                        </td>
+                        <td class="text-end">
+                            {{ line.prix_unitaire|floatformat:2 }} €
+                        </td>
+                        <td class="text-end fw-bold">
+                            {{ line.total_ligne|floatformat:2 }} €
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Generic Box for Notes -->
+        <div class="notes-box">
+            <strong>Notes :</strong>
+            <br>
+            Merci de bien vouloir accuser réception de cette commande.
         </div>
-    </div>
-
-    <!-- Legal Footer -->
-    <div class="legal-footer">
-        {{ societe.nom_societe }} - {{ societe.adresse }} {{ societe.code_postal }} {{ societe.ville }} - SIRET: {{
-        societe.siret }}
-    </div>
-
-</body>
-
+        <!-- Totals -->
+        <div class="footer-totals">
+            <div class="total-row">
+                <span>Total HT :</span>
+                <span>{{ commande.total_ht|floatformat:2 }} €</span>
+            </div>
+            <div class="total-row">
+                <span>TVA (20%) :</span>
+                <span>{{ commande.tva|floatformat:2 }} €</span>
+            </div>
+            <div class="total-row total-final">
+                <span>Total TTC :</span>
+                <span>{{ commande.total_ttc|floatformat:2 }} €</span>
+            </div>
+        </div>
+        <!-- Legal Footer -->
+        <div class="legal-footer">
+            {{ societe.nom_societe }} - {{ societe.adresse }} {{ societe.code_postal }} {{ societe.ville }} - SIRET: {{
+            societe.siret }}
+        </div>
+    </body>
 </html>

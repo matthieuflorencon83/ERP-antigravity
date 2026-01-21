@@ -1,86 +1,115 @@
 {% extends 'core/list_generic.html' %}
-
 {% block list_title %}
-<i class="bi bi-box-seam-fill text-primary me-2"></i>Articles
+    <i class="bi bi-box-seam-fill text-primary me-2"></i>Articles
 {% endblock %}
-
 {% block table_headers %}
-<th style="width: 30%;">Article</th>
-<th style="width: 20%;">Fournisseur</th>
-<th style="width: 15%;">Réf Usine</th>
-<th style="width: 15%;" class="text-end">Prix Achat</th>
-<th style="width: 10%;" class="text-center">Unité</th>
+    <th style="width: 30%;">
+        Article
+    </th>
+    <th style="width: 20%;">
+        Fournisseur
+    </th>
+    <th style="width: 15%;">
+        Réf Usine
+    </th>
+    <th style="width: 15%;" class="text-end">
+        Prix Achat
+    </th>
+    <th style="width: 10%;" class="text-center">
+        Unité
+    </th>
 {% endblock %}
-
 {% block table_filters %}
-<th>
-    <input type="text" name="designation" class="filter-input" placeholder="Filtrer désignation..."
-        value="{{ filters.designation }}">
-</th>
-<th>
-    <input type="text" name="fournisseur" class="filter-input" placeholder="Fournisseur..."
-        value="{{ filters.fournisseur }}">
-</th>
-<th>
-    <input type="text" name="ref" class="filter-input" placeholder="Réf..." value="{{ filters.ref }}">
-</th>
-<!-- No filters for price/unit for now -->
-<th></th>
-<th></th>
+    <th>
+        <input type="text"
+               name="designation"
+               class="filter-input"
+               placeholder="Filtrer désignation..."
+               value="{{ filters.designation }}">
+    </th>
+    <th>
+        <input type="text"
+               name="fournisseur"
+               class="filter-input"
+               placeholder="Fournisseur..."
+               value="{{ filters.fournisseur }}">
+    </th>
+    <th>
+        <input type="text"
+               name="ref"
+               class="filter-input"
+               placeholder="Réf..."
+               value="{{ filters.ref }}">
+    </th>
+    <!-- No filters for price/unit for now -->
+    <th>
+    </th>
+    <th>
+    </th>
 {% endblock %}
-
 {% block table_rows %}
-{% for art in articles %}
-<tr class="align-middle clickable-row" hx-get="{% url 'article_edit' art.pk %}" hx-target="#detailSidebarContent"
-    hx-swap="innerHTML" style="cursor: pointer;">
-    <td>
-        <div class="fw-bold text-dark small">{{ art.designation }}</div>
-        {% if art.code_article %}
-        <div class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-upc-scan me-1"></i>{{ art.code_article }}
-        </div>
-        {% endif %}
-    </td>
-    <td>
-        {% if art.fournisseur %}
-        <div class="small text-secondary">
-            <i class="bi bi-truck me-1"></i>{{ art.fournisseur.nom_fournisseur|truncatechars:25 }}
-        </div>
-        {% else %}
-        <span class="text-muted small fst-italic">-</span>
-        {% endif %}
-    </td>
-    <td class="font-monospace text-muted small">
-        {{ art.ref_fournisseur|default:"-" }}
-    </td>
-    <td class="text-end fw-bold text-primary small">
-        {{ art.prix_unitaire_ht|floatformat:2 }} €
-    </td>
-    <td class="text-center">
-        <span class="badge bg-light text-dark border">{{ art.unite|upper|default:"U" }}</span>
-    </td>
-
-    <td class="text-end">
-        <div class="row-actions">
-            <a href="{% url 'article_edit' art.pk %}" class="action-btn" title="Modifier">
-                <i class="bi bi-pencil-fill"></i>
-            </a>
-            <a href="#" class="action-btn text-danger" title="Supprimer" onclick="alert('Fonctionnalité à venir')">
-                <i class="bi bi-trash-fill"></i>
-            </a>
-        </div>
-    </td>
-</tr>
-{% empty %}
-<tr>
-    <td colspan="6" class="text-center py-5 text-muted fst-italic">
-        Aucun article trouvé.
-    </td>
-</tr>
-{% endfor %}
+    {% for art in articles %}
+        <tr class="align-middle clickable-row"
+            hx-get="{% url 'article_edit' art.pk %}"
+            hx-target="#detailSidebarContent"
+            hx-swap="innerHTML"
+            style="cursor: pointer">
+            <td>
+                <div class="fw-bold text-dark small">
+                    {{ art.designation }}
+                </div>
+                {% if art.code_article %}
+                    <div class="text-muted" style="font-size: 0.75rem;">
+                        <i class="bi bi-upc-scan me-1"></i>{{ art.code_article }}
+                    </div>
+                {% endif %}
+            </td>
+            <td>
+                {% if art.fournisseur %}
+                    <div class="small text-secondary">
+                        <i class="bi bi-truck me-1"></i>{{ art.fournisseur.nom_fournisseur|truncatechars:25 }}
+                    </div>
+                {% else %}
+                    <span class="text-muted small fst-italic">-</span>
+                {% endif %}
+            </td>
+            <td class="font-monospace text-muted small">
+                {{ art.ref_fournisseur|default:"-" }}
+            </td>
+            <td class="text-end fw-bold text-primary small">
+                {{ art.prix_unitaire_ht|floatformat:2 }} €
+            </td>
+            <td class="text-center">
+                <span class="badge bg-light text-dark border">{{ art.unite|upper|default:"U" }}</span>
+            </td>
+            <td class="text-end">
+                <div class="row-actions">
+                    <a href="{% url 'article_edit' art.pk %}"
+                       class="action-btn"
+                       title="Modifier">
+                        <i class="bi bi-pencil-fill"></i>
+                    </a>
+                    <a href="#"
+                       class="action-btn text-danger"
+                       title="Supprimer"
+                       onclick="alert('Fonctionnalité à venir')">
+                        <i class="bi bi-trash-fill"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="6" class="text-center py-5 text-muted fst-italic">
+                Aucun article trouvé.
+            </td>
+        </tr>
+    {% endfor %}
 {% endblock %}
-
 {% block floating_action %}
-<a href="javascript:void(0)" data-url="{% url 'article_create' %}" class="fab-new">
-    <i class="bi bi-plus-lg"></i> Nouvel Article
-</a>
+    <a href="javascript:void(0)"
+       data-url="{% url 'article_create' %}"
+       class="fab-new">
+        <i class="bi bi-plus-lg"></i> Nouvel Article
+    </a>
 {% endblock %}

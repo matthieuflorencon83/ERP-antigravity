@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block extra_css %}
-<style>
+    <style>
     /* CUSTOM PAGE STYLES - Antigravity Pro 2.0 */
 
     /* 1. LAYOUT & SCROLLING */
@@ -252,110 +251,113 @@
         /* pastel blue match */
         color: #1c7ed6;
     }
-</style>
+    </style>
 {% endblock %}
-
 {% block content %}
-<div class="page-container h-100">
-
-    <!-- DATAGRID MAIN CONTAINER -->
-    <div class="datagrid-card h-100">
-
-        <!-- TOOLBAR -->
-        <div class="toolbar-area">
-            <!-- Left: Global Search -->
-            <div class="input-group search-input-group">
-                <input type="text" name="q" class="form-control search-input" placeholder="Rechercher un article..."
-                    value="{{ request.GET.q }}" hx-get="{% url 'article_list' %}"
-                    hx-trigger="input changed delay:50ms, search" hx-target="#article-table-body" hx-push-url="true">
-                <button class="btn btn-outline-secondary search-btn" type="submit" aria-label="Rechercher">
-                    <i class="bi bi-search"></i>
-                </button>
+    <div class="page-container h-100">
+        <!-- DATAGRID MAIN CONTAINER -->
+        <div class="datagrid-card h-100">
+            <!-- TOOLBAR -->
+            <div class="toolbar-area">
+                <!-- Left: Global Search -->
+                <div class="input-group search-input-group">
+                    <input type="text"
+                           name="q"
+                           class="form-control search-input"
+                           placeholder="Rechercher un article..."
+                           value="{{ request.GET.q }}"
+                           hx-get="{% url 'article_list' %}"
+                           hx-trigger="input changed delay:50ms, search"
+                           hx-target="#article-table-body"
+                           hx-push-url="true">
+                    <button class="btn btn-outline-secondary search-btn"
+                            type="submit"
+                            aria-label="Rechercher">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+                <!-- Middle: Filter Pills -->
+                <div class="d-flex gap-2 mx-auto">
+                    <a href="?"
+                       class="filter-pill
+                              {% if not request.GET.fournisseur and not request.GET.stock %}
+                                  active
+                              {% endif %}">
+                        Tous
+                    </a>
+                </div>
+                <!-- Right: Spacer (Empty div to balance flex if needed, or just remove) -->
+                <div>
+                </div>
             </div>
-
-            <!-- Middle: Filter Pills -->
-            <div class="d-flex gap-2 mx-auto">
-                <a href="?"
-                    class="filter-pill {% if not request.GET.fournisseur and not request.GET.stock %}active{% endif %}">
-                    Tous
-                </a>
+            <!-- TABLE WRAPPER -->
+            <div class="table-container" id="article_grid">
+                <table class="table table-modern table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th style="width: 60%;">
+                                Article / Référence
+                            </th>
+                            <th style="width: 40%;">
+                                Fournisseur
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="article-table-body">
+                        {% include 'core/partials/article_table_body.html' %}
+                    </tbody>
+                </table>
             </div>
-
-            <!-- Right: Spacer (Empty div to balance flex if needed, or just remove) -->
-            <div></div>
-        </div>
-
-        <!-- TABLE WRAPPER -->
-        <div class="table-container" id="article_grid">
-            <table class="table table-modern table-hover align-middle">
-                <thead>
-                    <tr>
-                        <th style="width: 60%;">Article / Référence</th>
-                        <th style="width: 40%;">Fournisseur</th>
-                    </tr>
-                </thead>
-                <tbody id="article-table-body">
-                    {% include 'core/partials/article_table_body.html' %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- FOOTER / PAGINATION -->
-        <div class="px-3 py-2 border-top d-flex justify-content-between align-items-center small text-muted">
-            <div>
-                Affichage de <strong>{{ page_obj.start_index }}</strong> à <strong>{{ page_obj.end_index }}</strong> sur
-                <strong>{{ total_count }}</strong> articles
+            <!-- FOOTER / PAGINATION -->
+            <div class="px-3 py-2 border-top d-flex justify-content-between align-items-center small text-muted">
+                <div>
+                    Affichage de <strong>{{ page_obj.start_index }}</strong> à <strong>{{ page_obj.end_index }}</strong> sur
+                    <strong>{{ total_count }}</strong> articles
+                </div>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm mb-0">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
+                                   aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="page-item disabled">
+                            <span class="page-link">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
+                        </li>
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
+                                   aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
             </div>
-
-            <nav aria-label="Page navigation">
-                <ul class="pagination pagination-sm mb-0">
-                    {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link"
-                            href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
-                            aria-label="First">
-                            <span aria-hidden="true">&laquo;&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link"
-                            href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
-                            aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    {% endif %}
-
-                    <li class="page-item disabled">
-                        <span class="page-link">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
-                    </li>
-
-                    {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link"
-                            href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
-                            aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link"
-                            href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
-                            aria-label="Last">
-                            <span aria-hidden="true">&raquo;&raquo;</span>
-                        </a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </nav>
         </div>
-
     </div>
-</div>
-
-<script>
+    <script>
     // Simple script to highlight active row if needed, mainly visual
     // Interactions handled by specific hover CSS and HTMX
-</script>
-
+    </script>
 {% endblock %}

@@ -1,126 +1,155 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
-<div class="container-fluid py-4" style="max-width: 1600px;">
-
-    <!-- HEADER -->
-    <div class="d-flex align-items-center justify-content-between mb-4">
-        <div>
-            <h4 class="fw-bold mb-1">
-                <span class="text-muted fw-light">Affaire /</span> {{ affaire.nom_affaire }}
-            </h4>
-            <div class="text-muted small">
-                Gestion des besoins et approvisionnements
+    <div class="container-fluid py-4" style="max-width: 1600px;">
+        <!-- HEADER -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+                <h4 class="fw-bold mb-1">
+                    <span class="text-muted fw-light">Affaire /</span> {{ affaire.nom_affaire }}
+                </h4>
+                <div class="text-muted small">
+                    Gestion des besoins et approvisionnements
+                </div>
+            </div>
+            <div>
+                <!-- Stats or Actions -->
+                <span class="badge bg-white border text-dark me-2">
+                    <i class="bi bi-list-ol me-1"></i> {{ stats.total_lignes }} lignes
+                </span>
+                <a href="#" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i>Retour
+                </a>
             </div>
         </div>
-        <div>
-            <!-- Stats or Actions -->
-            <span class="badge bg-white border text-dark me-2">
-                <i class="bi bi-list-ol me-1"></i> {{ stats.total_lignes }} lignes
-            </span>
-            <a href="#" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left me-1"></i>Retour
-            </a>
-        </div>
-    </div>
-
-    <!-- QUICK ENTRY BAR (STICKY) -->
-    <div class="card border-0 shadow-sm mb-4 sticky-top z-3" style="top: 0.5rem;">
-        <div class="card-body p-2 bg-white rounded">
-            <form hx-post="{% url 'besoins_affaire' affaire.pk %}" hx-target="#besoinsTableBody" hx-swap="innerHTML"
-                hx-on::after-request="this.reset(); document.getElementById('code_article_input').focus();">
-                {% csrf_token %}
-                <div class="row g-2 align-items-center">
-
-                    <!-- 1. ARTICLE SEARCH -->
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
-                            <input list="articlesList" name="article_search" id="code_article_input"
-                                class="form-control border-0 bg-light fw-bold"
-                                placeholder="Rechercher Réf ou Désignation..." autocomplete="off" required
-                                onchange="updateArticleId(this)">
-                            <input type="hidden" name="article" id="article_id_hidden">
+        <!-- QUICK ENTRY BAR (STICKY) -->
+        <div class="card border-0 shadow-sm mb-4 sticky-top z-3"
+             style="top: 0.5rem">
+            <div class="card-body p-2 bg-white rounded">
+                <form hx-post="{% url 'besoins_affaire' affaire.pk %}"
+                      hx-target="#besoinsTableBody"
+                      hx-swap="innerHTML"
+                      hx-on::after-request="this.reset(); document.getElementById('code_article_input').focus();">
+                    {% csrf_token %}
+                    <div class="row g-2 align-items-center">
+                        <!-- 1. ARTICLE SEARCH -->
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                                <input list="articlesList"
+                                       name="article_search"
+                                       id="code_article_input"
+                                       class="form-control border-0 bg-light fw-bold"
+                                       placeholder="Rechercher Réf ou Désignation..."
+                                       autocomplete="off"
+                                       required
+                                       onchange="updateArticleId(this)">
+                                <input type="hidden" name="article" id="article_id_hidden">
+                            </div>
+                            <datalist id="articlesList">
+                                {% for art in articles_json %}
+                                    <option data-id="{{ art.id }}" value="{{ art.designation }}">
+                                        Ref: {{ art.ref_fournisseur }} - {{
+                                        art.fournisseur__nom_fournisseur }}
+                                    </option>
+                                {% endfor %}
+                            </datalist>
                         </div>
-                        <datalist id="articlesList">
-                            {% for art in articles_json %}
-                            <option data-id="{{ art.id }}" value="{{ art.designation }}">
-                                Ref: {{ art.ref_fournisseur }} - {{
-                                art.fournisseur__nom_fournisseur }}
-                            </option>
-                            {% endfor %}
-                        </datalist>
-                    </div>
-
-                    <!-- 2. QUANTITY -->
-                    <div class="col-md-1">
-                        <input type="number" name="quantite" step="0.1"
-                            class="form-control border-0 bg-light text-center fw-bold" placeholder="Qté" required>
-                    </div>
-
-                    <!-- 3. UNIT -->
-                    <div class="col-md-1">
-                        <select name="unite" class="form-select border-0 bg-light text-uppercase small">
-                            <option value="U">U</option>
-                            <option value="M">M</option>
-                            <option value="M2">M2</option>
-                            <option value="ENS">ENS</option>
-                        </select>
-                    </div>
-
-                    <!-- 4. RAL / FINITION (Auto-fill) -->
-                    <div class="col-md-2">
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-0 small text-muted">RAL</span>
-                            <input type="text" name="ral" class="form-control border-0 bg-light" placeholder="Ex: 7016"
-                                value="{{ last_ral }}">
+                        <!-- 2. QUANTITY -->
+                        <div class="col-md-1">
+                            <input type="number"
+                                   name="quantite"
+                                   step="0.1"
+                                   class="form-control border-0 bg-light text-center fw-bold"
+                                   placeholder="Qté"
+                                   required>
+                        </div>
+                        <!-- 3. UNIT -->
+                        <div class="col-md-1">
+                            <select name="unite"
+                                    class="form-select border-0 bg-light text-uppercase small">
+                                <option value="U">
+                                    U
+                                </option>
+                                <option value="M">
+                                    M
+                                </option>
+                                <option value="M2">
+                                    M2
+                                </option>
+                                <option value="ENS">
+                                    ENS
+                                </option>
+                            </select>
+                        </div>
+                        <!-- 4. RAL / FINITION (Auto-fill) -->
+                        <div class="col-md-2">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-0 small text-muted">RAL</span>
+                                <input type="text"
+                                       name="ral"
+                                       class="form-control border-0 bg-light"
+                                       placeholder="Ex: 7016"
+                                       value="{{ last_ral }}">
+                            </div>
+                        </div>
+                        <!-- 5. NOTES -->
+                        <div class="col-md-3">
+                            <input type="text"
+                                   name="notes"
+                                   class="form-control border-0 bg-light"
+                                   placeholder="Notes (facultatif)...">
+                        </div>
+                        <!-- ACTION -->
+                        <div class="col-md-1 text-end">
+                            <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
                         </div>
                     </div>
-
-                    <!-- 5. NOTES -->
-                    <div class="col-md-3">
-                        <input type="text" name="notes" class="form-control border-0 bg-light"
-                            placeholder="Notes (facultatif)...">
-                    </div>
-
-                    <!-- ACTION -->
-                    <div class="col-md-1 text-end">
-                        <button type="submit" class="btn btn-primary w-100 fw-bold shadow-sm">
-                            <i class="bi bi-plus-lg"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
+        </div>
+        <!-- DATAGRID -->
+        <div class="card border shadow-sm">
+            <div class="table-responsive">
+                <table class="table table-hover table-nowrap align-middle mb-0 table-sm">
+                    <thead class="bg-light text-muted text-uppercase small">
+                        <tr>
+                            <th style="width: 10%;">
+                                Réf.
+                            </th>
+                            <th style="width: 30%;">
+                                Désignation
+                            </th>
+                            <th style="width: 15%;">
+                                Fournisseur
+                            </th>
+                            <th style="width: 10%;" class="text-center">
+                                Qté
+                            </th>
+                            <th style="width: 5%;" class="text-center">
+                                Unité
+                            </th>
+                            <th style="width: 10%;" class="text-center">
+                                Finition/RAL
+                            </th>
+                            <th style="width: 10%;" class="text-center">
+                                Statut
+                            </th>
+                            <th style="width: 10%;" class="text-end">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="besoinsTableBody">
+                        {% include 'core/partials/besoins_table_body.html' %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
-    <!-- DATAGRID -->
-    <div class="card border shadow-sm">
-        <div class="table-responsive">
-            <table class="table table-hover table-nowrap align-middle mb-0 table-sm">
-                <thead class="bg-light text-muted text-uppercase small">
-                    <tr>
-                        <th style="width: 10%;">Réf.</th>
-                        <th style="width: 30%;">Désignation</th>
-                        <th style="width: 15%;">Fournisseur</th>
-                        <th style="width: 10%;" class="text-center">Qté</th>
-                        <th style="width: 5%;" class="text-center">Unité</th>
-                        <th style="width: 10%;" class="text-center">Finition/RAL</th>
-                        <th style="width: 10%;" class="text-center">Statut</th>
-                        <th style="width: 10%;" class="text-end">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="besoinsTableBody">
-                    {% include 'core/partials/besoins_table_body.html' %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-</div>
-
-<script>
+    <script>
     // Simple helper to map datalist value to hidden ID
     function updateArticleId(input) {
         const datalist = document.getElementById('articlesList');
@@ -141,5 +170,5 @@
             console.warn("Article non trouvé ou saisie libre non supportée");
         }
     }
-</script>
+    </script>
 {% endblock %}

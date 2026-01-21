@@ -1,12 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Sum
 from django.db import transaction
 from django.views.decorators.http import require_POST
 from decimal import Decimal
 import logging
-import uuid
 
 from apps.ventes.models import Affaire, Besoin
 from apps.catalogue.models import Article

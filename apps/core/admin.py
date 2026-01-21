@@ -1,8 +1,7 @@
 from django.contrib import admin
-from django.contrib import admin
 from apps.ventes.models import Affaire
 from apps.catalogue.models import Article
-from apps.tiers.models import Client, Fournisseur, CoreContact
+from apps.tiers.models import Client, Fournisseur
 from apps.achats.models import Commande, LigneCommande
 from apps.ged.models import Document
 

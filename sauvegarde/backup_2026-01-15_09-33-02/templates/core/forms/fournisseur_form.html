@@ -1,62 +1,108 @@
 {% extends 'base.html' %}
-
-{% block extra_css %}{% endblock %}
-
-{% block page_title %}Ajouter un Fournisseur{% endblock %}
-
+{% block extra_css %}
+{% endblock %}
+{% block page_title %}
+    Ajouter un Fournisseur
+{% endblock %}
 {% block content %}
-<div class="container py-4">
-    <div class="card shadow-sm border-0 mx-auto fournisseur-form-card">
-        <div class="card-header bg-white py-3">
-            <h5 class="mb-0 fw-bold text-success"><i class="bi bi-truck me-2" aria-hidden="true"></i>Nouveau Fournisseur
-            </h5>
-        </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="nom" class="form-label">Nom Officiel (Enseigne)</label>
-                        <input type="text" id="nom" name="nom" class="form-control" required
-                            placeholder="Ex: AluGlass France" title="Nom officiel du fournisseur">
+    <div class="container py-4">
+        <div class="card shadow-sm border-0 mx-auto fournisseur-form-card">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-success">
+                    <i class="bi bi-truck me-2" aria-hidden="true"></i>Nouveau Fournisseur
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="nom" class="form-label">
+                                Nom Officiel (Enseigne)
+                            </label>
+                            <input type="text"
+                                   id="nom"
+                                   name="nom"
+                                   class="form-control"
+                                   required
+                                   placeholder="Ex: AluGlass France"
+                                   title="Nom officiel du fournisseur">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nom_usage" class="form-label">
+                                Nom d'usage (Alias)
+                            </label>
+                            <input type="text"
+                                   id="nom_usage"
+                                   name="nom_usage"
+                                   class="form-control"
+                                   placeholder="Ex: AluGlass"
+                                   title="Nom d'usage ou alias">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="code_fournisseur" class="form-label">
+                                Code Fournisseur
+                            </label>
+                            <input type="text"
+                                   id="code_fournisseur"
+                                   name="code_fournisseur"
+                                   class="form-control"
+                                   placeholder="Ex: F-ALU-01"
+                                   title="Code interne fournisseur">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="siret" class="form-label">
+                                N° SIRET
+                            </label>
+                            <input type="text"
+                                   id="siret"
+                                   name="siret"
+                                   class="form-control"
+                                   placeholder="14 chiffres"
+                                   title="Numéro SIRET">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="tva_intracommunautaire" class="form-label">
+                                N° TVA Intracommunautaire
+                            </label>
+                            <input type="text"
+                                   id="tva_intracommunautaire"
+                                   name="tva_intracommunautaire"
+                                   class="form-control"
+                                   placeholder="Ex: FR 12 345678901"
+                                   title="Numéro de TVA">
+                        </div>
+                        <div class="col-md-12">
+                            <label for="adresse" class="form-label">
+                                Adresse Siège
+                            </label>
+                            <textarea id="adresse"
+                                      name="adresse"
+                                      class="form-control"
+                                      rows="2"
+                                      title="Adresse complète"
+                                      placeholder="Rue, CP, Ville..."></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label for="notes" class="form-label">
+                                Notes / Observations
+                            </label>
+                            <textarea id="notes"
+                                      name="notes"
+                                      class="form-control"
+                                      rows="2"
+                                      title="Commentaires libres"
+                                      placeholder="Observations diverses..."></textarea>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="nom_usage" class="form-label">Nom d'usage (Alias)</label>
-                        <input type="text" id="nom_usage" name="nom_usage" class="form-control"
-                            placeholder="Ex: AluGlass" title="Nom d'usage ou alias">
+                    <div class="mt-4 pt-3 border-top d-flex justify-content-between">
+                        <a href="{% url 'fournisseur_list' %}" class="btn btn-light">Annuler</a>
+                        <button type="submit" class="btn btn-success px-4">
+                            Créer le Fournisseur
+                        </button>
                     </div>
-                    <div class="col-md-6">
-                        <label for="code_fournisseur" class="form-label">Code Fournisseur</label>
-                        <input type="text" id="code_fournisseur" name="code_fournisseur" class="form-control"
-                            placeholder="Ex: F-ALU-01" title="Code interne fournisseur">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="siret" class="form-label">N° SIRET</label>
-                        <input type="text" id="siret" name="siret" class="form-control" placeholder="14 chiffres"
-                            title="Numéro SIRET">
-                    </div>
-                    <div class="col-md-12">
-                        <label for="tva_intracommunautaire" class="form-label">N° TVA Intracommunautaire</label>
-                        <input type="text" id="tva_intracommunautaire" name="tva_intracommunautaire"
-                            class="form-control" placeholder="Ex: FR 12 345678901" title="Numéro de TVA">
-                    </div>
-                    <div class="col-md-12">
-                        <label for="adresse" class="form-label">Adresse Siège</label>
-                        <textarea id="adresse" name="adresse" class="form-control" rows="2" title="Adresse complète"
-                            placeholder="Rue, CP, Ville..."></textarea>
-                    </div>
-                    <div class="col-md-12">
-                        <label for="notes" class="form-label">Notes / Observations</label>
-                        <textarea id="notes" name="notes" class="form-control" rows="2" title="Commentaires libres"
-                            placeholder="Observations diverses..."></textarea>
-                    </div>
-                </div>
-                <div class="mt-4 pt-3 border-top d-flex justify-content-between">
-                    <a href="{% url 'fournisseur_list' %}" class="btn btn-light">Annuler</a>
-                    <button type="submit" class="btn btn-success px-4">Créer le Fournisseur</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 {% endblock %}

@@ -1,21 +1,35 @@
 <div class="card shadow-sm mb-4">
-    <div class="card-header bg-light text-muted">Contenu de la commande (Lecture Seule)</div>
+    <div class="card-header bg-light text-muted">
+        Contenu de la commande (Lecture Seule)
+    </div>
     <div class="table-responsive">
         <table class="table table-striped table-sm align-middle mb-0 text-muted">
             <thead>
                 <tr>
-                    <th>Ref</th>
-                    <th>Désignation</th>
-                    <th>Qté Commandée</th>
+                    <th>
+                        Ref
+                    </th>
+                    <th>
+                        Désignation
+                    </th>
+                    <th>
+                        Qté Commandée
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 {% for ligne in analysis_result.articles %}
-                <tr>
-                    <td>{{ ligne.code_article|default:'-' }}</td>
-                    <td>{{ ligne.designation|truncatechars:60 }}</td>
-                    <td>{{ ligne.quantite }}</td>
-                </tr>
+                    <tr>
+                        <td>
+                            {{ ligne.code_article|default:'-' }}
+                        </td>
+                        <td>
+                            {{ ligne.designation|truncatechars:60 }}
+                        </td>
+                        <td>
+                            {{ ligne.quantite }}
+                        </td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>

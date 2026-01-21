@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block extra_css %}
-<style>
+    <style>
     /* CUSTOM PAGE STYLES - Commandes DataGrid */
 
     /* 1. LAYOUT & SCROLLING */
@@ -155,114 +154,135 @@
         border-radius: 6px;
         font-size: 0.75rem;
     }
-</style>
+    </style>
 {% endblock %}
-
 {% block content %}
-<div class="page-container">
-
-    <!-- DATAGRID CARD -->
-    <div class="datagrid-card">
-
-        <!-- TOOLBAR -->
-        <div class="toolbar-area">
-            <!-- Left: Search & Filters -->
-            <div class="d-flex align-items-center gap-3">
-                <!-- Search -->
-                <div class="input-group search-input-group w-35">
-                    <button class="btn btn-outline-secondary search-btn ps-3 pe-2" type="button">
-                        <i class="bi bi-search"></i>
+    <div class="page-container">
+        <!-- DATAGRID CARD -->
+        <div class="datagrid-card">
+            <!-- TOOLBAR -->
+            <div class="toolbar-area">
+                <!-- Left: Search & Filters -->
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Search -->
+                    <div class="input-group search-input-group w-35">
+                        <button class="btn btn-outline-secondary search-btn ps-3 pe-2" type="button">
+                            <i class="bi bi-search"></i>
+                        </button>
+                        <input type="text"
+                               name="q"
+                               class="form-control search-input ps-0"
+                               placeholder="Rechercher (BDC, Client, Affaire)..."
+                               autocomplete="off"
+                               hx-get="{% url 'commande_list' %}"
+                               hx-target="#commande-table-body"
+                               hx-trigger="input changed delay:50ms, search">
+                        <input type="hidden" name="statut" id="activeStatusFilter" value="">
+                    </div>
+                    <!-- Filters -->
+                    <div class="d-flex gap-2" id="statusFilters">
+                        <button class="filter-pill active" onclick="setStatusFilter('', this)">
+                            Toutes
+                        </button>
+                        <button class="filter-pill" onclick="setStatusFilter('BROUILLON', this)">
+                            Brouillons
+                        </button>
+                        <button class="filter-pill" onclick="setStatusFilter('COMMANDE', this)">
+                            En cours
+                        </button>
+                        <button class="filter-pill" onclick="setStatusFilter('CONFIRME_ARC', this)">
+                            ARC Reçu
+                        </button>
+                        <button class="filter-pill" onclick="setStatusFilter('LIVRE', this)">
+                            Livrées
+                        </button>
+                    </div>
+                </div>
+                <!-- Right: Actions -->
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-primary d-flex align-items-center gap-2 fw-medium px-3 shadow-sm"
+                            type="button"
+                            hx-get="{% url 'commande_create' %}"
+                            hx-target="#detailSidebarContent"
+                            hx-swap="innerHTML"
+                            onclick="toggleDetailPanel(true)">
+                        <i class="bi bi-plus-lg"></i>
+                        <span>Nouvelle Commande</span>
                     </button>
-
-                    <input type="text" name="q" class="form-control search-input ps-0"
-                        placeholder="Rechercher (BDC, Client, Affaire)..." autocomplete="off"
-                        hx-get="{% url 'commande_list' %}" hx-target="#commande-table-body"
-                        hx-trigger="input changed delay:50ms, search">
-
-                    <input type="hidden" name="statut" id="activeStatusFilter" value="">
-                </div>
-
-                <!-- Filters -->
-                <div class="d-flex gap-2" id="statusFilters">
-                    <button class="filter-pill active" onclick="setStatusFilter('', this)">Toutes</button>
-                    <button class="filter-pill" onclick="setStatusFilter('BROUILLON', this)">Brouillons</button>
-                    <button class="filter-pill" onclick="setStatusFilter('COMMANDE', this)">En cours</button>
-                    <button class="filter-pill" onclick="setStatusFilter('CONFIRME_ARC', this)">ARC Reçu</button>
-                    <button class="filter-pill" onclick="setStatusFilter('LIVRE', this)">Livrées</button>
                 </div>
             </div>
-
-            <!-- Right: Actions -->
-            <div class="d-flex align-items-center gap-2">
-                <button class="btn btn-primary d-flex align-items-center gap-2 fw-medium px-3 shadow-sm" type="button"
-                    hx-get="{% url 'commande_create' %}" hx-target="#detailSidebarContent" hx-swap="innerHTML"
-                    onclick="toggleDetailPanel(true)">
-                    <i class="bi bi-plus-lg"></i>
-                    <span>Nouvelle Commande</span>
-                </button>
+            <!-- TABLE HEADER (Sticky) & BODY (Scrollable) -->
+            <div class="table-container">
+                <table class="table table-modern align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th style="width: 12%;">
+                                Date
+                            </th>
+                            <th style="width: 15%;">
+                                N° BDC / ARC
+                            </th>
+                            <th style="width: 20%;">
+                                Client / Affaire
+                            </th>
+                            <th style="width: 15%;" class="text-center">
+                                Montant HT
+                            </th>
+                            <th style="width: 15%;" class="text-center">
+                                Statut
+                            </th>
+                            <th style="width: 13%;">
+                                Livraison
+                            </th>
+                            <th style="width: 10%;" class="text-end">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="commande-table-body">
+                        {% include 'core/partials/commande_table_body.html' %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- FOOTER / PAGINATION -->
+            <div class="px-3 py-2 border-top bg-body-tertiary d-flex align-items-center justify-content-between">
+                <small class="text-muted">
+                    Affichage de <strong>{{ page_obj.object_list|length }}</strong> commandes sur {{
+                    page_obj.paginator.count|default:0 }}
+                </small>
+                {% if page_obj.has_other_pages %}
+                    <div class="btn-group btn-group-sm">
+                        {% if page_obj.has_previous %}
+                            <button class="btn btn-outline-secondary"
+                                    hx-get="{% url 'commande_list' %}?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
+                                    hx-target="#commande-table-body">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                        {% else %}
+                            <button class="btn btn-outline-secondary disabled">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                        {% endif %}
+                        <span class="btn btn-outline-secondary disabled bg-transparent text-dark border-secondary-subtle">
+                            {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                        </span>
+                        {% if page_obj.has_next %}
+                            <button class="btn btn-outline-secondary"
+                                    hx-get="{% url 'commande_list' %}?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
+                                    hx-target="#commande-table-body">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        {% else %}
+                            <button class="btn btn-outline-secondary disabled">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        {% endif %}
+                    </div>
+                {% endif %}
             </div>
         </div>
-
-        <!-- TABLE HEADER (Sticky) & BODY (Scrollable) -->
-        <div class="table-container">
-            <table class="table table-modern align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th style="width: 12%;">Date</th>
-                        <th style="width: 15%;">N° BDC / ARC</th>
-                        <th style="width: 20%;">Client / Affaire</th>
-                        <th style="width: 15%;" class="text-center">Montant HT</th>
-                        <th style="width: 15%;" class="text-center">Statut</th>
-                        <th style="width: 13%;">Livraison</th>
-                        <th style="width: 10%;" class="text-end">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="commande-table-body">
-                    {% include 'core/partials/commande_table_body.html' %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- FOOTER / PAGINATION -->
-        <div class="px-3 py-2 border-top bg-body-tertiary d-flex align-items-center justify-content-between">
-            <small class="text-muted">
-                Affichage de <strong>{{ page_obj.object_list|length }}</strong> commandes sur {{
-                page_obj.paginator.count|default:0 }}
-            </small>
-
-            {% if page_obj.has_other_pages %}
-            <div class="btn-group btn-group-sm">
-                {% if page_obj.has_previous %}
-                <button class="btn btn-outline-secondary"
-                    hx-get="{% url 'commande_list' %}?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
-                    hx-target="#commande-table-body">
-                    <i class="bi bi-chevron-left"></i>
-                </button>
-                {% else %}
-                <button class="btn btn-outline-secondary disabled"><i class="bi bi-chevron-left"></i></button>
-                {% endif %}
-
-                <span class="btn btn-outline-secondary disabled bg-transparent text-dark border-secondary-subtle">
-                    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
-                </span>
-
-                {% if page_obj.has_next %}
-                <button class="btn btn-outline-secondary"
-                    hx-get="{% url 'commande_list' %}?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
-                    hx-target="#commande-table-body">
-                    <i class="bi bi-chevron-right"></i>
-                </button>
-                {% else %}
-                <button class="btn btn-outline-secondary disabled"><i class="bi bi-chevron-right"></i></button>
-                {% endif %}
-            </div>
-            {% endif %}
-        </div>
-
     </div>
-</div>
-
-<script>
+    <script>
     function setStatusFilter(status, btn) {
         // Update hidden input
         const input = document.getElementById('activeStatusFilter');
@@ -275,5 +295,5 @@
         // Trigger HTMX request on the form
         htmx.trigger(input.closest('form'), 'submit');
     }
-</script>
+    </script>
 {% endblock %}

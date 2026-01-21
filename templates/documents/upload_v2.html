@@ -2,9 +2,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load custom_filters %}
-
 {% block extra_css %}
-<style>
+    <style>
     /* FULL HEIGHT LAYOUT */
     #app-content {
         height: calc(100vh - 60px);
@@ -161,339 +160,484 @@
     .w-150px {
         width: 150px;
     }
-</style>
+    </style>
 {% endblock %}
-
 {% block content %}
-<!-- AUTOCOMPLETE DATALISTS (Injected from views.py) -->
-<datalist id="datalist-clients">
-    {% for nom in existing_clients %}
-    <option value="{{ nom }}">
-        {% endfor %}
-</datalist>
-<datalist id="datalist-fournisseurs">
-    {% for nom in existing_fournisseurs %}
-    <option value="{{ nom }}">
-        {% endfor %}
-</datalist>
-<datalist id="datalist-articles">
-    {% for code in existing_articles %}
-    <option value="{{ code }}">
-        {% endfor %}
-</datalist>
-
-<div class="split-container">
-
-    <!-- === LEFT PANE: VISUALISEUR PDF === -->
-    <div class="pdf-pane">
-        <!-- HEADER (Upload Bar) -->
-        <div class="bg-dark border-bottom border-secondary p-2 px-3 d-flex align-items-center justify-content-between">
-            <span class="text-white small fw-bold"><i class="bi bi-file-earmark-pdf me-2"></i>DOCUMENT SOURCE</span>
-
-            <!-- Mini Upload Form -->
-            <form method="POST" action="{% url 'upload_document' %}" enctype="multipart/form-data" class="d-flex gap-2">
-                {% csrf_token %}
-                <select class="form-select form-select-sm bg-secondary text-white border-0 w-auto" name="document_type"
-                    aria-label="Type de document" title="Type de document">
-                    <option value="">Auto-Détecter</option>
-                    <option value="DEVIS_CLIENT" {% if doc_type_selected=='DEVIS_CLIENT' %}selected{% endif %}>Devis
-                        Client</option>
-                    <option value="BON_COMMANDE" {% if doc_type_selected=='BON_COMMANDE' %}selected{% endif %}>Bon de
-                        Commande</option>
-                    <option value="ARC_FOURNISSEUR" {% if doc_type_selected=='ARC_FOURNISSEUR' %}selected{% endif %}>ARC
-                        Fournisseur</option>
-                    <option value="BON_LIVRAISON" {% if doc_type_selected=='BON_LIVRAISON' %}selected{% endif %}>Bon de
-                        Livraison</option>
-                    <option value="FACTURE" {% if doc_type_selected=='FACTURE' %}selected{% endif %}>Facture</option>
-                </select>
-                <div class="input-group input-group-sm">
-                    <input type="file" name="file" class="form-control bg-secondary text-white border-0" required
-                        aria-label="Fichier" title="Fichier">
-                    <button type="submit" class="btn btn-primary btn-sm" title="Recharger"><i
-                            class="bi bi-arrow-repeat"></i></button>
+    <!-- AUTOCOMPLETE DATALISTS (Injected from views.py) -->
+    <datalist id="datalist-clients">
+        {% for nom in existing_clients %}
+            <option value="{{ nom }}">
+            {% endfor %}
+        </datalist>
+        <datalist id="datalist-fournisseurs">
+            {% for nom in existing_fournisseurs %}
+                <option value="{{ nom }}">
+                {% endfor %}
+            </datalist>
+            <datalist id="datalist-articles">
+                {% for code in existing_articles %}
+                    <option value="{{ code }}">
+                    {% endfor %}
+                </datalist>
+                <div class="split-container">
+                    <!-- === LEFT PANE: VISUALISEUR PDF === -->
+                    <div class="pdf-pane">
+                        <!-- HEADER (Upload Bar) -->
+                        <div class="bg-dark border-bottom border-secondary p-2 px-3 d-flex align-items-center justify-content-between">
+                            <span class="text-white small fw-bold"><i class="bi bi-file-earmark-pdf me-2"></i>DOCUMENT SOURCE</span>
+                            <!-- Mini Upload Form -->
+                            <form method="POST"
+                                  action="{% url 'upload_document' %}"
+                                  enctype="multipart/form-data"
+                                  class="d-flex gap-2">
+                                {% csrf_token %}
+                                <select class="form-select form-select-sm bg-secondary text-white border-0 w-auto"
+                                        name="document_type"
+                                        aria-label="Type de document"
+                                        title="Type de document">
+                                    <option value="">
+                                        Auto-Détecter
+                                    </option>
+                                    <option value="DEVIS_CLIENT"
+                                            {% if doc_type_selected=='DEVIS_CLIENT' %}
+                                                selected
+                                            {% endif %}>
+                                        Devis
+                                        Client
+                                    </option>
+                                    <option value="BON_COMMANDE"
+                                            {% if doc_type_selected=='BON_COMMANDE' %}
+                                                selected
+                                            {% endif %}>
+                                        Bon de
+                                        Commande
+                                    </option>
+                                    <option value="ARC_FOURNISSEUR"
+                                            {% if doc_type_selected=='ARC_FOURNISSEUR' %}
+                                                selected
+                                            {% endif %}>
+                                        ARC
+                                        Fournisseur
+                                    </option>
+                                    <option value="BON_LIVRAISON"
+                                            {% if doc_type_selected=='BON_LIVRAISON' %}
+                                                selected
+                                            {% endif %}>
+                                        Bon de
+                                        Livraison
+                                    </option>
+                                    <option value="FACTURE"
+                                            {% if doc_type_selected=='FACTURE' %}
+                                                selected
+                                            {% endif %}>
+                                        Facture
+                                    </option>
+                                </select>
+                                <div class="input-group input-group-sm">
+                                    <input type="file"
+                                           name="file"
+                                           class="form-control bg-secondary text-white border-0"
+                                           required
+                                           aria-label="Fichier"
+                                           title="Fichier">
+                                    <button type="submit" class="btn btn-primary btn-sm" title="Recharger">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- PDF CONTENT -->
+                        <div class="flex-grow-1 position-relative bg-dark d-flex align-items-center justify-content-center">
+                            {% if document.fichier %}
+                                <embed src="{{ document.fichier.url }}"
+                                       type="application/pdf"
+                                       width="100%"
+                                       height="100%"
+                                       class="border-0">
+                            {% else %}
+                                <div class="text-center text-secondary">
+                                    <i class="bi bi-cloud-upload fs-1 d-block mb-3"></i>
+                                    <p>
+                                        Aucun document chargé
+                                    </p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- === RIGHT PANE: FORMULAIRE VALIDATION === -->
+                    <form method="POST"
+                          action="{% if document %}{% url 'document_detail' document.id %}{% else %}#{% endif %}"
+                          class="form-pane"
+                          id="validationForm">
+                        {% csrf_token %}
+                        <!-- 1. STICKY HEADER -->
+                        <div class="form-header-sticky">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="fw-bold mb-1">
+                                        Validation Données
+                                    </h5>
+                                    {% if analysis_result %}
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">
+                                            {{ analysis_result.type_document|default:"NON RECONNU" }}
+                                        </span>
+                                        {% if analysis_result.error %}
+                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill ms-1">
+                                                <i class="bi bi-exclamation-triangle"></i> Erreur IA
+                                            </span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge bg-secondary rounded-pill">En attente</span>
+                                    {% endif %}
+                                </div>
+                                <!-- ID Document -->
+                                {% if document %}
+                                    <span class="text-muted font-monospace small">#{{ document.id|stringformat:"05d" }}</span>
+                                {% endif %}
+                            </div>
+                            <!-- ScrollSpy Nav -->
+                            <ul class="nav nav-pills nav-fill bg-light p-1 rounded-pill border">
+                                <li class="nav-item">
+                                    <a class="nav-link active"
+                                       href="#section-infos"
+                                       onclick="scrollToSection('section-infos'); return false;">Infos</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       href="#section-tiers"
+                                       onclick="scrollToSection('section-tiers'); return false;">Tiers</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link"
+                                       href="#section-articles"
+                                       onclick="scrollToSection('section-articles'); return false;">Articles</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- 2. SECTION: INFOS GENERALES -->
+                        <div id="section-infos" class="form-section">
+                            <div class="section-title">
+                                <i class="bi bi-info-circle"></i> INFORMATIONS DOCUMENT
+                            </div>
+                            <div class="row g-3">
+                                <!-- Date -->
+                                <div class="col-6">
+                                    <label class="form-label small text-muted text-uppercase fw-bold">
+                                        Date Document
+                                    </label>
+                                    <input type="date"
+                                           name="date_document"
+                                           class="form-control"
+                                           value="{{ analysis_result.date_document|default:'' }}"
+                                           title="Date Document">
+                                </div>
+                                <!-- Fields based on Type -->
+                                {% if analysis_result.type_document == "DEVIS_CLIENT" %}
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted text-uppercase fw-bold">
+                                            N° ProDevis / Devis
+                                        </label>
+                                        <input type="text"
+                                               name="numero_prodevis"
+                                               class="form-control fw-bold"
+                                               value="{{ analysis_result.references.num_devis|default:'' }}"
+                                               title="N° Devis">
+                                    </div>
+                                {% elif analysis_result.type_document == "BON_COMMANDE" %}
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted text-uppercase fw-bold">
+                                            N° Commande
+                                        </label>
+                                        <input type="text"
+                                               name="num_commande"
+                                               class="form-control fw-bold"
+                                               value="{{ analysis_result.references.num_commande|default:'' }}"
+                                               title="N° Commande">
+                                    </div>
+                                {% elif analysis_result.type_document == "ARC_FOURNISSEUR" %}
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted text-uppercase fw-bold">
+                                            N° ARC
+                                        </label>
+                                        <input type="text"
+                                               name="num_arc"
+                                               class="form-control fw-bold"
+                                               value="{{ analysis_result.references.num_arc|default:'' }}"
+                                               title="N° ARC">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted text-uppercase fw-bold">
+                                            Lier au BDC
+                                        </label>
+                                        <input type="text"
+                                               name="num_bdc_lie"
+                                               class="form-control text-primary"
+                                               placeholder="Optionnel"
+                                               value="{{ analysis_result.references.num_commande|default:'' }}"
+                                               title="Lier au BDC">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted text-uppercase fw-bold">
+                                            Date Livraison Prévue
+                                        </label>
+                                        <input type="date"
+                                               name="date_livraison_prevue"
+                                               class="form-control"
+                                               value="{{ analysis_result.date_livraison_prevue|default:'' }}"
+                                               title="Date Livraison Prévue">
+                                    </div>
+                                {% elif analysis_result.type_document == "BON_LIVRAISON" %}
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted text-uppercase fw-bold">
+                                            N° BL
+                                        </label>
+                                        <input type="text"
+                                               name="num_bl"
+                                               class="form-control fw-bold"
+                                               value="{{ analysis_result.references.num_bl|default:'' }}"
+                                               title="N° BL">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted text-uppercase fw-bold">
+                                            Lier au BDC
+                                        </label>
+                                        <input type="text"
+                                               name="num_bdc_lie"
+                                               class="form-control text-primary"
+                                               value="{{ analysis_result.references.num_commande|default:'' }}"
+                                               title="Lier au BDC">
+                                    </div>
+                                {% elif analysis_result.type_document == "FACTURE" %}
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted text-uppercase fw-bold">
+                                            N° Facture
+                                        </label>
+                                        <input type="text"
+                                               name="num_facture"
+                                               class="form-control fw-bold"
+                                               value="{{ analysis_result.references.num_facture|default:'' }}"
+                                               title="N° Facture">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted text-uppercase fw-bold">
+                                            Lier (BDC/Devis)
+                                        </label>
+                                        <input type="text"
+                                               name="num_bdc_lie"
+                                               class="form-control text-primary"
+                                               value="{{ analysis_result.references.num_commande|default:'' }}"
+                                               title="Lier BDC/Devis">
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <!-- 3. SECTION: TIERS (AUTOCOMPLETE) -->
+                        <div id="section-tiers" class="form-section">
+                            <div class="section-title">
+                                <i class="bi bi-people"></i> IDENTIFICATION TIERS
+                                <span id="tiers-badge" class="badge bg-light text-dark border ms-auto"></span>
+                            </div>
+                            {% if analysis_result.type_document == "DEVIS_CLIENT" %}
+                                <!-- CLIENT MODE -->
+                                <div class="mb-3">
+                                    <label class="form-label small text-muted text-uppercase fw-bold">
+                                        Client
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+                                        <input type="text"
+                                               name="client_nom"
+                                               id="input-client-nom"
+                                               class="form-control fw-bold"
+                                               list="datalist-clients"
+                                               placeholder="Rechercher un client..."
+                                               value="{{ analysis_result.client.nom }}"
+                                               autocomplete="off"
+                                               oninput="checkTiers('client')"
+                                               title="Nom du client">
+                                    </div>
+                                    <div id="client-status-msg" class="form-text mt-1">
+                                    </div>
+                                </div>
+                            {% else %}
+                                <!-- FOURNISSEUR MODE (Default for ARC, BDC, BL, Facture) -->
+                                <div class="mb-3">
+                                    <label class="form-label small text-muted text-uppercase fw-bold">
+                                        Fournisseur
+                                    </label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white"><i class="bi bi-truck text-muted"></i></span>
+                                        <input type="text"
+                                               name="fournisseur_nom"
+                                               id="input-fournisseur-nom"
+                                               class="form-control fw-bold"
+                                               list="datalist-fournisseurs"
+                                               placeholder="Rechercher un fournisseur..."
+                                               value="{{ analysis_result.fournisseur.nom|default:analysis_result.client.nom }}"
+                                               autocomplete="off"
+                                               oninput="checkTiers('fournisseur')"
+                                               title="Nom du fournisseur">
+                                    </div>
+                                    <div id="fournisseur-status-msg" class="form-text mt-1">
+                                    </div>
+                                </div>
+                                <!-- Extra supplier fields -->
+                                <div class="row g-2">
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted text-muted">
+                                            Email
+                                        </label>
+                                        <input type="email"
+                                               name="fournisseur_email"
+                                               class="form-control form-control-sm"
+                                               value="{{ analysis_result.fournisseur.email|default:'' }}"
+                                               title="Email fournisseur">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label small text-muted text-muted">
+                                            SIRET
+                                        </label>
+                                        <input type="text"
+                                               name="fournisseur_siret"
+                                               class="form-control form-control-sm"
+                                               value="{{ analysis_result.fournisseur.siret|default:'' }}"
+                                               title="SIRET fournisseur">
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <!-- 4. SECTION: ARTICLES (MATH GUARD) -->
+                        <div id="section-articles" class="form-section flex-grow-1">
+                            <div class="section-title d-flex justify-content-between">
+                                <div>
+                                    <i class="bi bi-cart"></i> LIGNES & TOTAUX
+                                </div>
+                                <!-- GLOBAL MATH GUARD INDICATOR -->
+                                <div id="global-math-guard"
+                                     class="badge bg-success-subtle text-success border border-success-subtle">
+                                    <i class="bi bi-check-all"></i> Calculs OK
+                                </div>
+                            </div>
+                            <!-- Articles Table -->
+                            <div class="table-responsive border rounded mb-3">
+                                <table class="table table-sm table-striped mb-0 table-text-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="col-w-40">
+                                                Désignation / Code
+                                            </th>
+                                            <th class="col-w-15 text-center">
+                                                Qté
+                                            </th>
+                                            <th class="col-w-20 text-end">
+                                                P.U.
+                                            </th>
+                                            <th class="col-w-25 text-end">
+                                                Total
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="articles-tbody">
+                                        {% if analysis_result.lignes %}
+                                            {% for ligne in analysis_result.lignes %}
+                                                <tr class="line-row">
+                                                    <td>
+                                                        <!-- Hidden Inputs to keep structure on POST -->
+                                                        <input type="hidden"
+                                                               name="lignes[{{ forloop.counter0 }}][finition]"
+                                                               value="{{ ligne.finition }}">
+                                                        <input type="hidden"
+                                                               name="lignes[{{ forloop.counter0 }}][ral]"
+                                                               value="{{ ligne.ral }}">
+                                                        <input type="text"
+                                                               name="lignes[{{ forloop.counter0 }}][designation]"
+                                                               class="form-control form-control-sm border-0 bg-transparent fw-bold mb-1 p-0"
+                                                               value="{{ ligne.designation }}"
+                                                               title="Désignation">
+                                                        <input type="text"
+                                                               name="lignes[{{ forloop.counter0 }}][code_article]"
+                                                               class="form-control form-control-sm border-0 bg-transparent text-muted p-0 fs-xs"
+                                                               value="{{ ligne.code }}"
+                                                               placeholder="Code article"
+                                                               list="datalist-articles"
+                                                               title="Code Article">
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        <input type="number"
+                                                               step="0.01"
+                                                               name="lignes[{{ forloop.counter0 }}][quantite]"
+                                                               class="form-control form-control-sm text-center input-qty"
+                                                               value="{{ ligne.quantite }}"
+                                                               oninput="recalcLine(this)"
+                                                               title="Quantité">
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        <input type="number"
+                                                               step="0.01"
+                                                               name="lignes[{{ forloop.counter0 }}][prix_unitaire]"
+                                                               class="form-control form-control-sm text-end input-price"
+                                                               value="{{ ligne.prix_unitaire }}"
+                                                               oninput="recalcLine(this)"
+                                                               title="Prix Unitaire">
+                                                    </td>
+                                                    <td class="align-middle text-end position-relative">
+                                                        <!-- Calculated Total (Visual) -->
+                                                        <span class="fw-bold line-total-display">0.00 €</span>
+                                                        <!-- Original Total (Hidden for comparison) -->
+                                                        <input type="hidden"
+                                                               class="input-line-total-orig"
+                                                               value="{{ ligne.montant_ht }}">
+                                                        <!-- Math Alert Tooltip -->
+                                                        <div class="math-alert">
+                                                            <i class="bi bi-exclamation-circle"></i> Ecart
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                            <tr>
+                                                <td colspan="4" class="text-center text-muted py-3">
+                                                    Aucune ligne détectée
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- TOTAL GENERAL (Footer) -->
+                            <div class="d-flex justify-content-end align-items-center gap-3">
+                                <span class="text-uppercase small fw-bold text-muted">Total Global HT</span>
+                                <div class="input-group w-150px">
+                                    <input type="number"
+                                           step="0.01"
+                                           name="total_achat_ht"
+                                           class="form-control fw-bold text-end bg-light"
+                                           value="{{ analysis_result.totaux.ht|default:0 }}"
+                                           title="Total HT">
+                                    <span class="input-group-text">€</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 5. STICKY FOOTER: ACTIONS -->
+                        <div class="form-footer-sticky">
+                            {% if document %}
+                                <button type="submit"
+                                        class="btn btn-success w-100 py-2 fw-bold text-uppercase shadow-sm"
+                                        title="Valider">
+                                    <i class="bi bi-check-lg me-2"></i> Valider et Créer
+                                </button>
+                            {% else %}
+                                <button type="button"
+                                        class="btn btn-secondary w-100 py-2"
+                                        disabled
+                                        title="Aucun document">
+                                    Aucun document
+                                </button>
+                            {% endif %}
+                        </div>
+                    </form>
                 </div>
-            </form>
-        </div>
-
-        <!-- PDF CONTENT -->
-        <div class="flex-grow-1 position-relative bg-dark d-flex align-items-center justify-content-center">
-            {% if document.fichier %}
-            <embed src="{{ document.fichier.url }}" type="application/pdf" width="100%" height="100%" class="border-0">
-            {% else %}
-            <div class="text-center text-secondary">
-                <i class="bi bi-cloud-upload fs-1 d-block mb-3"></i>
-                <p>Aucun document chargé</p>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-
-
-    <!-- === RIGHT PANE: FORMULAIRE VALIDATION === -->
-    <form method="POST" action="{% if document %}{% url 'document_detail' document.id %}{% else %}#{% endif %}"
-        class="form-pane" id="validationForm">
-        {% csrf_token %}
-
-        <!-- 1. STICKY HEADER -->
-        <div class="form-header-sticky">
-            <div class="d-flex justify-content-between align-items-start mb-3">
-                <div>
-                    <h5 class="fw-bold mb-1">Validation Données</h5>
-                    {% if analysis_result %}
-                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">
-                        {{ analysis_result.type_document|default:"NON RECONNU" }}
-                    </span>
-                    {% if analysis_result.error %}
-                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle rounded-pill ms-1">
-                        <i class="bi bi-exclamation-triangle"></i> Erreur IA
-                    </span>
-                    {% endif %}
-                    {% else %}
-                    <span class="badge bg-secondary rounded-pill">En attente</span>
-                    {% endif %}
-                </div>
-                <!-- ID Document -->
-                {% if document %}
-                <span class="text-muted font-monospace small">#{{ document.id|stringformat:"05d" }}</span>
-                {% endif %}
-            </div>
-
-            <!-- ScrollSpy Nav -->
-            <ul class="nav nav-pills nav-fill bg-light p-1 rounded-pill border">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#section-infos"
-                        onclick="scrollToSection('section-infos'); return false;">Infos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#section-tiers"
-                        onclick="scrollToSection('section-tiers'); return false;">Tiers</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#section-articles"
-                        onclick="scrollToSection('section-articles'); return false;">Articles</a>
-                </li>
-            </ul>
-        </div>
-
-
-        <!-- 2. SECTION: INFOS GENERALES -->
-        <div id="section-infos" class="form-section">
-            <div class="section-title"><i class="bi bi-info-circle"></i> INFORMATIONS DOCUMENT</div>
-
-            <div class="row g-3">
-                <!-- Date -->
-                <div class="col-6">
-                    <label class="form-label small text-muted text-uppercase fw-bold">Date Document</label>
-                    <input type="date" name="date_document" class="form-control"
-                        value="{{ analysis_result.date_document|default:'' }}" title="Date Document">
-                </div>
-
-                <!-- Fields based on Type -->
-                {% if analysis_result.type_document == "DEVIS_CLIENT" %}
-                <div class="col-6">
-                    <label class="form-label small text-muted text-uppercase fw-bold">N° ProDevis / Devis</label>
-                    <input type="text" name="numero_prodevis" class="form-control fw-bold"
-                        value="{{ analysis_result.references.num_devis|default:'' }}" title="N° Devis">
-                </div>
-                {% elif analysis_result.type_document == "BON_COMMANDE" %}
-                <div class="col-6">
-                    <label class="form-label small text-muted text-uppercase fw-bold">N° Commande</label>
-                    <input type="text" name="num_commande" class="form-control fw-bold"
-                        value="{{ analysis_result.references.num_commande|default:'' }}" title="N° Commande">
-                </div>
-                {% elif analysis_result.type_document == "ARC_FOURNISSEUR" %}
-                <div class="col-6">
-                    <label class="form-label small text-muted text-uppercase fw-bold">N° ARC</label>
-                    <input type="text" name="num_arc" class="form-control fw-bold"
-                        value="{{ analysis_result.references.num_arc|default:'' }}" title="N° ARC">
-                </div>
-                <div class="col-6">
-                    <label class="form-label small text-muted text-uppercase fw-bold">Lier au BDC</label>
-                    <input type="text" name="num_bdc_lie" class="form-control text-primary" placeholder="Optionnel"
-                        value="{{ analysis_result.references.num_commande|default:'' }}" title="Lier au BDC">
-                </div>
-                <div class="col-6">
-                    <label class="form-label small text-muted text-uppercase fw-bold">Date Livraison Prévue</label>
-                    <input type="date" name="date_livraison_prevue" class="form-control"
-                        value="{{ analysis_result.date_livraison_prevue|default:'' }}" title="Date Livraison Prévue">
-                </div>
-                {% elif analysis_result.type_document == "BON_LIVRAISON" %}
-                <div class="col-6">
-                    <label class="form-label small text-muted text-uppercase fw-bold">N° BL</label>
-                    <input type="text" name="num_bl" class="form-control fw-bold"
-                        value="{{ analysis_result.references.num_bl|default:'' }}" title="N° BL">
-                </div>
-                <div class="col-6">
-                    <label class="form-label small text-muted text-uppercase fw-bold">Lier au BDC</label>
-                    <input type="text" name="num_bdc_lie" class="form-control text-primary"
-                        value="{{ analysis_result.references.num_commande|default:'' }}" title="Lier au BDC">
-                </div>
-                {% elif analysis_result.type_document == "FACTURE" %}
-                <div class="col-6">
-                    <label class="form-label small text-muted text-uppercase fw-bold">N° Facture</label>
-                    <input type="text" name="num_facture" class="form-control fw-bold"
-                        value="{{ analysis_result.references.num_facture|default:'' }}" title="N° Facture">
-                </div>
-                <div class="col-6">
-                    <label class="form-label small text-muted text-uppercase fw-bold">Lier (BDC/Devis)</label>
-                    <input type="text" name="num_bdc_lie" class="form-control text-primary"
-                        value="{{ analysis_result.references.num_commande|default:'' }}" title="Lier BDC/Devis">
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-
-        <!-- 3. SECTION: TIERS (AUTOCOMPLETE) -->
-        <div id="section-tiers" class="form-section">
-            <div class="section-title">
-                <i class="bi bi-people"></i> IDENTIFICATION TIERS
-                <span id="tiers-badge" class="badge bg-light text-dark border ms-auto"></span>
-            </div>
-
-            {% if analysis_result.type_document == "DEVIS_CLIENT" %}
-            <!-- CLIENT MODE -->
-            <div class="mb-3">
-                <label class="form-label small text-muted text-uppercase fw-bold">Client</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" name="client_nom" id="input-client-nom" class="form-control fw-bold"
-                        list="datalist-clients" placeholder="Rechercher un client..."
-                        value="{{ analysis_result.client.nom }}" autocomplete="off" oninput="checkTiers('client')"
-                        title="Nom du client">
-                </div>
-                <div id="client-status-msg" class="form-text mt-1"></div>
-            </div>
-            {% else %}
-            <!-- FOURNISSEUR MODE (Default for ARC, BDC, BL, Facture) -->
-            <div class="mb-3">
-                <label class="form-label small text-muted text-uppercase fw-bold">Fournisseur</label>
-                <div class="input-group">
-                    <span class="input-group-text bg-white"><i class="bi bi-truck text-muted"></i></span>
-                    <input type="text" name="fournisseur_nom" id="input-fournisseur-nom" class="form-control fw-bold"
-                        list="datalist-fournisseurs" placeholder="Rechercher un fournisseur..."
-                        value="{{ analysis_result.fournisseur.nom|default:analysis_result.client.nom }}"
-                        autocomplete="off" oninput="checkTiers('fournisseur')" title="Nom du fournisseur">
-                </div>
-                <div id="fournisseur-status-msg" class="form-text mt-1"></div>
-            </div>
-
-            <!-- Extra supplier fields -->
-            <div class="row g-2">
-                <div class="col-6">
-                    <label class="form-label small text-muted text-muted">Email</label>
-                    <input type="email" name="fournisseur_email" class="form-control form-control-sm"
-                        value="{{ analysis_result.fournisseur.email|default:'' }}" title="Email fournisseur">
-                </div>
-                <div class="col-6">
-                    <label class="form-label small text-muted text-muted">SIRET</label>
-                    <input type="text" name="fournisseur_siret" class="form-control form-control-sm"
-                        value="{{ analysis_result.fournisseur.siret|default:'' }}" title="SIRET fournisseur">
-                </div>
-            </div>
-            {% endif %}
-        </div>
-
-
-        <!-- 4. SECTION: ARTICLES (MATH GUARD) -->
-        <div id="section-articles" class="form-section flex-grow-1">
-            <div class="section-title d-flex justify-content-between">
-                <div><i class="bi bi-cart"></i> LIGNES & TOTAUX</div>
-
-                <!-- GLOBAL MATH GUARD INDICATOR -->
-                <div id="global-math-guard" class="badge bg-success-subtle text-success border border-success-subtle">
-                    <i class="bi bi-check-all"></i> Calculs OK
-                </div>
-            </div>
-
-            <!-- Articles Table -->
-            <div class="table-responsive border rounded mb-3">
-                <table class="table table-sm table-striped mb-0 table-text-sm">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="col-w-40">Désignation / Code</th>
-                            <th class="col-w-15 text-center">Qté</th>
-                            <th class="col-w-20 text-end">P.U.</th>
-                            <th class="col-w-25 text-end">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody id="articles-tbody">
-                        {% if analysis_result.lignes %}
-                        {% for ligne in analysis_result.lignes %}
-                        <tr class="line-row">
-                            <td>
-                                <!-- Hidden Inputs to keep structure on POST -->
-                                <input type="hidden" name="lignes[{{ forloop.counter0 }}][finition]"
-                                    value="{{ ligne.finition }}">
-                                <input type="hidden" name="lignes[{{ forloop.counter0 }}][ral]" value="{{ ligne.ral }}">
-
-                                <input type="text" name="lignes[{{ forloop.counter0 }}][designation]"
-                                    class="form-control form-control-sm border-0 bg-transparent fw-bold mb-1 p-0"
-                                    value="{{ ligne.designation }}" title="Désignation">
-                                <input type="text" name="lignes[{{ forloop.counter0 }}][code_article]"
-                                    class="form-control form-control-sm border-0 bg-transparent text-muted p-0 fs-xs"
-                                    value="{{ ligne.code }}" placeholder="Code article" list="datalist-articles"
-                                    title="Code Article">
-                            </td>
-                            <td class="align-middle">
-                                <input type="number" step="0.01" name="lignes[{{ forloop.counter0 }}][quantite]"
-                                    class="form-control form-control-sm text-center input-qty"
-                                    value="{{ ligne.quantite }}" oninput="recalcLine(this)" title="Quantité">
-                            </td>
-                            <td class="align-middle">
-                                <input type="number" step="0.01" name="lignes[{{ forloop.counter0 }}][prix_unitaire]"
-                                    class="form-control form-control-sm text-end input-price"
-                                    value="{{ ligne.prix_unitaire }}" oninput="recalcLine(this)" title="Prix Unitaire">
-                            </td>
-                            <td class="align-middle text-end position-relative">
-                                <!-- Calculated Total (Visual) -->
-                                <span class="fw-bold line-total-display">0.00 €</span>
-                                <!-- Original Total (Hidden for comparison) -->
-                                <input type="hidden" class="input-line-total-orig" value="{{ ligne.montant_ht }}">
-                                <!-- Math Alert Tooltip -->
-                                <div class="math-alert"><i class="bi bi-exclamation-circle"></i> Ecart</div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                        {% else %}
-                        <tr>
-                            <td colspan="4" class="text-center text-muted py-3">Aucune ligne détectée</td>
-                        </tr>
-                        {% endif %}
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- TOTAL GENERAL (Footer) -->
-            <div class="d-flex justify-content-end align-items-center gap-3">
-                <span class="text-uppercase small fw-bold text-muted">Total Global HT</span>
-                <div class="input-group w-150px">
-                    <input type="number" step="0.01" name="total_achat_ht"
-                        class="form-control fw-bold text-end bg-light" value="{{ analysis_result.totaux.ht|default:0 }}"
-                        title="Total HT">
-                    <span class="input-group-text">€</span>
-                </div>
-            </div>
-        </div>
-
-
-        <!-- 5. STICKY FOOTER: ACTIONS -->
-        <div class="form-footer-sticky">
-            {% if document %}
-            <button type="submit" class="btn btn-success w-100 py-2 fw-bold text-uppercase shadow-sm" title="Valider">
-                <i class="bi bi-check-lg me-2"></i> Valider et Créer
-            </button>
-            {% else %}
-            <button type="button" class="btn btn-secondary w-100 py-2" disabled title="Aucun document">
-                Aucun document
-            </button>
-            {% endif %}
-        </div>
-    </form>
-
-</div>
-
-<script>
+                <script>
     // === 1. SMOOTH SCROLL ===
     function scrollToSection(id) {
         document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
@@ -603,5 +747,5 @@
         // Only update if no manual override (optional, currently not implementing override check)
         // document.querySelector('[name="total_achat_ht"]').value = grandTotal.toFixed(2);
     }
-</script>
-{% endblock %}
+                </script>
+            {% endblock %}

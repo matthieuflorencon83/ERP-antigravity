@@ -1,78 +1,110 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block content %}
-<div class="container-fluid p-4 h-100 d-flex flex-column">
-
-    <!-- HEADER -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold mb-1">Commandes</h2>
-            <p class="text-muted mb-0">Suivi des approvisionnements et livraisons</p>
+    <div class="container-fluid p-4 h-100 d-flex flex-column">
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">
+                    Commandes
+                </h2>
+                <p class="text-muted mb-0">
+                    Suivi des approvisionnements et livraisons
+                </p>
+            </div>
+            <div>
+                <!-- Actions Globales si besoin -->
+            </div>
         </div>
-        <div>
-            <!-- Actions Globales si besoin -->
+        <!-- TABS NAVIGATION -->
+        <ul class="nav nav-tabs mb-3" id="commandeTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active d-flex align-items-center gap-2"
+                        id="brouillons-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#brouillons"
+                        type="button"
+                        role="tab"
+                        aria-controls="brouillons"
+                        aria-selected="true">
+                    <i class="bi bi-pencil-square text-warning"></i>
+                    À Commander
+                    <span class="badge bg-warning text-dark ms-1">{{ brouillons.count }}</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link d-flex align-items-center gap-2"
+                        id="arc-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#arc"
+                        type="button"
+                        role="tab"
+                        aria-controls="arc"
+                        aria-selected="false">
+                    <i class="bi bi-send text-primary"></i>
+                    En Attente ARC
+                    <span class="badge bg-primary ms-1">{{ attente_arc.count }}</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link d-flex align-items-center gap-2"
+                        id="liv-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#liv"
+                        type="button"
+                        role="tab"
+                        aria-controls="liv"
+                        aria-selected="false">
+                    <i class="bi bi-truck text-purple-600"></i>
+                    En Attente Livraison
+                    <span class="badge bg-info ms-1">{{ attente_liv.count }}</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link d-flex align-items-center gap-2"
+                        id="history-tab"
+                        data-bs-toggle="tab"
+                        data-bs-target="#history"
+                        type="button"
+                        role="tab"
+                        aria-controls="history"
+                        aria-selected="false">
+                    <i class="bi bi-archive text-muted"></i>
+                    Historique
+                </button>
+            </li>
+        </ul>
+        <!-- TABS CONTENT -->
+        <div class="tab-content flex-grow-1 overflow-auto bg-white border rounded shadow-sm p-0"
+             id="commandeTabsContent">
+            <!-- PANE 1: BROUILLONS -->
+            <div class="tab-pane fade show active h-100"
+                 id="brouillons"
+                 role="tabpanel"
+                 aria-labelledby="brouillons-tab">
+                {% include 'core/partials/commande_list_pane.html' with commandes=brouillons mode='brouillon' %}
+            </div>
+            <!-- PANE 2: ATTENTE ARC -->
+            <div class="tab-pane fade h-100"
+                 id="arc"
+                 role="tabpanel"
+                 aria-labelledby="arc-tab">
+                {% include 'core/partials/commande_list_pane.html' with commandes=attente_arc mode='arc' %}
+            </div>
+            <!-- PANE 3: ATTENTE LIVRAISON -->
+            <div class="tab-pane fade h-100"
+                 id="liv"
+                 role="tabpanel"
+                 aria-labelledby="liv-tab">
+                {% include 'core/partials/commande_list_pane.html' with commandes=attente_liv mode='livraison' %}
+            </div>
+            <!-- PANE 4: HISTORIQUE -->
+            <div class="tab-pane fade h-100"
+                 id="history"
+                 role="tabpanel"
+                 aria-labelledby="history-tab">
+                {% include 'core/partials/commande_list_pane.html' with commandes=historique mode='historique' %}
+            </div>
         </div>
     </div>
-
-    <!-- TABS NAVIGATION -->
-    <ul class="nav nav-tabs mb-3" id="commandeTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active d-flex align-items-center gap-2" id="brouillons-tab" data-bs-toggle="tab"
-                data-bs-target="#brouillons" type="button" role="tab" aria-controls="brouillons" aria-selected="true">
-                <i class="bi bi-pencil-square text-warning"></i>
-                À Commander
-                <span class="badge bg-warning text-dark ms-1">{{ brouillons.count }}</span>
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link d-flex align-items-center gap-2" id="arc-tab" data-bs-toggle="tab"
-                data-bs-target="#arc" type="button" role="tab" aria-controls="arc" aria-selected="false">
-                <i class="bi bi-send text-primary"></i>
-                En Attente ARC
-                <span class="badge bg-primary ms-1">{{ attente_arc.count }}</span>
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link d-flex align-items-center gap-2" id="liv-tab" data-bs-toggle="tab"
-                data-bs-target="#liv" type="button" role="tab" aria-controls="liv" aria-selected="false">
-                <i class="bi bi-truck text-purple-600"></i>
-                En Attente Livraison
-                <span class="badge bg-info ms-1">{{ attente_liv.count }}</span>
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link d-flex align-items-center gap-2" id="history-tab" data-bs-toggle="tab"
-                data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">
-                <i class="bi bi-archive text-muted"></i>
-                Historique
-            </button>
-        </li>
-    </ul>
-
-    <!-- TABS CONTENT -->
-    <div class="tab-content flex-grow-1 overflow-auto bg-white border rounded shadow-sm p-0" id="commandeTabsContent">
-
-        <!-- PANE 1: BROUILLONS -->
-        <div class="tab-pane fade show active h-100" id="brouillons" role="tabpanel" aria-labelledby="brouillons-tab">
-            {% include 'core/partials/commande_list_pane.html' with commandes=brouillons mode='brouillon' %}
-        </div>
-
-        <!-- PANE 2: ATTENTE ARC -->
-        <div class="tab-pane fade h-100" id="arc" role="tabpanel" aria-labelledby="arc-tab">
-            {% include 'core/partials/commande_list_pane.html' with commandes=attente_arc mode='arc' %}
-        </div>
-
-        <!-- PANE 3: ATTENTE LIVRAISON -->
-        <div class="tab-pane fade h-100" id="liv" role="tabpanel" aria-labelledby="liv-tab">
-            {% include 'core/partials/commande_list_pane.html' with commandes=attente_liv mode='livraison' %}
-        </div>
-
-        <!-- PANE 4: HISTORIQUE -->
-        <div class="tab-pane fade h-100" id="history" role="tabpanel" aria-labelledby="history-tab">
-            {% include 'core/partials/commande_list_pane.html' with commandes=historique mode='historique' %}
-        </div>
-    </div>
-
-</div>
 {% endblock %}

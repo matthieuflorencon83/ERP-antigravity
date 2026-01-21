@@ -119,11 +119,11 @@ def run_import():
                             if created or created2: count_created += 1
                             else: count_updated += 1
 
-                    except Exception as e:
+                    except Exception:
                         # print(f"Error on row {row}: {e}")
                         continue
 
-    print(f"\n✅ TERMINÉ ! Bilan :")
+    print("\n✅ TERMINÉ ! Bilan :")
     print(f"➕ Créés : {count_created} articles (x2 fournisseurs)")
     print(f"🔄 Mis à jour : {count_updated} articles")
 

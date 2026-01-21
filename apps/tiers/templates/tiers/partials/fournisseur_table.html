@@ -2,78 +2,90 @@
     <table class="table table-hover align-middle">
         <thead class="table-light">
             <tr>
-                <th>Société</th>
-                <th>Adresse / Info</th>
-                <th>Contacts Clés</th>
-                <th>Actions</th>
+                <th>
+                    Société
+                </th>
+                <th>
+                    Adresse / Info
+                </th>
+                <th>
+                    Contacts Clés
+                </th>
+                <th>
+                    Actions
+                </th>
             </tr>
         </thead>
         <tbody>
             {% for f in fournisseurs %}
-            <tr>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <div class="ms-2">
-                            <h6 class="mb-0 fw-bold text-primary">{{ f.nom_fournisseur }}</h6>
-                            {% if f.siret %}
-                            <small class="text-muted fs-08">SIRET: {{ f.siret }}</small>
-                            {% endif %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="ms-2">
+                                <h6 class="mb-0 fw-bold text-primary">
+                                    {{ f.nom_fournisseur }}
+                                </h6>
+                                {% if f.siret %}
+                                    <small class="text-muted fs-08">SIRET: {{ f.siret }}</small>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
-                </td>
-
-                <td>
-                    {% if f.adresse %}
-                    <small><i class="fas fa-map-marker-alt text-secondary me-1"></i>{{ f.adresse|truncatechars:30
-                        }}</small><br>
-                    {% endif %}
-                    {% if f.notes %}
-                    <small class="text-warning"><i class="fas fa-sticky-note me-1"></i>{{ f.notes|truncatechars:20
-                        }}</small>
-                    {% endif %}
-                </td>
-
-                <td>
-                    {% if f.corecontact_set.all %}
-                    {% for contact in f.corecontact_set.all %}
-                    <div class="mb-1">
-                        <i class="fas fa-user-tie text-secondary me-1"></i>
-                        <strong>{{ contact.prenom }} {{ contact.nom }}</strong>
-                        <span class="badge bg-secondary-subtle text-secondary-emphasis border">{{ contact.type_contact
-                            }}</span>
-                        <br>
-                        <small>
-                            <a href="tel:{{ contact.telephone }}" class="text-decoration-none me-2">
-                                <i class="fas fa-phone-alt"></i> {{ contact.telephone }}
-                            </a>
-                            {% if contact.email %}
-                            <a href="mailto:{{ contact.email }}" class="text-decoration-none" title="Envoyer un email">
-                                <i class="fas fa-envelope"></i>
-                            </a>
-                            {% endif %}
-                        </small>
-                    </div>
-                    {% if not forloop.last %}
-                    <hr class="my-1 dashed">{% endif %}
-                    {% endfor %}
-                    {% else %}
-                    <span class="text-muted fst-italic"><small>Aucun contact enregistré</small></span>
-                    {% endif %}
-                </td>
-
-                <td>
-                    <a href="{% url 'fournisseur_edit' f.pk %}" class="btn btn-sm btn-outline-secondary"
-                        title="Modifier">
-                        <i class="bi bi-pencil-square"></i>
-                    </a>
-                </td>
-            </tr>
+                    </td>
+                    <td>
+                        {% if f.adresse %}
+                            <small><i class="fas fa-map-marker-alt text-secondary me-1"></i>{{ f.adresse|truncatechars:30
+                            }}</small>
+                            <br>
+                        {% endif %}
+                        {% if f.notes %}
+                            <small class="text-warning"><i class="fas fa-sticky-note me-1"></i>{{ f.notes|truncatechars:20
+                            }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if f.corecontact_set.all %}
+                            {% for contact in f.corecontact_set.all %}
+                                <div class="mb-1">
+                                    <i class="fas fa-user-tie text-secondary me-1"></i>
+                                    <strong>{{ contact.prenom }} {{ contact.nom }}</strong>
+                                    <span class="badge bg-secondary-subtle text-secondary-emphasis border">{{ contact.type_contact
+                                    }}</span>
+                                    <br>
+                                    <small>
+                                        <a href="tel:{{ contact.telephone }}" class="text-decoration-none me-2">
+                                            <i class="fas fa-phone-alt"></i> {{ contact.telephone }}
+                                        </a>
+                                        {% if contact.email %}
+                                            <a href="mailto:{{ contact.email }}"
+                                               class="text-decoration-none"
+                                               title="Envoyer un email">
+                                                <i class="fas fa-envelope"></i>
+                                            </a>
+                                        {% endif %}
+                                    </small>
+                                </div>
+                                {% if not forloop.last %}
+                                    <hr class="my-1 dashed">
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-muted fst-italic"><small>Aucun contact enregistré</small></span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'fournisseur_edit' f.pk %}"
+                           class="btn btn-sm btn-outline-secondary"
+                           title="Modifier">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                    </td>
+                </tr>
             {% empty %}
-            <tr>
-                <td colspan="4" class="text-center py-4 text-muted">
-                    Aucun fournisseur trouvé.
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="4" class="text-center py-4 text-muted">
+                        Aucun fournisseur trouvé.
+                    </td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>
