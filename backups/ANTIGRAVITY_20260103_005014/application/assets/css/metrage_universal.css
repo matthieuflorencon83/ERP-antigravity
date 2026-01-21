@@ -1,0 +1,264 @@
+/* assets/css/metrage_universal.css - HYBRID INTERFACE V3 */
+
+:root {
+    --ag-primary: #0d6efd;
+    --ag-bg-light: #f8f9fa;
+    --ag-sidebar-width: 350px;
+    --header-height: 60px;
+    /* Adjust based on Antigravity main header */
+}
+
+/* =========================================
+   1. GLOBAL LAYOUT (SPLIT-SCREEN vs TUNNEL)
+   ========================================= */
+body.metrage-mode {
+    background-color: var(--ag-bg-light);
+    overflow-x: hidden;
+}
+
+.ag-universal-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Mobile default */
+    gap: 0;
+    min-height: calc(100vh - var(--header-height));
+    position: relative;
+    padding-bottom: 80px;
+    /* Space for Sticky Footer Mobile */
+}
+
+/* DESKTOP (Split Screen) */
+@media (min-width: 1024px) {
+    .ag-universal-grid {
+        grid-template-columns: 1fr var(--ag-sidebar-width);
+        padding-bottom: 0;
+    }
+
+    .zone-saisie {
+        padding: 2rem;
+        overflow-y: auto;
+    }
+
+    .zone-sidebar {
+        position: sticky;
+        top: var(--header-height);
+        height: calc(100vh - var(--header-height));
+        overflow-y: auto;
+        border-left: 1px solid #dee2e6;
+        background: white;
+        display: flex !important;
+        /* Force show in desktop */
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .sticky-footer-controls {
+        display: none !important;
+        /* No mobile footer on PC */
+    }
+
+    /* Hide Mobile Header trigger */
+    .mobile-header-trigger {
+        display: none;
+    }
+}
+
+/* MOBILE (Focus Mode) */
+@media (max-width: 1023px) {
+    /* Hide Main Site Header text or simplify it? 
+       Actually user requested "Focus Mode: Masque le Header du site". 
+       We might need JS to add class 'mobile-focus' to body or specific CSS overrides.
+    */
+
+    .zone-saisie {
+        padding: 1rem;
+    }
+
+    /* Sidebar becomes a drawer/modal */
+    .zone-sidebar {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        /* Hidden by default */
+        width: 85%;
+        height: 100vh;
+        background: white;
+        z-index: 1050;
+        transition: right 0.3s ease-in-out;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .zone-sidebar.active {
+        right: 0;
+    }
+}
+
+
+/* =========================================
+   2. TOUCH & INPUTS (GROS DOIGTS)
+   ========================================= */
+input.form-control,
+select.form-select,
+.btn-lg {
+    min-height: 48px;
+    /* Apple Human Interface Guidelines */
+    font-size: 16px;
+    /* Avoid IOS zoom */
+}
+
+.ag-card-selector {
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    height: 100%;
+    background: white;
+}
+
+.ag-card-selector:hover {
+    border-color: var(--ag-primary);
+    background-color: #f0f7ff;
+}
+
+.ag-card-selector.active {
+    border-color: var(--ag-primary);
+    background-color: #e6f0ff;
+    box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.2);
+}
+
+.ag-card-selector i {
+    font-size: 2rem;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.ag-card-selector.active i {
+    color: var(--ag-primary);
+}
+
+
+/* =========================================
+   3. STICKY FOOTER (THUMB ZONE)
+   ========================================= */
+.sticky-footer-controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    border-top: 1px solid #dee2e6;
+    padding: 10px;
+    z-index: 1040;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.sticky-footer-controls .btn-nav {
+    flex: 1;
+    margin: 0 5px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+.sticky-footer-controls .btn-fab-center {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-top: -30px;
+    /* Pop out effect */
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.3);
+    border: 4px solid white;
+    z-index: 1041;
+}
+
+
+/* =========================================
+   4. STEPPER COMPACT
+   ========================================= */
+.ag-stepper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.ag-stepper::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #e9ecef;
+    z-index: 0;
+}
+
+.step-item {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    background: var(--ag-bg-light);
+    /* Hide line behind */
+    padding: 0 10px;
+}
+
+.step-circle {
+    width: 30px;
+    height: 30px;
+    background: #fff;
+    border: 2px solid #adb5bd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #adb5bd;
+    margin: 0 auto 5px;
+    transition: all 0.3s;
+}
+
+.step-item.active .step-circle {
+    border-color: var(--ag-primary);
+    background: var(--ag-primary);
+    color: white;
+}
+
+.step-item.completed .step-circle {
+    border-color: #198754;
+    background: #198754;
+    color: white;
+}
+
+.step-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Animations */
+.fade-in-up {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

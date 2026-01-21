@@ -1,0 +1,42 @@
+/* Global Styles */
+.form-card-container,
+.client-form-card,
+.fournisseur-form-card {
+    max-width: 600px;
+}
+
+.search-input-width {
+    width: 250px;
+}
+
+.qty-input-table {
+    width: 80px;
+}
+
+.designation-cell {
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.upload-progress-indicator {
+    z-index: 2000;
+}
+
+.progress-bar-full {
+    width: 100%;
+}
+
+.page-container-old {
+    min-height: calc(100vh - 110px);
+}
+
+.empty-state-old {
+    min-height: 400px;
+}
+
+.doc-type-select-old {
+    width: auto;
+    max-width: 200px;
+}

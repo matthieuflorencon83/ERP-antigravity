@@ -1,0 +1,200 @@
+﻿<?php
+// tasks.php - Gestionnaire de TÃ¢ches (Interne v2)
+require_once 'auth.php';
+require_once 'db.php';
+require_once 'functions.php';
+
+$page_title = 'To Do List';
+$message = "";
+
+// Enable Error Reporting for Debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// --- DB UPDATE : Moved to dedicated script if needed ---
+
+
+// --- ACTIONS ---
+
+// 1. AJOUTER TÃ‚CHE
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'add_task') {
+
+
+    $title = trim($_POST['title']);
+    $description = trim($_POST['description'] ?? '');
+    $importance = $_POST['importance'] ?? 'normal';
+    $due_date = !empty($_POST['due_date']) ? $_POST['due_date'] : null; // NEW DATE FIELD
+    $affaire_id = !empty($_POST['affaire_id']) ? $_POST['affaire_id'] : null;
+    $commande_id = !empty($_POST['commande_id']) ? $_POST['commande_id'] : null;
+    $redirect = !empty($_POST['redirect']) ? $_POST['redirect'] : 'tasks.php';
+    
+    // Checklist Items array
+    $checklist = $_POST['checklist'] ?? [];
+
+    if (!empty($title)) {
+        try {
+            $pdo->beginTransaction();
+
+            // Insert Task with DUE_DATE
+            $stmt = $pdo->prepare("INSERT INTO tasks (user_id, title, description, importance, status, affaire_id, commande_id, created_at, due_date) VALUES (?, ?, ?, ?, 'todo', ?, ?, NOW(), ?)");
+            $stmt->execute([$_SESSION['user_id'], $title, $description, $importance, $affaire_id, $commande_id, $due_date]);
+            $task_id = $pdo->lastInsertId();
+
+            // Insert Checklist Items
+            if (!empty($checklist)) {
+                $stmtItem = $pdo->prepare("INSERT INTO task_items (task_id, content) VALUES (?, ?)");
+                foreach ($checklist as $item) {
+                    if (!empty(trim($item))) {
+                        $stmtItem->execute([$task_id, trim($item)]);
+                    }
+                }
+            }
+
+            $pdo->commit();
+            
+            // DEBUG: Stop before redirect
+            // die("DEBUG: Insert Successful for Task ID $task_id. Redirecting to $redirect");
+            
+            header("Location: $redirect");
+            exit;
+
+        } catch (Exception $e) {
+            $pdo->rollBack();
+            // VISIBLE ERROR for User
+            die("<h1 style='color:red; background:white; padding:20px;'>ERREUR CRITIQUE: " . $e->getMessage() . "</h1><pre>" . $e->getTraceAsString() . "</pre>");
+        }
+    } else {
+         die("<h1 style='color:orange; background:white; padding:20px;'>ERREUR: Le titre est vide !</h1>");
+    }
+}
+// 1b. EDITER TÃ‚CHE
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'edit_task') {
+    $id = intval($_POST['task_id']);
+    $title = trim($_POST['title']);
+    $description = trim($_POST['description'] ?? '');
+    $importance = $_POST['importance'] ?? 'normal';
+    $due_date = !empty($_POST['due_date']) ? $_POST['due_date'] : null;
+    $affaire_id = !empty($_POST['affaire_id']) ? $_POST['affaire_id'] : null;
+    $commande_id = !empty($_POST['commande_id']) ? $_POST['commande_id'] : null;
+
+    if (!empty($title)) {
+        $sql = "UPDATE tasks SET title=?, description=?, importance=?, due_date=?, affaire_id=?, commande_id=? WHERE id=? AND user_id=?";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([$title, $description, $importance, $due_date, $affaire_id, $commande_id, $id, $_SESSION['user_id']]);
+        
+        // Note: For now, we do not edit checklist items in Edit Mode (Too complex for V1).
+        // User can add new ones via the "Add Task" flow or we can add a specific "Edit Checklist" page later.
+        
+        header("Location: tasks.php?success=edited");
+        exit;
+    }
+}
+
+// 2. CHANGER STATUT (Toggle)
+if (isset($_GET['toggle_id'])) {
+    $id = intval($_GET['toggle_id']);
+    $redirect = !empty($_GET['redirect']) ? $_GET['redirect'] : 'tasks.php';
+    $stmt = $pdo->prepare("UPDATE tasks SET status = IF(status='todo','done','todo') WHERE id = ? AND user_id = ?");
+    $stmt->execute([$id, $_SESSION['user_id']]);
+    header("Location: $redirect");
+    exit;
+}
+
+// 3. SUPPRIMER
+if (isset($_GET['delete_id'])) {
+    $id = intval($_GET['delete_id']);
+    $redirect = !empty($_GET['redirect']) ? $_GET['redirect'] : 'tasks.php';
+    $stmt = $pdo->prepare("DELETE FROM tasks WHERE id = ? AND user_id = ?");
+    $stmt->execute([$id, $_SESSION['user_id']]);
+    header("Location: $redirect");
+    exit;
+}
+
+// 4. SUPPRIMER SOUS-TÃ‚CHE
+if (isset($_GET['delete_subtask_id'])) {
+    $subtask_id = intval($_GET['delete_subtask_id']);
+    // Verify ownership through task_id
+    $stmt = $pdo->prepare("DELETE ti FROM task_items ti 
+                           INNER JOIN tasks t ON ti.task_id = t.id 
+                           WHERE ti.id = ? AND t.user_id = ?");
+    $stmt->execute([$subtask_id, $_SESSION['user_id']]);
+    header("Location: tasks.php");
+    exit;
+}
+
+// 5. TOGGLE SOUS-TÃ‚CHE (cocher/dÃ©cocher)
+if (isset($_GET['toggle_subtask_id'])) {
+    $subtask_id = intval($_GET['toggle_subtask_id']);
+    $selected_task = isset($_GET['selected_task']) ? intval($_GET['selected_task']) : null;
+    
+    // Verify ownership and toggle
+    $stmt = $pdo->prepare("UPDATE task_items ti 
+                           INNER JOIN tasks t ON ti.task_id = t.id 
+                           SET ti.is_completed = NOT ti.is_completed 
+                           WHERE ti.id = ? AND t.user_id = ?");
+    $stmt->execute([$subtask_id, $_SESSION['user_id']]);
+    
+    // Redirect back with selected task to keep panel open
+    $redirect = $selected_task ? "tasks.php?selected_task=$selected_task" : "tasks.php";
+    header("Location: $redirect");
+    exit;
+}
+
+// --- CHARGEMENT DONNÃ‰ES ---
+
+// Listes pour Dropdowns (LimitÃ©es aux 50 plus rÃ©centes pour perf)
+$affaires_list = $pdo->query("SELECT id, nom_affaire FROM affaires ORDER BY id DESC LIMIT 50")->fetchAll();
+$commandes_list = $pdo->query("SELECT ca.id, ca.ref_interne, f.nom as fournisseur_nom FROM commandes_achats ca LEFT JOIN fournisseurs f ON ca.fournisseur_id = f.id ORDER BY ca.date_commande DESC LIMIT 50")->fetchAll();
+
+// RÃ©cupÃ©rer les tÃ¢ches avec jointures
+$sql = "SELECT t.*, a.nom_affaire, ca.ref_interne 
+        FROM tasks t 
+        LEFT JOIN affaires a ON t.affaire_id = a.id 
+        LEFT JOIN commandes_achats ca ON t.commande_id = ca.id 
+        WHERE t.user_id = ? 
+        ORDER BY t.status ASC, t.importance DESC, t.created_at DESC";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([$_SESSION['user_id']]);
+$tasks = $stmt->fetchAll();
+
+// Charger les sous-tÃ¢ches (task_items) pour toutes les tÃ¢ches
+$task_ids = array_column($tasks, 'id');
+$subtasks_by_task = [];
+if (!empty($task_ids)) {
+    $placeholders = str_repeat('?,', count($task_ids) - 1) . '?';
+    $sql_items = "SELECT * FROM task_items WHERE task_id IN ($placeholders) ORDER BY id ASC";
+    $stmt_items = $pdo->prepare($sql_items);
+    $stmt_items->execute($task_ids);
+    $all_items = $stmt_items->fetchAll();
+    
+    foreach ($all_items as $item) {
+        $subtasks_by_task[$item['task_id']][] = $item;
+    }
+}
+
+// Attacher les sous-tÃ¢ches Ã  chaque tÃ¢che
+foreach ($tasks as &$task) {
+    $task['subtasks'] = $subtasks_by_task[$task['id']] ?? [];
+}
+unset($task);
+
+$tasks_todo = [];
+$tasks_done = [];
+
+foreach($tasks as $t) {
+    if ($t['status'] === 'done') {
+        $tasks_done[] = $t;
+    } else {
+        $tasks_todo[] = $t;
+    }
+}
+
+require_once 'header.php';
+?>
+
+<style>
+    /* Override the 135px padding-top from ag-main-content */
+    .ag-main-content { padding-top: 1.5rem !important; }
+    .main-content { margin-top: 0 !important; padding-top: 0 !important; }
+/* Simple scrollable task list - page can scroll normally */
+.list-group {

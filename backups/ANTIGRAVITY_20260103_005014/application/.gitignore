@@ -1,0 +1,37 @@
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+error_log
+debug.log
+
+# Environnement
+.env
+
+# Composer
+/vendor/
+composer.lock
+
+# Node modules
+node_modules/
+package-lock.json
+
+# Backups
+/backups/
+*.backup
+*.bak
+
+# Uploads temporaires
+/uploads/temp/
+
+# Cache
+/cache/
+*.cache

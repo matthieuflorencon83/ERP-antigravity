@@ -1,0 +1,302 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity ERP</title>
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    {% block extra_css %}{% endblock %}
+
+    <style>
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 280px !important;
+            --bs-offcanvas-width: 280px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1045;
+            /* Match Bootstrap offcanvas z-index */
+            border-right: 1px solid var(--bs-border-color);
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bs-body-bg);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        /* Mobile Sidebar behavior (default offcanvas behavior is good, but we need overrides for Desktop) */
+        /* On Desktop (>= 992px), force visibility and reset transform */
+        @media (min-width: 992px) {
+            .sidebar {
+                transform: none !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* Mobile Layout (< 992px) */
+        @media (max-width: 991.98px) {
+
+            /* Sidebar is handled by Bootstrap offcanvas classes for hiding/showing */
+            /* We just need to ensure main content uses full width */
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .nav-link {
+            color: var(--bs-body-color);
+            padding: 0.8rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background-color: var(--bs-tertiary-bg);
+            color: var(--bs-primary);
+        }
+
+        .nav-link i {
+            font-size: 1.2rem;
+        }
+
+        /* Topbar */
+        .topbar {
+            height: 60px;
+            border-bottom: 1px solid var(--bs-border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            background-color: var(--bs-body-bg);
+        }
+
+        .avatar-circle {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Condensed Sidebar Form Styling */
+        #detailSidebar .offcanvas-body {
+            padding: 1rem !important;
+            overflow-y: auto;
+        }
+
+        #detailSidebar form .form-group {
+            margin-bottom: 0.5rem !important;
+        }
+
+        #detailSidebar form label {
+            font-size: 0.75rem !important;
+            margin-bottom: 2px !important;
+            color: var(--bs-gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        #detailSidebar form .input-clean,
+        #detailSidebar form input:not([type=checkbox]),
+        #detailSidebar form select,
+        #detailSidebar form textarea {
+            font-size: 0.85rem !important;
+            padding: 0.35rem 0.6rem !important;
+            min-height: auto !important;
+            height: auto !important;
+        }
+
+        #detailSidebar form textarea {
+            min-height: 60px !important;
+        }
+
+        #detailSidebar form .btn-primary-2026 {
+            padding: 0.6rem 1rem !important;
+            font-size: 0.9rem !important;
+            margin-top: 1rem !important;
+        }
+
+        #detailSidebar form .form-text {
+            display: none;
+        }
+
+        #detailSidebar .offcanvas-header {
+            padding: 0.75rem 1rem;
+            min-height: auto;
+            border-bottom: 1px solid var(--bs-border-color);
+        }
+
+        #detailSidebar .offcanvas-title {
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+
+<body hx-boost="true">
+
+    <!-- Mobile Toggle Button (Visible only on mobile) -->
+    <button class="btn btn-primary d-lg-none position-fixed top-0 start-0 m-3 z-3" type="button"
+        data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" title="Toggle Sidebar">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Sidebar (Desktop & Mobile Offcanvas) -->
+    <!-- Removed offcanvas-lg to prevent conflict with custom fixed positioning -->
+    <div class="offcanvas offcanvas-start sidebar" tabindex="-1" id="sidebarMenu">
+        <div class="d-flex align-items-center p-4 border-bottom">
+            <i class="bi bi-box-seam-fill text-primary fs-3 me-2"></i>
+            <span class="fs-4 fw-bold">Antigravity</span>
+            <button type="button" class="btn-close d-lg-none ms-auto" data-bs-dismiss="offcanvas"
+                data-bs-target="#sidebarMenu" aria-label="Close"></button>
+        </div>
+
+        <div class="flex-grow-1 p-3 overflow-y-auto">
+            <nav class="nav flex-column">
+                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="/">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+                <a class="nav-link {% if 'documents' in request.path %}active{% endif %}"
+                    href="{% url 'upload_document' %}">
+                    <i class="bi bi-cpu"></i> IA & Documents
+                </a>
+                <a class="nav-link {% if 'fournisseur' in request.path %}active{% endif %}"
+                    href="{% url 'fournisseur_list' %}">
+                    <i class="bi bi-truck"></i> Fournisseurs
+                </a>
+                <a class="nav-link {% if 'client' in request.path %}active{% endif %}" href="{% url 'client_list' %}">
+                    <i class="bi bi-people"></i> Clients
+                </a>
+                <a class="nav-link {% if 'article' in request.path %}active{% endif %}" href="{% url 'article_list' %}">
+                    <i class="bi bi-box"></i> Articles
+                </a>
+                <a class="nav-link" href="#">
+                    <i class="bi bi-cart"></i> Commandes
+                </a>
+            </nav>
+        </div>
+
+        <div class="p-3 border-top">
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle"
+                    data-bs-toggle="dropdown">
+                    <div
+                        class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2 avatar-circle">
+                        A
+                    </div>
+                    <strong>Admin</strong>
+                </a>
+                <ul class="dropdown-menu text-small shadow">
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Topbar -->
+        <header class="topbar sticky-top">
+            <div class="d-flex align-items-center">
+                <!-- Page Title -->
+                <h5 class="mb-0 m-0">
+                    {% block page_title %}Dashboard{% endblock %}
+                </h5>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <!-- Header Actions (Injected by templates) -->
+                {% block header_actions %}{% endblock %}
+
+                <!-- Theme Toggle -->
+                <button class="btn btn-link nav-link px-2" id="bd-theme-toggle" type="button" title="Toggle theme">
+                    <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="p-4" id="app-content">
+            {% if messages %}
+            <div class="container-fluid mb-3">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('bd-theme-toggle');
+            const icon = document.getElementById('theme-icon');
+            const html = document.documentElement;
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            html.setAttribute('data-bs-theme', savedTheme);
+            updateIcon(savedTheme);
+
+            toggleBtn.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+                html.setAttribute('data-bs-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateIcon(newTheme);
+            });
+
+            function updateIcon(theme) {
+                if (theme === 'dark') {
+                    icon.classList.remove('bi-sun-fill');
+                    icon.classList.add('bi-moon-stars-fill');
+                } else {
+                    icon.classList.remove('bi-moon-stars-fill');
+                    icon.classList.add('bi-sun-fill');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

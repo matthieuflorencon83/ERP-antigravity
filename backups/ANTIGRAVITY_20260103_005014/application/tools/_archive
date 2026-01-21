@@ -1,0 +1,7 @@
+-- update_schema_affaires_sales.sql
+-- Ajout des champs financiers pour le mode Passerelle Vente
+
+ALTER TABLE affaires ADD COLUMN montant_ht DECIMAL(10, 2) DEFAULT 0.00;
+ALTER TABLE affaires ADD COLUMN date_signature DATE DEFAULT NULL;
+
+-- S'assurer que le statut 'Signé' est bien supporté (normalement oui via enum, mais verification pas possible en pure alter sans redefinir tout l'enum, on suppose que c'est bon d'apres le schema initial)

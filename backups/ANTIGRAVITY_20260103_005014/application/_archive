@@ -1,0 +1,10 @@
+<?php
+require 'db.php';
+try {
+    $sql = file_get_contents('tools/update_schema_emails.sql');
+    $pdo->exec($sql);
+    echo "SQL Executed Successfully.";
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+?>

@@ -1,0 +1,111 @@
+{% extends 'core/list_generic.html' %}
+
+{% block list_title %}
+<i class="bi bi-people-fill text-primary me-2"></i>Clients
+{% endblock %}
+
+{% block table_headers %}
+<th style="width: 25%;">Client / Société</th>
+<th style="width: 10%;">Type</th>
+<th style="width: 15%;">Téléphone</th>
+<th style="width: 20%;">Email</th>
+<th style="width: 20%;">Ville / Adresse</th>
+{% endblock %}
+
+{% block table_filters %}
+<th>
+    <input type="text" name="nom" class="filter-input" placeholder="Filtrer nom..." value="{{ filters.nom }}">
+</th>
+<th>
+    <!-- Type is complex to filter inline without choices passed, skipping or simple text -->
+</th>
+<th>
+    <input type="text" name="tel" class="filter-input" placeholder="Tél..." value="{{ filters.tel }}">
+</th>
+<th>
+    <input type="text" name="email" class="filter-input" placeholder="Email..." value="{{ filters.email }}">
+</th>
+<th>
+    <input type="text" name="ville" class="filter-input" placeholder="Ville..." value="{{ filters.ville }}">
+</th>
+{% endblock %}
+
+{% block table_rows %}
+{% for client in clients %}
+<tr>
+    <td>
+        <div class="fw-bold text-dark small">{{ client.nom|upper }}</div>
+        {% if client.prenom %}
+        <div class="text-muted small">{{ client.prenom }}</div>
+        {% endif %}
+    </td>
+    <td>
+        {% if client.type_tiers == 'PROFESSIONNEL' %}
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle badge-pill-text">PRO</span>
+        {% else %}
+        <span class="badge bg-success-subtle text-success border border-success-subtle badge-pill-text">PART</span>
+        {% endif %}
+    </td>
+    <td class="small">
+        {% with client.corecontact_set.first as contact %}
+        {% if contact and contact.telephone %}
+        <div class="font-monospace text-dark">{{ contact.telephone }}</div>
+        <div class="text-muted" style="font-size: 0.75rem;">(Contact)</div>
+        {% else %}
+        <div class="font-monospace text-muted">{{ client.telephone_client|default:"-" }}</div>
+        {% endif %}
+        {% endwith %}
+    </td>
+    <td>
+        {% with client.corecontact_set.first as contact %}
+        {% if contact %}
+        <div class="fw-bold text-dark small">{{ contact.nom }} {{ contact.prenom }}</div>
+        {% if contact.email %}
+        <a href="mailto:{{ contact.email }}" class="text-decoration-none text-muted d-flex align-items-center"
+            style="font-size: 0.75rem;">
+            <span class="text-truncate d-inline-block" style="max-width: 150px;">{{ contact.email }}</span>
+        </a>
+        {% endif %}
+        {% else %}
+        {% if client.email_client %}
+        <a href="mailto:{{ client.email_client }}" class="text-decoration-none text-dark d-flex align-items-center">
+            <span class="text-truncate d-inline-block" style="max-width: 150px;">{{ client.email_client }}</span>
+        </a>
+        {% else %}
+        <span class="text-muted small">-</span>
+        {% endif %}
+        {% endif %}
+        {% endwith %}
+    </td>
+    <td>
+        <div class="text-truncate d-inline-block" style="max-width: 200px;" title="{{ client.adresse_facturation }}">
+            {{ client.adresse_facturation|default:"-" }}
+        </div>
+    </td>
+
+    <!-- Actions (Last Column) -->
+    <td class="text-end">
+        <div class="row-actions">
+            <a href="{% url 'client_edit' client.pk %}" class="action-btn" title="Modifier">
+                <i class="bi bi-pencil-fill"></i>
+            </a>
+            <a href="#" class="action-btn text-danger" title="Supprimer" onclick="alert('Fonctionnalité à venir')">
+                <i class="bi bi-trash-fill"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="6" class="text-center py-5 text-muted fst-italic">
+        Aucun résultat ne correspond à vos filtres.
+    </td>
+</tr>
+{% endfor %}
+{% endblock %}
+
+{% block floating_action %}
+<a href="javascript:void(0)" data-url="{% url 'client_create' %}" class="fab-new">
+    <i class="bi bi-person-plus-fill"></i> Nouveau Client
+</a>
+{% endblock %}

@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/upload.css' %}">
+{% endblock %}
+
+{% block page_title %}
+Validation Documents
+{% endblock %}
+
+{% block header_actions %}
+<form method="post" enctype="multipart/form-data" hx-boost="false" class="d-flex align-items-center gap-2">
+    {% csrf_token %}
+    <select class="form-select form-select-sm" name="document_type" style="width: auto; max-width: 200px;"
+        aria-label="Type de document">
+        <option value="" {% if not doc_type_selected %}selected{% endif %}>-- Type de Document --</option>
+        <option value="DEVIS_CLIENT" {% if doc_type_selected=="DEVIS_CLIENT" %}selected{% endif %}>Devis Client</option>
+        <option value="BON_COMMANDE" {% if doc_type_selected=="BON_COMMANDE" %}selected{% endif %}>Bon de Commande
+        </option>
+        <option value="ARC_FOURNISSEUR" {% if doc_type_selected=="ARC_FOURNISSEUR" %}selected{% endif %}>ARC Fournisseur
+        </option>
+        <option value="BON_LIVRAISON" {% if doc_type_selected=="BON_LIVRAISON" %}selected{% endif %}>Bon de Livraison
+        </option>
+        <option value="FICHE_FOURNISSEUR" {% if doc_type_selected=="FICHE_FOURNISSEUR" %}selected{% endif %}>Fiche
+            Fournisseur</option>
+        <option value="FICHE_CLIENT" {% if doc_type_selected=="FICHE_CLIENT" %}selected{% endif %}>Fiche Client</option>
+        <option value="FICHE_ARTICLE" {% if doc_type_selected=="FICHE_ARTICLE" %}selected{% endif %}>Fiche Article
+        </option>
+    </select>
+
+    <label class="btn btn-primary btn-sm d-flex align-items-center gap-2" for="headerFile">
+        <i class="bi bi-cloud-upload"></i>
+        <span>Importer</span>
+    </label>
+    <input type="file" id="headerFile" name="file" required class="d-none" onchange="this.form.submit()">
+</form>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column h-100" style="min-height: calc(100vh - 110px);">
+    <!-- MAIN CONTENT AREA -->
+    <div class="flex-grow-1 overflow-hidden position-relative">
+        {% if document %}
+        <!-- MODE VALIDATION (SPLIT SCREEN) -->
+        <div class="row h-100 g-0">
+
+            <!-- COLONNE GAUCHE : PDF VIEWER -->
+            <div class="col-md-5 bg-secondary d-none d-md-block pdf-viewer-column position-relative h-100">
+                {% if document.fichier %}
+                <div class="h-100 d-flex flex-column">
+                    <div class="bg-dark text-white p-2 text-end">
+                        <a href="{{ document.fichier.url }}" target="_blank" class="btn btn-sm btn-light">
+                            <i class="bi bi-box-arrow-up-right"></i> Ouvrir PDF
+                        </a>
+                    </div>
+                    <embed src="{{ document.fichier.url }}" width="100%" height="100%" type="application/pdf"
+                        title="Document Viewer">
+                </div>
+                {% else %}
+                <div class="d-flex align-items-center justify-content-center h-100 text-white">
+                    <div class="text-center">
+                        <i class="bi bi-file-earmark-x display-1"></i>
+                        <p>Aucun fichier PDF à afficher</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- COLONNE DROITE : COCKPIT VALIDATION -->
+            <div class="col-md-7 h-100 overflow-auto validation-form-column">
+                <div class="p-4 pb-5"> <!-- Added padding bottom for footer -->
+                    <form method="POST" action="{% url 'document_detail' document.id %}" novalidate>
+                        {% csrf_token %}
+
+                        <!-- HEADER -->
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="h4 mb-0">Validation de l'analyse</h2>
+                            <span class="badge bg-primary fs-6">
+                                {{ analysis_result.type_document|default:"DOCUMENT" }}
+                            </span>
+                        </div>
+
+                        {% if analysis_result.error %}
+                        <div class="alert alert-danger">{{ analysis_result.error }}</div>
+                        {% endif %}
+
+                        <!-- SECTION ACTEURS -->
+                        <div class="row g-3 mb-4">
+                            <!-- Card Fournisseur -->
+                            <div class="col-md-6">
+                                <div class="card h-100 shadow-sm border-start border-4 border-warning">
+                                    <div class="card-header bg-white fw-bold text-warning">Fournisseur (Emetteur
+                                        externe)</div>
+                                    <div class="card-body">
+                                        <div class="mb-2">
+                                            <label for="fournisseur_nom" class="form-label small text-muted">Nom /
+                                                Raison
+                                                Sociale</label>
+                                            <input type="text" class="form-control form-control-sm" id="fournisseur_nom"
+                                                name="fournisseur_nom"
+                                                value="{{ analysis_result.fournisseur.nom_fournisseur|default:'' }}">
+                                        </div>
+                                        <div class="mb-0">
+                                            <label for="fournisseur_siret"
+                                                class="form-label small text-muted">SIRET</label>
+                                            <input type="text" class="form-control form-control-sm"
+                                                id="fournisseur_siret" name="fournisseur_siret"
+                                                value="{{ analysis_result.fournisseur.siret|default:'' }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Card Client -->
+                            <div class="col-md-6">
+                                <div class="card h-100 shadow-sm border-start border-4 border-info">
+                                    <div class="card-header bg-white fw-bold text-info">Client (Destinataire/Nous)</div>
+                                    <div class="card-body">
+                                        <div class="mb-2">
+                                            <label for="client_nom" class="form-label small text-muted">Nom
+                                                Client</label>
+                                            <input type="text" class="form-control form-control-sm" id="client_nom"
+                                                name="client_nom" value="{{ analysis_result.client.nom|default:'' }}">
+                                        </div>
+                                        <div class="mb-0">
+                                            <label for="client_adresse" class="form-label small text-muted">Adresse /
+                                                Ville</label>
+                                            <input type="text" class="form-control form-control-sm" id="client_adresse"
+                                                name="client_adresse"
+                                                value="{{ analysis_result.client.adresse|default:'' }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION DETAILS -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Détails Commande</h6>
+                            </div>
+                            <div class="card-body row g-2">
+                                <div class="col-md-3">
+                                    <label for="date_document" class="small text-muted">Date Commande</label>
+                                    <input type="date" class="form-control form-control-sm" id="date_document"
+                                        name="date_document"
+                                        value="{{ analysis_result.details.dates.emission|default:'' }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="num_commande" class="small text-muted">N° Commande</label>
+                                    <input type="text" class="form-control form-control-sm" id="num_commande"
+                                        name="num_commande"
+                                        value="{{ analysis_result.details.numeros.commande_client|default:'' }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="num_arc" class="small text-muted">N° ARC</label>
+                                    <input type="text" class="form-control form-control-sm" id="num_arc" name="num_arc"
+                                        value="{{ analysis_result.details.numeros.arc|default:'' }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="nom_affaire" class="small text-muted">Affaire</label>
+                                    <input type="text" class="form-control form-control-sm" id="nom_affaire"
+                                        name="nom_affaire" value="{{ analysis_result.affaire.nom_affaire|default:'' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION ARTICLES -->
+                        <div class="card shadow-sm mb-5">
+                            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">Articles / Lignes</h6>
+                                <span class="badge bg-secondary">{{ analysis_result.articles|length }} lignes</span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm table-striped mb-0 align-middle">
+                                    <thead class="table-light">
+                                        <tr class="small text-muted text-uppercase">
+                                            <th class="col-ref">Ref</th>
+                                            <th class="col-des">Désignation</th>
+                                            <th class="col-ral">RAL</th>
+                                            <th class="col-qty">Qté</th>
+                                            <th class="col-price">Prix U.</th>
+                                            <th class="col-total text-end">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for ligne in analysis_result.articles %}
+                                        <tr>
+                                            <td>
+                                                <input type="text"
+                                                    class="form-control form-control-sm border-0 bg-transparent"
+                                                    name="lignes[{{ forloop.counter0 }}][code_article]"
+                                                    value="{{ ligne.code_article|default:'' }}"
+                                                    aria-label="Code Article ligne {{ forloop.counter }}">
+                                            </td>
+                                            <td>
+                                                <input type="text"
+                                                    class="form-control form-control-sm border-0 bg-transparent"
+                                                    name="lignes[{{ forloop.counter0 }}][designation]"
+                                                    value="{{ ligne.designation|default:'' }}"
+                                                    aria-label="Désignation ligne {{ forloop.counter }}">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-sm"
+                                                    name="lignes[{{ forloop.counter0 }}][ral]"
+                                                    value="{{ ligne.ral|default:'' }}" placeholder="RAL"
+                                                    aria-label="RAL ligne {{ forloop.counter }}">
+                                            </td>
+                                            <td>
+                                                <input type="number" step="0.01"
+                                                    class="form-control form-control-sm text-center"
+                                                    name="lignes[{{ forloop.counter0 }}][quantite]"
+                                                    value="{{ ligne.quantite|default:'0' }}"
+                                                    aria-label="Quantité ligne {{ forloop.counter }}">
+                                            </td>
+                                            <td>
+                                                <!-- Handle unit price logic (Normalized in Service) -->
+                                                <input type="number" step="0.01"
+                                                    class="form-control form-control-sm text-end"
+                                                    name="lignes[{{ forloop.counter0 }}][prix_unitaire]"
+                                                    value="{{ ligne.prix_unitaire }}"
+                                                    aria-label="Prix Unitaire ligne {{ forloop.counter }}">
+                                            </td>
+                                            <td class="text-end fw-bold">
+                                                {% with total=ligne.quantite|multiply:ligne.prix_unitaire %}
+                                                {{ total|floatformat:2 }} €
+                                                {% endwith %}
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="6" class="text-center p-3 text-muted">Aucune ligne détectée
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- FOOTER ACTIONS -->
+                        <div
+                            class="fixed-bottom col-md-7 offset-md-5 p-3 bg-white border-top shadow-lg d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted me-2">Total Estimé HT :</span>
+                                <span class="h4 text-primary mb-0">
+                                    {{ analysis_result.commande.prix_total_ht|floatformat:2 }} €
+                                </span>
+                            </div>
+                            <button type="submit" class="btn btn-success px-4 fw-bold">
+                                <i class="bi bi-check-circle-fill me-2"></i> VALIDER & INTÉGRER
+                            </button>
+                        </div>
+
+                        <!-- Spacer for fixed footer -->
+                        <div class="footer-spacer"></div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {% else %}
+        <!-- EMPTY STATE (No document selected) -->
+        <div class="d-flex align-items-center justify-content-center h-100 bg-light rounded-3"
+            style="min-height: 400px;">
+            <div class="text-center text-muted opacity-50">
+                <i class="bi bi-arrow-up-circle display-1 mb-3"></i>
+                <h3>Commencez ici</h3>
+                <p>Cliquez sur le bouton <strong>'Importer'</strong> en haut à droite</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

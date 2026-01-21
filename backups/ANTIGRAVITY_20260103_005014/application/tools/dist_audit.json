@@ -1,0 +1,321 @@
+{
+    "add_config_clients.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "affaires_detail.php": {
+        "has_db": true,
+        "link_count": 2,
+        "broken_items": []
+    },
+    "affaires_generer_commandes.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "affaires_liste.php": {
+        "has_db": true,
+        "link_count": 3,
+        "broken_items": []
+    },
+    "affaires_nouveau.php": {
+        "has_db": true,
+        "link_count": 2,
+        "broken_items": [
+            "clients_nouveau.php"
+        ]
+    },
+    "ai_parser.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "analyze_db.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "api_save_lines.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "api_theme.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "atelier_feuille_debit.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "atelier_liste.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "auth.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "besoins_saisie.php": {
+        "has_db": true,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "catalogue_detail.php": {
+        "has_db": true,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "catalogue_liste.php": {
+        "has_db": true,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "check_tables.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "client_actions.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "clients_detail.php": {
+        "has_db": true,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "clients_fiche.php": {
+        "has_db": false,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "clients_liste.php": {
+        "has_db": false,
+        "link_count": 2,
+        "broken_items": []
+    },
+    "commandes_detail.php": {
+        "has_db": true,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "commandes_liste.php": {
+        "has_db": true,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "commandes_reception.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "commandes_saisie.php": {
+        "has_db": true,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "config.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "create_stock_mouvements.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "dashboard.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "dashboard_backup_interactive_kpi.php": {
+        "has_db": true,
+        "link_count": 3,
+        "broken_items": []
+    },
+    "db.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "diagnostic_affaires_clients.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "diagnostic_client.php": {
+        "has_db": true,
+        "link_count": 2,
+        "broken_items": [
+            "execute_client_schema_direct.php"
+        ]
+    },
+    "email_config.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "envoyer_commande.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "footer.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "fournisseur_actions.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "fournisseurs_detail.php": {
+        "has_db": true,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "fournisseurs_liste.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "functions.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "ged_init_structure.php": {
+        "has_db": true,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "ged_manager.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "ged_upload.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "generer_bdc.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "gestion_metrage_ajax.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "gestion_metrage_planning.php": {
+        "has_db": true,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "gestion_metrage_terrain.php": {
+        "has_db": true,
+        "link_count": 2,
+        "broken_items": []
+    },
+    "header.php": {
+        "has_db": false,
+        "link_count": 15,
+        "broken_items": []
+    },
+    "header_pwa.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "info.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "login.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "logout.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "menu.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "parametres.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "planning_view.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "setup_api.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "setup_final.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "setup_settings.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "setup_task_items.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "stocks_liste.php": {
+        "has_db": true,
+        "link_count": 1,
+        "broken_items": []
+    },
+    "stocks_mouvements.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "style_guide.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "tasks.php": {
+        "has_db": true,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "validation_patterns.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    },
+    "view.php": {
+        "has_db": false,
+        "link_count": 0,
+        "broken_items": []
+    }
+}

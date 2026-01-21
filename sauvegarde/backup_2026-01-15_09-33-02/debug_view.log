@@ -1,0 +1,57 @@
+View called. Method: GET
+View called. Method: POST
+POST received. File present: True
+View called. Method: GET
+View called. Method: POST
+POST received. File present: True
+Creating Document object...
+CRITICAL VIEW ERROR: ERREUR:  la colonne « created_at » de la relation « documents_document » n'existe pas
+LINE 1: ...uments_document" ("id", "fichier", "ai_response", "created_a...
+                                                             ^
+
+View called. Method: GET
+View called. Method: POST
+POST received. File present: True
+Creating Document object...
+CRITICAL VIEW ERROR: ERREUR:  une valeur NULL viole la contrainte NOT NULL de la colonne « type_document » dans la relation « documents_document »
+DETAIL:  La ligne en échec contient (06bd3ad5-cdc5-40d2-8b89-5b3c7500cfa3, documents/20250110_MIL_BRUNET_fenetre_ARC_QmbHJy9.pdf, null, null, null, null, null, 2026-01-11 15:00:25.841161+00).
+
+View called. Method: GET
+View called. Method: POST
+POST received. File present: True
+Creating Document object...
+CRITICAL VIEW ERROR: ERREUR:  une valeur NULL viole la contrainte NOT NULL de la colonne « type_document » dans la relation « documents_document »
+DETAIL:  La ligne en échec contient (4d296c96-7648-4ae7-9c22-b822d10b3677, documents/20250113_AKR_BUSIN_plaque_ARC_0GpUZLJ.pdf, null, null, null, null, null, 2026-01-11 15:12:01.754326+00).
+
+View called. Method: GET
+View called. Method: POST
+POST received. File present: True
+Creating Document object...
+Document created: e11de3ba-49e2-4823-9589-6101e4344961. calling analyze_document...
+Analysis returned: {'type_document': 'Autre', 'date_document': '2025-01-13', 'fournisseur': {'Nom': 'AKRAPLAST France S.A.S.', 'Adresse': '31 Avenue de Bruxelles Z.I. Les Estroublans - BP 82100, 13846 VITROLLES CEDEX 9', 'SIRET': 'FR14390535904'}, 'montant_ht': 4104.47, 'montant_ttc': 4925.36, 'liste_articles': [{'ref': 'IMPACTCONTROL7', 'designation': 'IMPACT CONTROL 75 mm', 'qte': 33.6, 'prix_unitaire': 182.22, 'montant_ligne': 4040.91}, {'ref': 'YVC1420', 'designation': 'MEMB IMPACT NG T PROVENCE 1220', 'qte': 40.32, 'prix_unitaire': None, 'montant_ligne': None}, {'ref': 'YK70E3500', 'designation': 'ACOUST BLC EC/BLC 3500x1200x70 (PL)', 'qte': 8.0, 'prix_unitaire': None, 'montant_ligne': None}, {'ref': 'YK70E3500', 'designation': 'ACOUST BLC EC/BLC 3500x1200x70 (UN)', 'qte': 4.0, 'prix_unitaire': None, 'montant_ligne': None}, {'ref': 'YA0275A', 'designation': 'CORN.ALU BRUT30x10x2x1200', 'qte': 8.0, 'prix_unitaire': None, 'montant_ligne': None}, {'ref': 'YA0275D', 'designation': 'CORN.ALU BRUT30x10x2x6000 16 FOIS 3500', 'qte': 16.0, 'prix_unitaire': None, 'montant_ligne': None}, {'ref': None, 'designation': 'Montant Eco-contribution', 'qte': 1.0, 'prix_unitaire': 3.56, 'montant_ligne': 3.56}, {'ref': 'PORT', 'designation': 'PORT', 'qte': 1.0, 'prix_unitaire': 60.0, 'montant_ligne': 60.0}]}
+View called. Method: GET
+Rendering template. Analysis Result Present: False
+View called. Method: POST
+POST received. File present: True
+Creating Document object...
+CRITICAL VIEW ERROR: ERREUR:  la colonne « date_document » de la relation « documents_document » n'existe pas
+LINE 1: ...r", "ai_response", "created_at", "type_document", "date_docu...
+                                                             ^
+
+Rendering template. Analysis Result Present: False
+View called. Method: POST
+POST received. File present: True
+Creating Document object...
+CRITICAL VIEW ERROR: ERREUR:  la colonne « date_document » de la relation « documents_document » n'existe pas
+LINE 1: ...r", "ai_response", "created_at", "type_document", "date_docu...
+                                                             ^
+
+Rendering template. Analysis Result Present: False
+View called. Method: POST
+POST received. File present: True
+Creating Document object...
+Document created: 3ba782be-205e-4b5c-907d-121d8e0ef8f5. calling analyze_document...
+Analysis returned: {'type_document': 'Confirmation de Commande', 'date_document': '2025-01-13', 'fournisseur': {'Nom': 'AKRAPLAST France S.A.S.', 'Adresse': '31 Avenue de Bruxelles Z.I. Les Estroublans - BP 82100 13846 VITROLLES CEDEX 9', 'SIRET': None}, 'montant_ht': 4104.47, 'montant_ttc': 4925.36, 'liste_articles': [{'ref': 'IMPACTCONTROL7', 'designation': 'IMPACT CONTROL 75 mm', 'qte': 33.6, 'prix_unitaire': 182.22, 'montant_ligne': 4040.91}, {'ref': 'YVC1420', 'designation': 'MEMB IMPACT NG T PROVENCE 1220', 'qte': 40.32, 'prix_unitaire': None, 'montant_ligne': 0.0}, {'ref': 'YK70E3500', 'designation': 'ACOUST BLC EC/BLC 3500x1200x70 PL', 'qte': 33.6, 'prix_unitaire': None, 'montant_ligne': 0.0}, {'ref': 'YK70E3500', 'designation': 'ACOUST BLC EC/BLC 3500x1200x70 UN', 'qte': 4.0, 'prix_unitaire': None, 'montant_ligne': 0.0}, {'ref': 'YA0275A', 'designation': 'CORN.ALU BRUT30x10x2x1200', 'qte': 9.6, 'prix_unitaire': None, 'montant_ligne': 0.0}, {'ref': 'YA0275D', 'designation': 'CORN.ALU BRUT30x10x2x6000 16 FOIS 3500', 'qte': 96.0, 'prix_unitaire': None, 'montant_ligne': 0.0}, {'ref': None, 'designation': 'Montant Eco-contribution', 'qte': 1, 'prix_unitaire': 3.56, 'montant_ligne': 3.56}, {'ref': None, 'designation': 'PORT', 'qte': 1, 'prix_unitaire': 60.0, 'montant_ligne': 60.0}]}
+CRITICAL VIEW ERROR: ERREUR:  valeur trop longue pour le type character varying(20)
+
+Rendering template. Analysis Result Present: True

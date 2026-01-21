@@ -1,0 +1,60 @@
+{% for besoin in besoins %}
+<tr class="fade-in-row">
+    <td class="ps-4">
+        {% if besoin.statut != 'COMMANDE' %}
+        <input type="checkbox" name="besoin_ids" value="{{ besoin.id }}" class="form-check-input row-checkbox"
+            x-model="selected" aria-label="Sélectionner">
+        {% else %}
+        <i class="bi bi-check-circle-fill text-success opacity-50"></i>
+        {% endif %}
+    </td>
+    <td class="text-nowrap font-monospace text-muted small">{{ besoin.article.ref_fournisseur|default:"-" }}</td>
+    <td>
+        <div class="fw-bold text-dark">{{ besoin.article.designation }}</div>
+        {% if besoin.notes %}
+        <div class="small text-muted fst-italic"><i class="bi bi-chat-left-text me-1"></i>{{ besoin.notes }}</div>
+        {% endif %}
+    </td>
+    <td>
+        {% if besoin.article.fournisseur %}
+        <span class="badge bg-light text-dark border">{{
+            besoin.article.fournisseur.code_fournisseur|default:besoin.article.fournisseur.nom_fournisseur|truncatechars:10
+            }}</span>
+        {% else %} - {% endif %}
+    </td>
+    <td class="text-center fw-bold">{{ besoin.quantite|floatformat:1 }}</td>
+    <td class="text-center small text-muted">{{ besoin.unite }}</td>
+    <td class="text-center">
+        {% if besoin.ral %}<span class="badge rounded-pill text-bg-secondary">{{ besoin.ral }}</span>{% else %}-{% endif
+        %}
+    </td>
+    <td class="text-center">
+        {% if besoin.statut == 'A_TRAITER' %}
+        <span class="badge bg-warning text-dark border border-warning-subtle"><i class="bi bi-hourglass me-1"></i>À
+            traiter</span>
+        {% elif besoin.statut == 'VALIDE' %}
+        <span class="badge bg-success"><i class="bi bi-check-lg me-1"></i>Validé</span>
+        {% elif besoin.statut == 'COMMANDE' %}
+        <span class="badge bg-primary"><i class="bi bi-cart-check me-1"></i>Commandé</span>
+        {% endif %}
+    </td>
+    <td class="text-end pe-4">
+        <button type="button" class="btn btn-sm btn-link text-danger p-0" title="Supprimer"
+            hx-delete="{% url 'delete_besoin' besoin.id %}" hx-confirm="Supprimer cette ligne ?" hx-target="closest tr"
+            hx-swap="outerHTML swap:0.5s">
+            <i class="bi bi-trash"></i>
+        </button>
+    </td>
+</tr>
+{% empty %}
+<tr id="empty-state-row">
+    <td colspan="9" class="text-center py-5 text-muted">
+        <div class="mb-2"><i class="bi bi-basket2 display-6 opacity-25"></i></div>
+        Aucun besoin. Ajoutez des articles depuis le panneau de droite.
+    </td>
+</tr>
+{% endfor %}
+
+<div id="stats-update" hx-swap-oob="innerHTML:#besoins-counter">
+    <i class="bi bi-list-ol me-1"></i> {{ besoins|length }} lignes
+</div>

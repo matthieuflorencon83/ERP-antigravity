@@ -1,0 +1,16 @@
+Array
+(
+    [POST] => Array
+        (
+            [imputation_type] => STOCK
+            [module_type] => PLIAGE
+            [fournisseur] => TEST_PLIAGE_STOCK
+            [matiere] => ALU
+            [ral] => 7016
+            [quantite] => 5
+            [canvas_image] => data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==
+        )
+
+    [COMPUTED_AFFAIRE_ID] => 
+    [TYPE] => NULL
+)

@@ -1,0 +1,231 @@
+/* assets/css/cockpit.css */
+/* FORCE REFRESH */
+
+:root {
+    --col-width: 280px;
+    --bg-kanban: #f4f6f8;
+}
+
+body {
+    background-color: var(--bg-kanban);
+    overflow-x: hidden;
+}
+
+.cockpit-container {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 15px;
+    height: calc(100vh - 80px);
+    padding: 15px;
+}
+
+/* KANBAN BOARD */
+.kanban-board {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding-bottom: 10px;
+}
+
+.kanban-column {
+    min-width: var(--col-width);
+    max-width: var(--col-width);
+    background: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border-top: 4px solid #ccc;
+}
+
+.col-header {
+    padding: 10px 15px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px 12px 0 0;
+    border-bottom: 1px solid #eee;
+}
+
+.col-body {
+    padding: 8px;
+    flex-grow: 1;
+    overflow-y: auto;
+    background: #f8f9fa;
+}
+
+/* CARDS - ULTRA COMPACT */
+#kanban-area .k-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 8px !important;
+    margin-bottom: 8px;
+    cursor: grab;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+#kanban-area .k-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.08);
+}
+
+#kanban-area .k-card.priority-high {
+    border-left: 3px solid #e74c3c;
+}
+
+.k-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+    color: #2c3e50;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.k-desc {
+    font-size: 0.75rem;
+    color: #6c757d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.k-meta {
+    font-size: 0.7rem;
+    color: #999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 4px;
+    margin-top: 4px;
+}
+
+.k-btn-view {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #0d6efd;
+    border: 1px solid #dee2e6;
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
+.k-btn-view:hover {
+    background: #0d6efd;
+    color: white;
+}
+
+/* MAP SIDEBAR */
+.map-sidebar {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+#map {
+    flex-grow: 1;
+    width: 100%;
+    min-height: 200px;
+}
+
+/* COLUMN COLORS */
+.col-plan {
+    border-top-color: #3498db;
+}
+
+.col-progress {
+    border-top-color: #f1c40f;
+}
+
+.col-validate {
+    border-top-color: #9b59b6;
+}
+
+.col-done {
+    border-top-color: #2ecc71;
+}
+
+.blink {
+    animation: blinker 1.5s linear infinite;
+}
+
+@keyframes blinker {
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* DARK MODE OVERRIDES (Financial Petrol Theme) */
+[data-bs-theme="dark"] body {
+    background-color: #1a252f;
+    /* Darker Petrol Global */
+}
+
+[data-bs-theme="dark"] .kanban-column {
+    background: #2c3e50;
+    /* Petrol Blue */
+    border-color: #34495e;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+[data-bs-theme="dark"] .col-header {
+    background: #34495e;
+    /* Wet Asphalt */
+    color: #fff;
+    border-bottom-color: #465c71;
+}
+
+[data-bs-theme="dark"] .col-body {
+    background: #2c3e50;
+    /* Match Column */
+}
+
+[data-bs-theme="dark"] #kanban-area .k-card {
+    background: #34495e;
+    /* Lighter Petrol for Cards */
+    border-color: #465c71;
+    color: #ecf0f1;
+}
+
+[data-bs-theme="dark"] .k-title {
+    color: #fff;
+}
+
+[data-bs-theme="dark"] .k-desc {
+    color: #bdc3c7;
+}
+
+[data-bs-theme="dark"] .k-meta {
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-bs-theme="dark"] .map-sidebar {
+    background: #2c3e50;
+    color: #ecf0f1;
+}
+
+[data-bs-theme="dark"] .map-header button {
+    color: #bdc3c7 !important;
+}
+
+[data-bs-theme="dark"] .alert-light {
+    background: #34495e;
+    border-color: #465c71;
+    color: #ecf0f1;
+}

@@ -1,0 +1,58 @@
+=== DIAGNOSTIC BASE DE DONNÉES METRAGE ===
+
+1. TABLES EXISTANTES :
+--------------------------------------------------
+✓ metrage_etapes
+✓ metrage_guides_full
+✓ metrage_interventions
+✓ metrage_lignes
+✓ metrage_photos
+✓ metrage_points_controle
+✓ metrage_types
+✓ sav_interventions
+
+2. STRUCTURE metrage_interventions :
+--------------------------------------------------
+id                        int                  NOT NULL
+affaire_id                int                  NOT NULL
+date_prevue               datetime             NULL
+date_realisee             datetime             NULL
+statut                    enum('A_PLANIFIER','PLANIFIE','EN_COURS','VALIDE','A_REVOIR','TERMINE') NULL
+technicien_id             int                  NULL
+infos_acces               text                 NULL
+notes_generales           text                 NULL
+gps_lat                   decimal(10,8)        NULL
+gps_lon                   decimal(11,8)        NULL
+created_at                timestamp            NULL
+updated_at                timestamp            NULL
+
+3. DONNÉES metrage_interventions :
+--------------------------------------------------
+Nombre de lignes: 5
+Ligne 0: {"id":1,"affaire_id":1,"date_prevue":null,"date_realisee":null,"statut":"A_PLANIFIER","technicien_id":null,"infos_acces":null,"notes_generales":null,"gps_lat":null,"gps_lon":null,"created_at":"2025-12-30 23:30:57","updated_at":"2025-12-30 23:30:57"}
+Ligne 1: {"id":2,"affaire_id":17,"date_prevue":"2026-01-01 01:02:00","date_realisee":null,"statut":"A_PLANIFIER","technicien_id":1,"infos_acces":null,"notes_generales":null,"gps_lat":null,"gps_lon":null,"created_at":"2025-12-31 00:15:23","updated_at":"2025-12-31 11:59:09"}
+Ligne 2: {"id":3,"affaire_id":12,"date_prevue":null,"date_realisee":null,"statut":"A_PLANIFIER","technicien_id":1,"infos_acces":null,"notes_generales":null,"gps_lat":null,"gps_lon":null,"created_at":"2025-12-31 09:32:59","updated_at":"2025-12-31 09:32:59"}
+Ligne 3: {"id":4,"affaire_id":2,"date_prevue":"2026-01-05 10:18:53","date_realisee":null,"statut":"EN_COURS","technicien_id":null,"infos_acces":null,"notes_generales":"Métrage spontané via Assistant","gps_lat":null,"gps_lon":null,"created_at":"2025-12-31 10:18:53","updated_at":"2025-12-31 11:59:13"}
+Ligne 4: {"id":5,"affaire_id":16,"date_prevue":null,"date_realisee":null,"statut":"A_PLANIFIER","technicien_id":1,"infos_acces":null,"notes_generales":null,"gps_lat":null,"gps_lon":null,"created_at":"2025-12-31 17:39:33","updated_at":"2025-12-31 17:39:33"}
+
+4. COLONNES DE LA TABLE clients :
+--------------------------------------------------
+id
+civilite
+nom_principal
+prenom
+code_client
+email_principal
+telephone_fixe
+telephone_mobile
+adresse_postale
+code_postal
+ville
+pays
+notes
+commentaire
+date_creation
+is_temp
+gps_lat
+gps_lng
+photo_facade

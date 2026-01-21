@@ -1,0 +1,88 @@
+{% extends 'core/list_generic.html' %}
+
+{% block list_title %}
+<i class="bi bi-truck text-primary me-2"></i>Fournisseurs
+{% endblock %}
+
+{% block table_headers %}
+<th style="width: 25%;">Société</th>
+<th style="width: 15%;">Code Fournisseur</th>
+<th style="width: 25%;">Ville / Adresse</th>
+<th style="width: 20%;">Contact Principal</th>
+{% endblock %}
+
+{% block table_filters %}
+<th>
+    <input type="text" name="nom" class="filter-input" placeholder="Filtrer nom..." value="{{ filters.nom }}">
+</th>
+<th>
+    <input type="text" name="code" class="filter-input" placeholder="Code..." value="{{ filters.code }}">
+</th>
+<th>
+    <input type="text" name="ville" class="filter-input" placeholder="Ville..." value="{{ filters.ville }}">
+</th>
+<th>
+    <!-- Contact filter difficult inline, keeping simple text search on contact name later if needed -->
+</th>
+{% endblock %}
+
+{% block table_rows %}
+{% for f in fournisseurs %}
+<tr class="align-middle clickable-row" hx-get="{% url 'fournisseur_edit' f.pk %}" hx-target="#detailSidebarContent"
+    hx-swap="innerHTML" style="cursor: pointer;">
+    <td>
+        <div class="fw-bold text-dark small">{{ f.nom_fournisseur }}</div>
+        {% if f.siret %}
+        <div class="text-muted" style="font-size: 0.75rem;">SIRET: {{ f.siret }}</div>
+        {% endif %}
+    </td>
+    <td class="font-monospace text-muted small">
+        {{ f.code_fournisseur|default:"-" }}
+    </td>
+    <td>
+        <div class="text-truncate d-inline-block small" style="max-width: 250px;" title="{{ f.adresse }}">
+            {{ f.adresse|default:"-" }}
+        </div>
+        {% if f.notes %}
+        <i class="bi bi-sticky text-warning ms-1" title="{{ f.notes|truncatechars:100 }}"></i>
+        {% endif %}
+    </td>
+    <td>
+        {% with f.corecontact_set.first as contact %}
+        {% if contact %}
+        <div class="small text-dark fw-medium">{{ contact.prenom }} {{ contact.nom }}</div>
+        {% if contact.telephone %}
+        <div class="text-muted" style="font-size: 0.75rem;">{{ contact.telephone }}</div>
+        {% endif %}
+        {% else %}
+        <span class="text-muted small fst-italic">-</span>
+        {% endif %}
+        {% endwith %}
+    </td>
+
+    <!-- Actions -->
+    <td class="text-end">
+        <div class="row-actions">
+            <a href="{% url 'fournisseur_edit' f.pk %}" class="action-btn" title="Modifier">
+                <i class="bi bi-pencil-fill"></i>
+            </a>
+            <a href="#" class="action-btn text-danger" title="Supprimer" onclick="alert('Fonctionnalité à venir')">
+                <i class="bi bi-trash-fill"></i>
+            </a>
+        </div>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="5" class="text-center py-5 text-muted fst-italic">
+        Aucun fournisseur trouvé.
+    </td>
+</tr>
+{% endfor %}
+{% endblock %}
+
+{% block floating_action %}
+<a href="javascript:void(0)" data-url="{% url 'fournisseur_create' %}" class="fab-new">
+    <i class="bi bi-plus-lg"></i> Nouveau Fournisseur
+</a>
+{% endblock %}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test JavaScript TodoList</title>
+</head>
+<body>
+    <h1>Test Event Listeners</h1>
+    
+    <!-- Simuler une tâche -->
+    <div class="task-item" 
+         data-task-id="4" 
+         data-subtasks='[{"id":1,"content":"Test 1","is_completed":0},{"id":2,"content":"Test 2","is_completed":1}]'
+         style="border: 1px solid black; padding: 10px; cursor: pointer; margin: 10px;">
+        Cliquez sur cette tâche de test
+    </div>
+    
+    <div id="subtasks-panel" style="border: 1px solid red; padding: 10px; min-height: 200px;">
+        Panneau sous-tâches (vide au départ)
+    </div>
+    
+    <script>
+    console.log('Script chargé');
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM Ready');
+        
+        const taskItems = document.querySelectorAll('.task-item');
+        console.log('Nombre de tâches trouvées:', taskItems.length);
+        
+        const subtasksPanel = document.getElementById('subtasks-panel');
+        console.log('Panneau trouvé:', subtasksPanel ? 'OUI' : 'NON');
+        
+        taskItems.forEach((item, index) => {
+            console.log(`Attachement listener sur tâche ${index}`);
+            
+            item.addEventListener('click', function() {
+                console.log('CLIC DÉTECTÉ !');
+                
+                const subtasks = JSON.parse(this.getAttribute('data-subtasks') || '[]');
+                const taskId = this.getAttribute('data-task-id');
+                
+                console.log('Task ID:', taskId);
+                console.log('Subtasks:', subtasks);
+                
+                let html = '<h6>Sous-tâches</h6><ul>';
+                subtasks.forEach(sub => {
+                    html += `<li>${sub.content} (${sub.is_completed ? 'Fait' : 'À faire'})</li>`;
+                });
+                html += '</ul>';
+                
+                subtasksPanel.innerHTML = html;
+                console.log('HTML injecté');
+            });
+        });
+        
+        console.log('Tous les listeners attachés');
+    });
+    </script>
+</body>
+</html>

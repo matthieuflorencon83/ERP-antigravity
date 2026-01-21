@@ -1,0 +1,1078 @@
+/* assets/css/metrage_studio_theme.css */
+
+:root {
+    /* LIGHT MODE DEFAULTS */
+    --studio-bg: #f0f2f5;
+    --studio-panel-bg: #ffffff;
+    --studio-border: #e9ecef;
+    --studio-text: #212529;
+    --studio-text-mute: #6c757d;
+    --studio-accent: #0d6efd;
+    --studio-accent-dim: #e6f0ff;
+    --studio-canvas-bg: #e9ecef;
+
+    --header-height: 96px;
+    /* 56px Nav + 40px Ticker exactly */
+}
+
+/* DARK MODE OVERRIDES */
+[data-bs-theme="dark"] {
+    --studio-bg: #121212;
+    --studio-panel-bg: #1e1e1e;
+    --studio-border: #2c2c2c;
+    --studio-text: #e0e0e0;
+    --studio-text-mute: #a0a0a0;
+    --studio-accent: #3788d8;
+    /* Softer blue */
+    --studio-accent-dim: #1a2a3a;
+    --studio-canvas-bg: #18191a;
+}
+
+body.studio-mode {
+    background-color: var(--studio-bg);
+    color: var(--studio-text);
+    overflow: hidden;
+    /* Desktop default */
+    padding-top: var(--header-height);
+}
+
+/* RESET GLOBAL CONTAINER PADDING */
+body.studio-mode .ag-main-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+}
+
+/* LAYOUT */
+.studio-container {
+    display: flex;
+    height: calc(100vh - var(--header-height));
+    width: 100vw;
+    background: var(--studio-bg);
+}
+
+/* 1. LEFT PANEL */
+.studio-left {
+    width: 250px;
+    background: var(--studio-panel-bg);
+    border-right: 1px solid var(--studio-border);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s;
+    z-index: 100;
+}
+
+.studio-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--studio-border);
+    cursor: pointer;
+    border-left: 4px solid transparent;
+    color: var(--studio-text);
+}
+
+.studio-item:hover {
+    background: var(--studio-bg);
+}
+
+.studio-item.active {
+    background: var(--studio-accent-dim);
+    border-left-color: var(--studio-accent);
+    color: var(--studio-accent);
+}
+
+.studio-item-add {
+    padding: 15px;
+    text-align: center;
+    border-top: 1px solid var(--studio-border);
+    background: var(--studio-panel-bg);
+    cursor: pointer;
+    color: var(--studio-accent);
+    font-weight: bold;
+}
+
+/* 2. CENTER PANEL */
+.studio-center {
+    flex: 1;
+    background: var(--studio-canvas-bg);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.canvas-container {
+    width: 80%;
+    height: 80%;
+    background: var(--studio-panel-bg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    position: relative;
+    padding: 20px;
+}
+
+/* INPUT FLOATING ON CANVAS */
+.canvas-overlay-input {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 90px;
+    text-align: center;
+    font-weight: bold;
+    border: 2px solid var(--studio-accent);
+    border-radius: 4px;
+    padding: 5px;
+    background: var(--studio-panel-bg);
+    color: var(--studio-text);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 3. RIGHT PANEL */
+.studio-right {
+    width: 350px;
+    background: var(--studio-panel-bg);
+    border-left: 1px solid var(--studio-border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.inspector-header {
+    padding: 15px;
+    background: var(--studio-panel-bg);
+    border-bottom: 1px solid var(--studio-border);
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+
+.inspector-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--studio-border);
+}
+
+.inspector-tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--studio-text-mute);
+    border-bottom: 2px solid transparent;
+}
+
+.inspector-tab.active {
+    border-bottom-color: var(--studio-accent);
+    color: var(--studio-accent);
+    background: var(--studio-accent-dim);
+}
+
+.inspector-content {
+    padding: 20px;
+    flex: 1;
+}
+
+.prop-group {
+    margin-bottom: 20px;
+    background: var(--studio-bg);
+    border: 1px solid var(--studio-border);
+    border-radius: 8px;
+    padding: 15px;
+}
+
+.prop-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--studio-text-mute);
+    margin-bottom: 8px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+/* ============================
+   MOBILE RESPONSIVENESS
+   ============================ */
+@media (max-width: 991px) {
+    body.studio-mode {
+        overflow: auto;
+        /* Allow Scroll on mobile */
+    }
+
+    .studio-container {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    /* LEFT: Top Bar / Drawer */
+    .studio-left {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--studio-border);
+        order: 2;
+        /* Put list below canvas or make it a drawer? Let's put it at top for nav or bottom? */
+        /* Better UX: Canvas First (Center), properties below, List via Menu */
+        display: none;
+        /* Hide List by default, use toggle */
+    }
+
+    .studio-left.mobile-visible {
+        display: flex;
+    }
+
+    /* CENTER: Canvas */
+    .studio-center {
+        order: 1;
+        height: 60vh;
+        /* Big Visual Area */
+    }
+
+    .canvas-container {
+        width: 95%;
+        height: 95%;
+        margin: 10px auto;
+    }
+
+    /* RIGHT: Properties */
+    .studio-right {
+        order: 3;
+        width: 100%;
+        height: auto;
+        border-left: none;
+        border-top: 1px solid var(--studio-border);
+        overflow: visible;
+    }
+
+    /* TOUCH-FRIENDLY BUTTONS (Antigravity Protocol: min 44px) */
+    .studio-item-add,
+    .studio-catalog-card,
+    .btn {
+        min-height: 48px;
+        padding: 12px;
+    }
+
+    .inspector-tab {
+        min-height: 50px;
+        font-size: 0.75rem;
+    }
+
+    .canvas-overlay-input {
+        min-height: 44px;
+        font-size: 1rem;
+        padding: 10px;
+    }
+}
+
+/* CATALOG CARDS (Creation Flow) */
+.studio-catalog-card {
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    cursor: pointer;
+    background: var(--studio-panel-bg);
+    border: 1px solid var(--studio-border);
+    color: var(--studio-text);
+}
+
+.studio-catalog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: var(--studio-accent);
+}
+
+.studio-catalog-card i {
+    color: var(--studio-accent);
+}
+
+.studio-catalog-card .card-body {
+    padding: 2rem;
+}
+
+/* =========================================
+   CONTEXT HEADER BAR
+   ========================================= */
+.studio-context-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: var(--studio-panel-bg);
+    border-bottom: 1px solid var(--studio-border);
+    position: sticky;
+    top: 0;
+    z-index: 200;
+}
+
+.studio-context-header h5 {
+    color: var(--studio-text);
+}
+
+/* =========================================
+   ASSISTANT PANEL (Far Right)
+   ========================================= */
+.studio-assistant {
+    width: 280px;
+    background: var(--studio-panel-bg);
+    border-left: 1px solid var(--studio-border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.assistant-header {
+    padding: 15px;
+    background: linear-gradient(135deg, var(--studio-accent) 0%, #6610f2 100%);
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.assistant-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+#assistant-stream {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.ag-assistant-message {
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid var(--studio-border);
+    font-size: 0.85rem;
+}
+
+.ag-assistant-message .icon {
+    width: 30px;
+    font-size: 1.2rem;
+    color: var(--studio-accent);
+}
+
+.assistant-checklist {
+    background: var(--studio-accent-dim);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.assistant-checklist li {
+    padding: 5px 0;
+    border-bottom: 1px solid var(--studio-border);
+}
+
+/* Adjust main container for 4 panels */
+.studio-container {
+    display: flex;
+    height: calc(100vh - var(--header-height) - 60px);
+    /* Account for context header */
+}
+
+/* Mobile Assistant Toggle */
+@media (max-width: 991px) {
+    .studio-assistant {
+        position: fixed;
+        right: -300px;
+        top: var(--header-height);
+        height: calc(100vh - var(--header-height));
+        transition: right 0.3s;
+        z-index: 300;
+        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .studio-assistant.mobile-visible {
+        right: 0;
+    }
+}
+
+/* Adjust for header visibility */
+body.studio-mode {
+    padding-top: 0 !important;
+    /* Context header handles spacing now */
+}
+
+body.studio-mode .ag-main-content {
+    padding-top: var(--header-height) !important;
+}
+
+/* =========================================
+   FLOATING ASSISTANT POPUP
+   ========================================= */
+.assistant-popup {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 320px;
+    max-height: 450px;
+    background: var(--studio-panel-bg);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--studio-border);
+}
+
+.assistant-popup.show {
+    display: flex;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.assistant-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: linear-gradient(135deg, var(--studio-accent) 0%, #6610f2 100%);
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.assistant-popup-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    max-height: 350px;
+}
+
+.assistant-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--studio-accent) 0%, #6610f2 100%);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 999;
+    transition: transform 0.2s;
+}
+
+.assistant-toggle-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Hide inline assistant panel CSS (now using popup) */
+.studio-assistant {
+    display: none !important;
+}
+
+/* Adjust container for 3 panels instead of 4 */
+.studio-container {
+    display: flex;
+    height: calc(100vh - var(--header-height) - 60px);
+}
+
+/* =========================================
+   CONVERSATIONAL WIZARD UI (V6)
+   ========================================= */
+body.conversation-mode .ag-main-content {
+    padding: 0 !important;
+}
+
+.assistant-conversation-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+}
+
+.conversation-topbar {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.conversation-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Chat Bubbles */
+.chat-bubble {
+    max-width: 80%;
+    padding: 15px 20px;
+    border-radius: 18px;
+    animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chat-bubble.assistant {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+.chat-bubble.user {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.chat-bubble .bubble-icon {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 0.8rem;
+}
+
+.chat-bubble h5 {
+    margin: 0 0 5px 0;
+    font-size: 1rem;
+}
+
+.chat-bubble p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Response Area (Buttons) */
+.response-area {
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.response-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.response-btn {
+    padding: 15px 25px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border-radius: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 150px;
+    text-align: center;
+}
+
+.response-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--studio-accent);
+    transform: translateY(-2px);
+}
+
+.response-btn.selected {
+    background: var(--studio-accent);
+    border-color: var(--studio-accent);
+}
+
+.response-btn i {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+/* Input Response */
+.response-input-group {
+    display: flex;
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.response-input {
+    flex: 1;
+    padding: 15px 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 12px;
+    font-size: 1.1rem;
+}
+
+.response-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.response-input:focus {
+    outline: none;
+    border-color: var(--studio-accent);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Ouvrages Drawer */
+.ouvrages-drawer {
+    position: fixed;
+    top: 0;
+    left: -320px;
+    width: 300px;
+    height: 100vh;
+    background: var(--studio-panel-bg);
+    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: left 0.3s ease;
+}
+
+.ouvrages-drawer.open {
+    left: 0;
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: var(--studio-accent);
+    color: white;
+    font-weight: bold;
+}
+
+.drawer-body {
+    padding: 15px;
+    overflow-y: auto;
+    height: calc(100% - 50px);
+}
+
+.drawer-toggle-btn {
+    position: fixed;
+    bottom: 80px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--studio-accent);
+    color: white;
+    border: none;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    z-index: 999;
+}
+
+.drawer-toggle-btn .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 0.7rem;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .response-btn {
+        min-width: 120px;
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+
+    .response-btn i {
+        font-size: 1.5rem;
+    }
+
+    .chat-bubble {
+        max-width: 90%;
+    }
+}
+
+/* =========================================
+   SMART WIZARD V7 ENHANCEMENTS
+   ========================================= */
+
+/* Etape Progress Indicator */
+.etape-progress {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    margin-right: 8px;
+}
+
+/* Rappel / Warning Box */
+.assistant-rappel {
+    background: rgba(255, 193, 7, 0.15);
+    border-left: 4px solid #ffc107;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border-radius: 0 8px 8px 0;
+    color: #ffeeba;
+    font-size: 0.9rem;
+    max-width: 80%;
+    animation: fadeInUp 0.3s ease;
+}
+
+/* Schema Image */
+.assistant-schema {
+    max-width: 300px;
+    margin: 15px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.assistant-schema img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Multi MM Inputs */
+.multi-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.multi-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.multi-input-row label {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    min-width: 80px;
+}
+
+.multi-input-row .response-input {
+    flex: 1;
+}
+
+/* Input Suffix (mm, cm, etc) */
+.input-suffix {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    margin-left: -40px;
+    padding-right: 10px;
+}
+
+/* Photo Upload */
+.photo-input-group {
+    text-align: center;
+}
+
+.photo-upload-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 30px 40px;
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.photo-upload-btn:hover {
+    border-color: var(--studio-accent);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Bubble Content Formatting */
+.bubble-content strong {
+    color: #fff;
+}
+
+.bubble-content em {
+    opacity: 0.8;
+}
+
+/* Wizard Navigation Bottom */
+.wizard-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .assistant-rappel {
+        max-width: 100%;
+    }
+
+    .assistant-schema {
+        max-width: 100%;
+    }
+
+    .multi-input-group {
+        max-width: 100%;
+    }
+
+    .response-btn {
+        min-width: 100px;
+        font-size: 0.85rem;
+    }
+}
+
+/* =========================================
+   EDITABLE RECAP (Product Edit Mode)
+   ========================================= */
+.editable-recap {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.recap-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.recap-field:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--studio-accent);
+}
+
+.recap-field .field-label {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    min-width: 100px;
+}
+
+.recap-field .field-value {
+    flex: 1;
+    text-align: right;
+    color: white;
+    font-weight: 500;
+    margin: 0 10px;
+}
+
+.recap-field .fa-pen {
+    color: var(--studio-accent);
+    font-size: 0.75rem;
+    opacity: 0.5;
+}
+
+.recap-field:hover .fa-pen {
+    opacity: 1;
+}
+
+
+/* =========================================
+   SIDEBAR TREE VIEW (V8)
+   ========================================= */
+.studio-v8-wrapper {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.studio-sidebar {
+    width: 280px;
+    min-width: 280px;
+    background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tree-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+/* Tree Nodes */
+.tree-node {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 5px;
+}
+
+.tree-node::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.tree-root {
+    padding-left: 0;
+    margin-bottom: 15px;
+}
+
+.tree-root::before {
+    display: none;
+}
+
+.node-header {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.node-header:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.node-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.node-meta {
+    padding-left: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.75rem;
+}
+
+/* Product Node */
+.tree-product {
+    margin-left: 10px;
+}
+
+.tree-product>.node-header {
+    background: rgba(102, 126, 234, 0.2);
+    border-left: 3px solid var(--studio-accent);
+}
+
+.tree-product.active>.node-header {
+    background: var(--studio-accent);
+}
+
+/* Etape Node */
+.tree-etape {
+    margin-left: 25px;
+}
+
+.tree-etape>.node-header {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+}
+
+.tree-etape.done>.node-header {
+    color: #66bb6a;
+}
+
+.tree-etape.current>.node-header {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+}
+
+.tree-etape.pending>.node-header {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Legend */
+.tree-legend {
+    padding: 10px 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-around;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.tree-legend span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Main Area */
+.studio-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Mobile Sidebar */
+@media (max-width: 992px) {
+    .studio-sidebar {
+        position: fixed;
+        left: -300px;
+        top: 0;
+        height: 100vh;
+        z-index: 1050;
+        transition: left 0.3s ease;
+        box-shadow: 5px 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .studio-sidebar.mobile-open {
+        left: 0;
+    }
+
+    .studio-v8-wrapper {
+        flex-direction: column;
+    }
+
+    .studio-main {
+        width: 100%;
+    }
+}

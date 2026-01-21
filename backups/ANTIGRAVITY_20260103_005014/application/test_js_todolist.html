@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test JS TodoList</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <style>
+        .task-row:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+
+<body class="bg-light p-4">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Liste</h3>
+                <div id="list-container" class="list-group">
+                    <!-- Will be populated -->
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Détail</h3>
+                <div id="detail-panel" class="bg-white p-4 border rounded shadow-sm">
+                    <p class="text-muted text-center">Sélectionnez une tâche...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MOCK DATA
+        const tasksStore = {
+            101: {
+                id: 101,
+                title: "Test Tâche JS",
+                description: "Ceci est une description test.\nElle a plusieurs lignes.",
+                importance: "high",
+                subtasks: [
+                    { id: 1, content: "Etape 1", is_completed: 0 },
+                    { id: 2, content: "Etape 2", is_completed: 1 }
+                ]
+            }
+        };
+
+        // RENDER LIST
+        function renderList() {
+            let html = '';
+            for (let id in tasksStore) {
+                let t = tasksStore[id];
+                html += `<div class="p-3 border-bottom task-row bg-white" onclick="showDetail(this, ${t.id})" style="cursor: pointer;">
+            <strong>${t.title}</strong>
+        </div>`;
+            }
+            document.getElementById('list-container').innerHTML = html;
+        }
+
+        // --- COPIED LOGIC FROM tasks.php ---
+
+        // Show Details
+        function showDetail(element, taskId) {
+            if (!tasksStore[taskId]) return;
+            let task = tasksStore[taskId];
+            let subtasks = task.subtasks || [];
+
+            // Highlight Row
+            document.querySelectorAll('.task-row').forEach(el => {
+                el.className = 'p-3 border-bottom task-row bg-white';
+                el.style.borderLeft = 'none';
+            });
+            element.className = 'p-3 border-bottom task-row bg-primary-subtle';
+            element.style.borderLeft = '4px solid #0d6efd';
+
+            let container = document.getElementById('detail-panel');
+
+            // Build Detail HTML
+            let descText = task.description || '';
+            let descHtml = descText ? descText.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>") : '<i class="text-muted">Aucune description (Double-cliquez pour éditer)</i>';
+
+            let html = `
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <h4 class="fw-bold text-dark mb-0">${task.title}</h4>
+            <span class="badge bg-${task.importance == 'high' ? 'danger' : 'secondary'}">${task.importance == 'high' ? 'URGENT' : 'Normal'}</span>
+        </div>
+        
+        <!-- Post-it Description -->
+        <div id="desc-container-${task.id}" 
+             class="p-3 rounded border mb-4 bg-info-subtle text-dark"
+             ondblclick="enableDescEdit(${task.id})"
+             title="Double-cliquez pour modifier"
+             style="cursor: text; min-height: 80px; white-space: pre-wrap;">${descHtml}</div>
+        
+        <h6 class="fw-bold text-primary mb-3"><i class="fas fa-tasks me-2"></i>Sous-tâches</h6>
+        
+        <ul class="list-group mb-3 border-0 bg-transparent" id="subtasks-list-${task.id}">
+    `;
+
+            if (subtasks.length === 0) {
+                html += '<li class="list-group-item bg-transparent text-muted small border-0">Aucune sous-tâche.</li>';
+            } else {
+                subtasks.forEach(item => {
+                    let checked = item.is_completed == 1 ? 'checked' : '';
+                    let style = item.is_completed == 1 ? 'text-decoration: line-through; opacity: 0.5;' : '';
+                    let safeContent = item.content.replace(/"/g, "&quot;");
+
+                    html += `
+                <li class="list-group-item bg-transparent border-0 border-bottom d-flex align-items-center gap-2" id="li-sub-${item.id}">
+                    <input type="checkbox" class="form-check-input mt-0" ${checked} style="cursor: pointer;">
+                    
+                    <span style="${style}; cursor: text;" class="flex-grow-1 p-1 rounded hover-bg-light" 
+                          id="subtext-${item.id}"
+                          title="Double-clic pour éditer"
+                          ondblclick="enableSubtaskEdit(${item.id})">${safeContent}</span>
+                </li>
+            `;
+                });
+            }
+
+            html += `</ul>`;
+            container.innerHTML = html;
+        }
+
+        function enableDescEdit(taskId) {
+            console.log("Edit Description Task:", taskId);
+            let container = document.getElementById(`desc-container-${taskId}`);
+            if (!container) return;
+
+            if (container.querySelector('textarea')) return;
+
+            let task = tasksStore[taskId];
+            let currentText = task.description || '';
+
+            let h = Math.max(container.clientHeight, 80);
+            container.innerHTML = '';
+
+            let textarea = document.createElement('textarea');
+            textarea.className = 'form-control';
+            textarea.style.minHeight = h + 'px';
+            textarea.value = currentText;
+            textarea.id = `desc-edit-${taskId}`;
+
+            textarea.onblur = function () { saveDescEdit(taskId); };
+
+            container.appendChild(textarea);
+            textarea.focus();
+        }
+
+        function saveDescEdit(taskId) {
+            let textarea = document.getElementById(`desc-edit-${taskId}`);
+            if (!textarea) return;
+
+            let newText = textarea.value;
+            let container = document.getElementById(`desc-container-${taskId}`);
+
+            console.log("Saving Description:", newText);
+
+            if (tasksStore[taskId]) {
+                tasksStore[taskId].description = newText;
+            }
+
+            let display = newText ? newText.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>") : '<i class="text-muted">Aucune description (Double-cliquez pour éditer)</i>';
+            container.innerHTML = display;
+        }
+
+        function enableSubtaskEdit(subId) {
+            console.log("Edit Subtask:", subId);
+            let span = document.getElementById(`subtext-${subId}`);
+            if (!span) return;
+
+            if (span.tagName === 'INPUT') return;
+
+            let currentText = span.innerText;
+
+            let input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'form-control form-control-sm';
+            input.value = currentText;
+            input.id = `subtext-${subId}`;
+
+            input.onblur = function () { saveSubtaskEditInternal(subId, input); };
+            input.onkeypress = function (e) { if (e.key === 'Enter') input.blur(); };
+
+            span.replaceWith(input);
+            input.focus();
+        }
+
+        function saveSubtaskEditInternal(subId, inputElement) {
+            let newText = inputElement.value;
+            console.log("Saving Subtask:", subId, newText);
+
+            let span = document.createElement('span');
+            span.className = 'flex-grow-1 p-1 rounded hover-bg-light';
+            span.style.cursor = 'text';
+            span.id = `subtext-${subId}`;
+            span.innerText = newText;
+            span.setAttribute('ondblclick', `enableSubtaskEdit(${subId})`);
+
+            inputElement.replaceWith(span);
+        }
+
+        // INIT
+        renderList();
+
+    </script>
+</body>
+
+</html>

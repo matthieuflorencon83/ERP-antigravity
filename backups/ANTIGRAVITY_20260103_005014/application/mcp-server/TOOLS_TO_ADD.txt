@@ -1,0 +1,143 @@
+// ============================================
+// AJOUT DES 4 NOUVEAUX OUTILS
+// ============================================
+
+// À ajouter dans la liste tools[] après 'analyze_error_logs'
+
+            {
+                name: 'write_file',
+                description: 'Crée ou modifie un fichier. Extensions autorisées : .php, .js, .json, .css, .sql, .md, .txt, .html',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        filepath: {
+                            type: 'string',
+                            description: 'Chemin relatif du fichier (ex: "api/test.php")',
+                        },
+                        content: {
+                            type: 'string',
+                            description: 'Contenu du fichier',
+                        },
+                        createDirs: {
+                            type: 'boolean',
+                            description: 'Créer les dossiers parents si nécessaire (défaut: true)',
+                            default: true,
+                        },
+                    },
+                    required: ['filepath', 'content'],
+                },
+            },
+            {
+                name: 'create_directory',
+                description: 'Crée un dossier (récursif)',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        dirpath: {
+                            type: 'string',
+                            description: 'Chemin relatif du dossier (ex: "api/v2")',
+                        },
+                    },
+                    required: ['dirpath'],
+                },
+            },
+            {
+                name: 'list_files',
+                description: 'Liste les fichiers et dossiers d\'un répertoire',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        directory: {
+                            type: 'string',
+                            description: 'Chemin relatif du dossier (défaut: ".")',
+                            default: '.',
+                        },
+                        recursive: {
+                            type: 'boolean',
+                            description: 'Parcourir les sous-dossiers (défaut: false)',
+                            default: false,
+                        },
+                    },
+                },
+            },
+            {
+                name: 'run_git_command',
+                description: 'Exécute une commande Git sécurisée (status, add, commit, branch, checkout)',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        command: {
+                            type: 'string',
+                            enum: ['status', 'add', 'commit', 'branch', 'checkout'],
+                            description: 'Commande Git à exécuter',
+                        },
+                        message: {
+                            type: 'string',
+                            description: 'Message de commit (requis si command=commit)',
+                        },
+                        branchName: {
+                            type: 'string',
+                            description: 'Nom de la branche (requis si command=checkout)',
+                        },
+                    },
+                    required: ['command'],
+                },
+            },
+
+// ============================================
+// AJOUT DES HANDLERS
+// ============================================
+
+// À ajouter dans le switch après le case 'analyze_error_logs'
+
+            case 'write_file': {
+                const args = WriteFileSchema.parse(request.params.arguments);
+                const result = await writeFile(args.filepath, args.content, args.createDirs);
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: JSON.stringify(result, null, 2),
+                        },
+                    ],
+                };
+            }
+
+            case 'create_directory': {
+                const args = CreateDirectorySchema.parse(request.params.arguments);
+                const result = await createDirectory(args.dirpath);
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: JSON.stringify(result, null, 2),
+                        },
+                    ],
+                };
+            }
+
+            case 'list_files': {
+                const args = ListFilesSchema.parse(request.params.arguments);
+                const result = await listFiles(args.directory, args.recursive);
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: JSON.stringify(result, null, 2),
+                        },
+                    ],
+                };
+            }
+
+            case 'run_git_command': {
+                const args = RunGitCommandSchema.parse(request.params.arguments);
+                const result = await runGitCommand(args.command, args.message, args.branchName);
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: JSON.stringify(result, null, 2),
+                        },
+                    ],
+                };
+            }

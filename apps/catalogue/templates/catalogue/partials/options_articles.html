@@ -1,0 +1,5 @@
+{% for art in articles %}
+<option data-id="{{ art.id }}" value="{{ art.designation }}">
+    Ref: {{ art.ref_fournisseur }} - {{ art.fournisseur.nom_fournisseur }}
+</option>
+{% endfor %}

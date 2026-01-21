@@ -1,0 +1,79 @@
+{% for f in fournisseurs %}
+<tr class="cursor-pointer" onclick="handleRowClick(event, this)" hx-get="{% url 'fournisseur_edit' f.pk %}"
+    hx-target="#detailSidebarContent" hx-swap="innerHTML">
+
+    <!-- Name & Usage -->
+    <td>
+        <div class="d-flex align-items-center gap-3">
+            <div class="avatar-circle-sm bg-info-subtle text-info fw-bold d-flex align-items-center justify-content-center rounded-circle"
+                style="width:36px; height:36px; font-size:0.8rem;">
+                {{ f.nom_fournisseur|slice:":2"|upper }}
+            </div>
+            <div>
+                <div class="fw-bold text-dark">{{ f.nom_fournisseur }}</div>
+                {% if f.nom_usage %}
+                <div class="text-muted small" style="font-size: 0.75rem;">
+                    (Alias: {{ f.nom_usage }})
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </td>
+
+    <!-- Code -->
+    <td class="font-monospace text-secondary small">
+        {{ f.code_fournisseur|default:"-" }}
+    </td>
+
+    <!-- Contact -->
+    <td>
+        {% with f.corecontact_set.first as contact %}
+        {% if contact %}
+        <div class="fw-medium text-dark small">{{ contact.prenom|default:"" }} {{ contact.nom }}
+        </div>
+        {% if contact.telephone %}
+        <div class="text-muted xxs">{{ contact.telephone }}</div>
+        {% endif %}
+        {% else %}
+        <span class="text-muted small italic">-</span>
+        {% endif %}
+        {% endwith %}
+    </td>
+
+    <!-- Address -->
+    <td>
+        {% if f.adresse %}
+        <div class="d-flex align-items-center gap-2 text-muted small">
+            <i class="bi bi-geo-alt"></i>
+            <span class="text-truncate" style="max-width: 200px;" title="{{ f.adresse }}">
+                {{ f.adresse|truncatechars:40 }}
+            </span>
+        </div>
+        {% else %}
+        <span class="text-muted small italic">-</span>
+        {% endif %}
+    </td>
+
+    <!-- Actions -->
+    <td class="text-end">
+        <div class="row-actions">
+            <button class="btn btn-sm btn-icon action-btn" title="Modifier">
+                <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button class="btn btn-sm btn-icon action-btn text-danger" title="Supprimer"
+                onclick="event.stopPropagation(); alert('Désactivé')">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="5" class="text-center py-5">
+        <div class="d-flex flex-column align-items-center justify-content-center opacity-50">
+            <i class="bi bi-truck fs-1 mb-3"></i>
+            <p class="mb-0 fw-medium">Aucun fournisseur trouvé.</p>
+        </div>
+    </td>
+</tr>
+{% endfor %}

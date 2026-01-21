@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --form-bg: #ffffff;
+        --form-border: #e9ecef;
+        --input-bg: #f8f9fa;
+        --input-focus-border: #339af0;
+        --input-focus-shadow: rgba(51, 154, 240, 0.15);
+    }
+
+    .form-container-boxed {
+        max-width: 720px;
+        margin: 2rem auto;
+        background: var(--form-bg);
+        border: 1px solid var(--form-border);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .form-header-modern {
+        background: transparent;
+        border-bottom: 1px solid var(--form-border);
+        padding: 1.5rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .form-title {
+        font-weight: 700;
+        color: #343a40;
+        letter-spacing: -0.5px;
+        margin: 0;
+    }
+
+    .form-body-modern {
+        padding: 2rem;
+    }
+
+    /* Custom Input Styling */
+    .form-label-modern {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        color: #868e96;
+        margin-bottom: 0.4rem;
+    }
+
+    .form-control,
+    .form-select {
+        background-color: var(--input-bg);
+        border: 1px solid transparent;
+        border-radius: 6px;
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        background-color: #fff;
+        border-color: var(--input-focus-border);
+        box-shadow: 0 0 0 3px var(--input-focus-shadow);
+    }
+
+    /* Checkbox/Radios */
+    .form-check-input:checked {
+        background-color: var(--input-focus-border);
+        border-color: var(--input-focus-border);
+    }
+
+    /* Simple Grid for inputs to avoid stacking too much vertical space */
+    .fields-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
+
+    /* Full width override for long fields (textarea, huge inputs) */
+    .field-full-width {
+        grid-column: 1 / -1;
+    }
+
+    /* Clean Form Styles (Merged) */
+    :root {
+        --bg-body: #fdfdfd;
+    }
+
+    .form-clean-wrapper {
+        max-width: 680px;
+        margin: 4rem auto;
+        padding: 0 1.5rem;
+    }
+
+    .form-clean-header {
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .form-clean-title {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        font-size: 2.5rem;
+        color: #111;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-clean-subtitle {
+        color: #6c757d;
+        font-size: 1.1rem;
+        font-weight: 400;
+    }
+
+    .form-clean-body {
+        background: transparent;
+    }
+
+    .bg-body-custom {
+        background-color: var(--bg-body);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Standalone Form Clean Design -->
+
+<div class="container-fluid min-vh-100 d-flex flex-column bg-body-custom">
+    <div class="form-clean-wrapper w-100">
+
+        <div class="form-clean-header">
+            <h1 class="form-clean-title">
+                {% if form.instance.pk %}
+                Modifier l'élément
+                {% else %}
+                Nouveau
+                {% endif %}
+            </h1>
+            <div class="form-clean-subtitle">
+                {% if form.instance.pk %}
+                Mettez à jour les informations ci-dessous.
+                {% else %}
+                Remplissez les informations pour créer un nouvel enregistrement.
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-clean-body">
+            {% include 'core/partials/form_snippet.html' with is_htmx=False %}
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Petit boost UX : Focus sur le premier champ input visible
+    document.addEventListener('DOMContentLoaded', function () {
+        const firstInput = document.querySelector('.form-control:not([type="hidden"]):not([disabled])');
+        if (firstInput) firstInput.focus();
+    });
+</script>
+{% endblock %}

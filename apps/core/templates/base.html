@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <title>Antigravity ERP</title>
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    {% block extra_css %}{% endblock %}
+
+    <style>
+        /* THEME INIT : BLOCKING TO PREVENT FLASH */
+        html {
+            visibility: hidden;
+            opacity: 0;
+        }
+    </style>
+    <script>
+        // Immediately Applied Theme Logic (Blocking)
+        (function () {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', savedTheme);
+            // Restore visibility immediately after theme is set
+            const style = document.createElement('style');
+            style.innerHTML = 'html { visibility: visible; opacity: 1; }';
+            document.head.appendChild(style);
+        })();
+    </script>
+
+    <style>
+        /* Global Loader */
+        .htmx-indicator-global {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #0d6efd, #6610f2);
+            z-index: 9999;
+            animation: loader-anim 1s infinite linear;
+        }
+
+        @keyframes loader-anim {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .htmx-request .htmx-indicator-global {
+            display: block;
+        }
+
+        .htmx-request.htmx-indicator-global {
+            display: block;
+        }
+
+        body {
+            height: 100vh;
+            /* Was min-height */
+            overflow: hidden;
+            /* Prevent global scroll */
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            width: 280px !important;
+            --bs-offcanvas-width: 280px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1045;
+            /* Match Bootstrap offcanvas z-index */
+            border-right: 1px solid var(--bs-border-color);
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bs-body-bg);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            /* Flex layout to handle dynamic topbar height */
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            transition: margin-left 0.3s ease-in-out;
+            /* container handles scroll usually */
+        }
+
+        #app-content {
+            flex: 1;
+            /* Allow content to scroll or be container for full-height apps */
+            overflow: auto;
+            padding: 0 !important;
+            /* Let children handle padding if needed for full screen apps */
+        }
+
+        /* Re-add padding for normal pages if needed via a utility or default block */
+        .page-padding {
+            padding: 1.5rem;
+        }
+
+        /* Transition moved to .main-content rule above if valid, or removing stray text */
+
+        /* Mobile Sidebar behavior (default offcanvas behavior is good, but we need overrides for Desktop) */
+        /* On Desktop (>= 992px), force visibility and reset transform */
+        @media (min-width: 992px) {
+            .sidebar {
+                transform: none !important;
+                visibility: visible !important;
+            }
+        }
+
+        /* Mobile Layout (< 992px) */
+        @media (max-width: 991.98px) {
+
+            /* Sidebar is handled by Bootstrap offcanvas classes for hiding/showing */
+            /* We just need to ensure main content uses full width */
+            .main-content {
+                margin-left: 0;
+            }
+        }
+
+        .nav-link {
+            color: var(--bs-body-color);
+            padding: 0.8rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Topbar - Reduced for space */
+        .topbar {
+            min-height: 0;
+            padding: 0.5rem 1.5rem;
+            border-bottom: 1px solid var(--bs-border-color);
+            background-color: var(--bs-body-bg);
+            display: flex;
+            /* Keep flex for actions if any */
+            justify-content: flex-end;
+            /* Align actions to right */
+        }
+
+        /* Sidebar Active State - High Visibility */
+        .nav-link.active {
+            background-color: var(--bs-primary-bg-subtle);
+            color: var(--bs-primary);
+            font-weight: 700;
+            /* Bold */
+            border-left: 4px solid var(--bs-primary);
+            border-radius: 0 0.5rem 0.5rem 0;
+            /* Updated radius for left border */
+        }
+
+        .avatar-circle {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Condensed Sidebar Form Styling */
+        #detailSidebar .offcanvas-body {
+            padding: 1rem !important;
+            overflow-y: auto;
+        }
+
+        #detailSidebar form .form-group {
+            margin-bottom: 0.5rem !important;
+        }
+
+        #detailSidebar form label {
+            font-size: 0.75rem !important;
+            margin-bottom: 2px !important;
+            color: var(--bs-gray-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        #detailSidebar form .input-clean,
+        #detailSidebar form input:not([type=checkbox]),
+        #detailSidebar form select,
+        #detailSidebar form textarea {
+            font-size: 0.85rem !important;
+            padding: 0.35rem 0.6rem !important;
+            height: auto !important;
+        }
+
+        #detailSidebar form textarea {
+            min-height: 60px !important;
+        }
+
+        #detailSidebar form .btn-primary-2026 {
+            padding: 0.6rem 1rem !important;
+            font-size: 0.9rem !important;
+            margin-top: 1rem !important;
+        }
+
+        #detailSidebar form .form-text {
+            display: none;
+        }
+
+        #detailSidebar .offcanvas-header {
+            padding: 0.75rem 1rem;
+            min-height: 0;
+            border-bottom: 1px solid var(--bs-border-color);
+        }
+
+        #detailSidebar .offcanvas-title {
+            font-size: 1.1rem;
+        }
+
+        /* Fixed sidebar width */
+        .sidebar-detail-width {
+            width: 500px;
+            /* Legacy override if needed */
+        }
+
+        /* PUSH SIDEBAR STYLES */
+        .detail-panel {
+            width: 0;
+            opacity: 0;
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease-in;
+            overflow: hidden;
+            border-left: 1px solid var(--bs-border-color);
+            position: relative;
+            z-index: 1040;
+            background-color: var(--bs-body-bg);
+            flex-shrink: 0;
+            height: 100%;
+            /* Ensure full height adoption */
+        }
+
+        .detail-panel.open {
+            width: 600px;
+            /* Requested width */
+            opacity: 1;
+        }
+
+        /* FORCE collapse even if inline width is set by JS resizer */
+        .detail-panel:not(.open) {
+            width: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+        }
+
+        /* Adjust main content flex behavior */
+        .main-content {
+            transition: margin-right 0.3s;
+        }
+    </style>
+</head>
+
+<body hx-indicator=".htmx-indicator-global">
+    <!-- Global Loader -->
+    <div class="htmx-indicator-global"></div>
+
+    <!-- Mobile Toggle Button (Visible only on mobile) -->
+    <button class="btn btn-primary d-lg-none position-fixed top-0 start-0 m-3 z-3" type="button"
+        data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" title="Toggle Sidebar">
+        <i class="bi bi-list"></i>
+    </button>
+
+    <!-- Sidebar (Desktop & Mobile Offcanvas) -->
+    <!-- Removed offcanvas-lg to prevent conflict with custom fixed positioning -->
+    <div class="offcanvas offcanvas-start sidebar" tabindex="-1" id="sidebarMenu">
+        <div class="d-flex align-items-center p-4 border-bottom">
+            <i class="bi bi-box-seam-fill text-primary fs-3 me-2"></i>
+            <span class="fs-4 fw-bold">Antigravity</span>
+            <button type="button" class="btn-close d-lg-none ms-auto" data-bs-dismiss="offcanvas"
+                data-bs-target="#sidebarMenu" aria-label="Close"></button>
+        </div>
+
+        <div class="flex-grow-1 p-3 overflow-y-auto">
+            <nav class="nav flex-column">
+                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="/">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+                <a class="nav-link {% if 'documents' in request.path %}active{% endif %}"
+                    href="{% url 'upload_document' %}">
+                    <i class="bi bi-cpu"></i> IA & Documents
+                </a>
+                <!-- Fournisseurs Submenu -->
+                <div class="nav-item">
+                    <div class="d-flex align-items-center">
+                        <a class="nav-link flex-grow-1 {% if 'fournisseur' in request.path %}active{% endif %}"
+                            href="{% url 'fournisseur_list' %}">
+                            <i class="bi bi-truck"></i> Fournisseurs
+                        </a>
+                        <a class="nav-link px-2 ms-1 justify-content-center" href="#submenu-fournisseurs"
+                            data-bs-toggle="collapse" role="button"
+                            aria-expanded="{% if 'fournisseur' in request.path %}true{% else %}false{% endif %}"
+                            aria-controls="submenu-fournisseurs" title="Déplier le menu Fournisseurs">
+                            <i class="bi bi-chevron-down small opacity-50"></i>
+                        </a>
+                    </div>
+                    <div class="collapse {% if 'fournisseur' in request.path %}show{% endif %}"
+                        id="submenu-fournisseurs">
+                        <nav class="nav flex-column ms-3 mt-1 border-start ps-2">
+                            <a class="nav-link small py-1 text-muted" href="javascript:void(0)"
+                                hx-get="{% url 'fournisseur_create' %}" hx-target="#detailSidebarContent"
+                                hx-swap="innerHTML" onclick="toggleDetailPanel(true);">
+                                <i class="bi bi-plus text-success me-1"></i>Nouveau
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+
+                <!-- Clients Submenu -->
+                <div class="nav-item">
+                    <div class="d-flex align-items-center">
+                        <a class="nav-link flex-grow-1 {% if 'client' in request.path %}active{% endif %}"
+                            href="{% url 'client_list' %}">
+                            <i class="bi bi-people"></i> Clients
+                        </a>
+                        <button class="btn btn-toggle d-flex align-items-center rounded border-0 collapsed"
+                            data-bs-toggle="collapse" data-bs-target="#submenu-clients"
+                            aria-expanded="{% if 'client' in request.path %}true{% else %}false{% endif %}"
+                            title="Déplier le menu Clients">
+                            <i class="bi bi-chevron-down small opacity-50"></i>
+                        </button>
+                    </div>
+                    <div class="collapse {% if 'client' in request.path %}show{% endif %}" id="submenu-clients">
+                        <nav class="nav flex-column ms-3 mt-1 border-start ps-2">
+                            <a class="nav-link small py-1 text-muted" href="javascript:void(0)"
+                                hx-get="{% url 'client_create' %}" hx-target="#detailSidebarContent" hx-swap="innerHTML"
+                                onclick="toggleDetailPanel(true);">
+                                <i class="bi bi-plus text-success me-1"></i>Nouveau
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+                <!-- Articles Submenu (Split Interaction) -->
+                <div class="nav-item">
+                    <div class="d-flex align-items-center">
+                        <a class="nav-link flex-grow-1 {% if 'article' in request.path %}active{% endif %}"
+                            href="{% url 'article_list' %}">
+                            <i class="bi bi-box"></i> Articles
+                        </a>
+                        <a class="nav-link px-2 ms-1 justify-content-center" href="#submenu-articles"
+                            data-bs-toggle="collapse" role="button"
+                            aria-expanded="{% if 'article' in request.path %}true{% else %}false{% endif %}"
+                            aria-controls="submenu-articles" title="Déplier le menu Articles">
+                            <i class="bi bi-chevron-down small opacity-50"></i>
+                        </a>
+                    </div>
+                    <div class="collapse {% if 'article' in request.path %}show{% endif %}" id="submenu-articles">
+                        <nav class="nav flex-column ms-3 mt-1 border-start ps-2">
+                            <!-- Link 'Liste' removed as parent link handles it. Only 'Nouveau' remains -->
+                            <a class="nav-link small py-1 text-muted" href="javascript:void(0)"
+                                hx-get="{% url 'article_create' %}" hx-target="#detailSidebarContent"
+                                hx-swap="innerHTML" onclick="toggleDetailPanel(true);">
+                                <i class="bi bi-plus text-success me-1"></i>Nouveau
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+                <a class="nav-link {% if 'commandes' in request.path %}active{% endif %}"
+                    href="{% url 'commande_list' %}">
+                    <i class="bi bi-cart"></i> Commandes
+                </a>
+
+                <!-- Affaires / Besoins (Demo) -->
+                <div class="nav-item mt-3">
+                    <span class="text-uppercase text-muted fw-bold small ps-3 mb-2 d-block fs-07">Chantiers</span>
+                    <a class="nav-link {% if 'besoins' in request.path %}active{% endif %}"
+                        href="{% url 'besoins_affaire' '715d853c-4917-4d76-ba87-aaab7bdd6c55' %}">
+                        <i class="bi bi-grid-3x3-gap"></i> Saisie Rapide (Stock)
+                    </a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="p-3 border-top d-flex align-items-center justify-content-between">
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle"
+                    data-bs-toggle="dropdown">
+                    <div
+                        class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2 avatar-circle">
+                        A
+                    </div>
+                    <strong>Admin</strong>
+                </a>
+                <ul class="dropdown-menu text-small shadow">
+                    <li><a class="dropdown-item" href="{% url 'settings' %}"><i
+                                class="bi bi-gear me-2"></i>Paramètres</a></li>
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Sign out</a></li>
+                </ul>
+            </div>
+            <!-- Moved Theme Toggle Here -->
+            <button class="btn btn-link nav-link px-2" id="bd-theme-toggle" type="button" title="Toggle theme">
+                <i class="bi bi-moon-stars-fill" id="theme-icon"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Layout Wrapper to enable Push behavior -->
+    <div id="layout-wrapper" class="d-flex w-100 h-100 overflow-hidden">
+
+        <!-- Main Content -->
+        <main class="main-content flex-grow-1 min-w-0">
+            <!-- Topbar (Minimal / Optional) -->
+            {% block header_actions_wrapper %}
+            <header class="topbar sticky-top">
+                <!-- Page Title REMOVED for space -->
+                <!-- Only actions remain -->
+                <div class="d-flex align-items-center gap-3 w-100 justify-content-end">
+                    {% block header_actions %}{% endblock %}
+                </div>
+            </header>
+            {% endblock %}
+
+            <!-- Page Content -->
+            <div class="p-4" id="app-content">
+                {% if messages %}
+                <div class="container-fluid mb-3">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+
+        <!-- Detail Sidebar (Right) - PUSH MODE -->
+
+        <!-- RESIZER HANDLE -->
+        <div id="resizer"
+            class="bg-body-tertiary border-start border-end d-flex align-items-center justify-content-center resizer-handle">
+            <i class="bi bi-three-dots-vertical text-muted opacity-50 small"></i>
+        </div>
+
+        <div class="detail-panel bg-body" id="detailSidebar">
+            <div class="d-flex flex-column h-100">
+                <div class="p-3 border-bottom d-flex align-items-center justify-content-between bg-body-tertiary">
+                    <h5 class="m-0 fs-6 fw-bold text-uppercase text-secondary ls-1">Détails / Édition</h5>
+                    <div class="d-flex gap-2">
+                        <!-- Close button acts as 'Collapse' or 'Clear' now, or removing it if permanent -->
+                        <button type="button" class="btn-close" onclick="toggleDetailPanel()" aria-label="Close"
+                            title="Masquer/Afficher"></button>
+                    </div>
+                </div>
+                <div id="detailSidebarContent" class="flex-grow-1 d-flex flex-column overflow-hidden">
+                    <!-- HTMX Content Loads Here -->
+                    <div class="text-center text-muted mt-5">
+                        <div class="spinner-border text-primary d-none" role="status" id="sidebarSpinner"></div>
+                        <p>Chargement...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        /**
+         * ANTIGRAVITY ERP - MAIN SCRIPT
+         * Consolidated Logic for Theme, Sidebar, and Resizer
+         */
+
+        // --- 1. THEME MANAGEMENT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('bd-theme-toggle');
+            const icon = document.getElementById('theme-icon');
+            const html = document.documentElement;
+
+            // Toggle Event
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    const currentTheme = html.getAttribute('data-bs-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    html.setAttribute('data-bs-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                    if (icon) updateThemeIcon(newTheme, icon);
+                });
+            }
+        });
+
+        // Helper: Update Icon (Public safe)
+        function updateThemeIcon(theme, icon) {
+            if (!icon) return;
+            if (theme === 'dark') {
+                icon.classList.remove('bi-sun-fill');
+                icon.classList.add('bi-moon-stars-fill');
+            } else {
+                icon.classList.remove('bi-moon-stars-fill');
+                icon.classList.add('bi-sun-fill');
+            }
+        }
+
+        // --- 2. SIDEBAR STATE MANAGEMENT (Public API) ---
+
+        // Helper: safe width restoration
+        function restorePanelWidth(panel) {
+            const savedWidth = parseInt(localStorage.getItem('detailPanelWidth'));
+            if (savedWidth && savedWidth > 200) {
+                // Constraints: Min 300px, Max 85% view
+                const safeW = Math.min(Math.max(savedWidth, 300), window.innerWidth * 0.85);
+                panel.style.setProperty('--saved-width', safeW + 'px');
+                panel.style.setProperty('width', safeW + 'px', 'important');
+            }
+        }
+
+        window.toggleDetailPanel = function (forceState = null) {
+            const panel = document.getElementById('detailSidebar');
+            if (!panel) return;
+
+            let isOpen = panel.classList.contains('open');
+
+            if (forceState === true) {
+                panel.classList.add('open');
+                isOpen = true;
+            } else if (forceState === false) {
+                panel.classList.remove('open');
+                panel.style.width = '';
+                isOpen = false;
+            } else {
+                panel.classList.toggle('open');
+                isOpen = panel.classList.contains('open');
+            }
+
+            // Persist State
+            localStorage.setItem('detailPanelOpen', isOpen);
+
+            // If now open, restore width
+            if (isOpen) {
+                restorePanelWidth(panel);
+            } else {
+                panel.style.width = '';
+            }
+        };
+
+        // --- 3. DATAGRID ROW INTERACTIONS ---
+        let activeRow = null;
+
+        window.handleRowClick = function (evt, row) {
+            // 1. Visual Highlight
+            if (activeRow) activeRow.classList.remove('active-row');
+            activeRow = row;
+            activeRow.classList.add('active-row');
+
+            // 2. Open Panel Immediately
+            const panel = document.getElementById('detailSidebar');
+            if (panel && !panel.classList.contains('open')) {
+                toggleDetailPanel(true);
+            }
+
+            // 3. Show Spinner (Optional, if we want to clear old content)
+            const content = document.getElementById('detailSidebarContent');
+            if (content) {
+                // Check if we are actually loading something new (HTMX allows us to know?)
+                // Simple approach: Just show spinner. HTMX will swap it out.
+                content.innerHTML = `
+                    <div class="h-100 d-flex flex-column align-items-center justify-content-center text-muted">
+                        <div class="spinner-border text-secondary mb-3" role="status"></div>
+                        <div class="small fw-medium">Chargement...</div>
+                    </div>`;
+            }
+        };
+
+        // --- 4. ROBUST RESIZER (Lifecycle Aware) ---
+        (function () {
+            let isResizing = false;
+
+            // A. START RESIZE (Delegated)
+            document.addEventListener('mousedown', function (e) {
+                if (e.target.closest('#resizer')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    startResize();
+                }
+            });
+
+            function startResize() {
+                isResizing = true;
+                // Visual & Functional Locking
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+                document.body.style.webkitUserSelect = 'none';
+
+                const resizer = document.getElementById('resizer');
+                if (resizer) resizer.classList.add('bg-primary-subtle');
+
+                const panel = document.getElementById('detailSidebar');
+                const content = document.querySelector('.main-content');
+
+                // Disable transitions during drag
+                if (panel) panel.style.transition = 'none';
+                if (content) content.style.transition = 'none';
+
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+            }
+
+            function onMouseMove(e) {
+                if (!isResizing) return;
+                const panel = document.getElementById('detailSidebar');
+                if (!panel) return;
+
+                // Right Sidebar: Width = Total - MouseX
+                const newWidth = window.innerWidth - e.clientX;
+                if (newWidth > 250 && newWidth < window.innerWidth * 0.9) {
+                    panel.style.setProperty('width', newWidth + 'px', 'important');
+                }
+            }
+
+            function onMouseUp(e) {
+                stopResize();
+            }
+
+            function stopResize() {
+                if (!isResizing) return;
+                isResizing = false;
+
+                // Cleanup Styles
+                document.body.style.cursor = '';
+                document.body.style.removeProperty('user-select');
+                document.body.style.removeProperty('-webkit-user-select');
+
+                const resizer = document.getElementById('resizer');
+                if (resizer) resizer.classList.remove('bg-primary-subtle');
+
+                const panel = document.getElementById('detailSidebar');
+                if (panel) {
+                    const w = parseInt(panel.style.width);
+                    if (w > 200) localStorage.setItem('detailPanelWidth', w);
+
+                    panel.style.transition = '';
+                    const content = document.querySelector('.main-content');
+                    if (content) content.style.transition = '';
+                }
+
+                window.removeEventListener('mousemove', onMouseMove);
+                window.removeEventListener('mouseup', onMouseUp);
+            }
+
+            // Safety
+            window.addEventListener('blur', stopResize);
+            document.addEventListener('mouseleave', stopResize);
+
+            // B. DOUBLE CLICK RESET
+            document.addEventListener('dblclick', function (e) {
+                const resizer = e.target.closest('#resizer');
+                if (resizer) {
+                    const panel = document.getElementById('detailSidebar');
+                    if (panel) {
+                        panel.style.setProperty('width', '600px', 'important');
+                        localStorage.setItem('detailPanelWidth', 600);
+
+                        // Feedback
+                        resizer.style.backgroundColor = 'var(--bs-primary)';
+                        setTimeout(() => resizer.style.backgroundColor = '', 200);
+                    }
+                }
+            });
+
+            // C. LIFECYCLE HOOKS (Ensures Persistence)
+            function enforceState() {
+                const panel = document.getElementById('detailSidebar');
+
+                // FORCE OPEN BY DEFAULT (User Requirement: "Double Tableau" always active on load)
+                if (panel) {
+                    if (!panel.classList.contains('open')) {
+                        toggleDetailPanel(true);
+                    }
+                    // Also ensure width is restored
+                    restorePanelWidth(panel);
+                }
+            }
+
+            // Run on Load and HTMX Navigation
+            document.addEventListener('DOMContentLoaded', enforceState);
+            document.body.addEventListener('htmx:load', enforceState);
+            document.body.addEventListener('htmx:afterSwap', enforceState);
+
+            // Auto-Open on Content Load
+            document.body.addEventListener('htmx:afterSwap', function (evt) {
+                if (evt.detail.target.id === 'detailSidebarContent') {
+                    const panel = document.getElementById('detailSidebar');
+                    if (panel && !panel.classList.contains('open')) {
+                        toggleDetailPanel(true);
+                    }
+                }
+            });
+
+        })();
+
+    </script>
+</body>
+
+</html>

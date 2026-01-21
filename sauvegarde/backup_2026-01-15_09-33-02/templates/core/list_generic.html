@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+    /* 
+     * SAAS PRO 2026 - Compact DataGrid Styles
+     */
+    :root {
+        --table-bg: #ffffff;
+        --table-hover: #f1f3f5;
+        --table-border: #e9ecef;
+        --primary-light: #e7f5ff;
+        --primary-border: #339af0;
+        --text-muted: #868e96;
+        --header-bg: #f8f9fa;
+        --sidebar-width: 500px;
+    }
+
+    /* Container & Layout */
+    .datagrid-container {
+        background: var(--table-bg);
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--table-border);
+        overflow: hidden;
+        position: relative;
+        height: calc(100vh - 140px);
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Scrollable Area */
+    .table-responsive {
+        flex: 1;
+        overflow: auto;
+        position: relative;
+    }
+
+    /* Table Base */
+    .table-dense {
+        font-size: 13px;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 0;
+    }
+
+    .table-dense th,
+    .table-dense td {
+        padding: 0.35rem 0.75rem;
+        border-bottom: 1px solid var(--table-border);
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    /* Sticky Header */
+    .table-dense thead {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: var(--header-bg);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .table-dense thead th {
+        background-color: var(--header-bg);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+        font-size: 11px;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    /* Filter Row */
+    .filter-row th {
+        background-color: var(--header-bg);
+        padding: 0.25rem 0.5rem;
+        border-top: none;
+    }
+
+    .filter-input {
+        width: 100%;
+        font-size: 12px;
+        padding: 2px 4px;
+        border: 1px solid transparent;
+        border-bottom: 1px solid #ced4da;
+        background: transparent;
+        color: #495057;
+        transition: all 0.2s ease;
+    }
+
+    .filter-input:focus {
+        outline: none;
+        border-bottom-color: var(--primary-border);
+        background: white;
+    }
+
+    .filter-input::placeholder {
+        color: #adb5bd;
+        font-style: italic;
+    }
+
+    /* Rows & Hover Effects */
+    .table-dense tbody tr {
+        transition: background-color 0.1s ease;
+    }
+
+    .table-dense tbody tr:hover {
+        background-color: var(--table-hover);
+    }
+
+    .table-dense tbody tr:hover td:first-child {
+        box-shadow: inset 3px 0 0 var(--primary-border);
+    }
+
+    /* Floating Actions */
+    .row-actions {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+
+    .table-dense tbody tr:hover .row-actions {
+        opacity: 1;
+    }
+
+    .action-btn {
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: var(--text-muted);
+        background: white;
+        border: 1px solid var(--table-border);
+        font-size: 12px;
+    }
+
+    .action-btn:hover {
+        color: var(--primary-border);
+        border-color: var(--primary-border);
+    }
+
+    /* Micro-Badges */
+    .micro-badge {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 6px;
+    }
+
+    .badge-pill-text {
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 12px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    /* Floating "New" Button */
+    .fab-new {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 100;
+        background: linear-gradient(135deg, #4dabf7 0%, #339af0 100%);
+        color: white;
+        border: none;
+        border-radius: 24px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(51, 154, 240, 0.3);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.2s;
+    }
+
+    .fab-new:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(51, 154, 240, 0.4);
+        color: white;
+    }
+
+    /* Utilities */
+    .col-action {
+        width: 80px;
+    }
+
+    .btn-filter-apply {
+        font-size: 11px;
+    }
+
+    /* Active Row Highlight */
+    .active-row td {
+        background-color: var(--primary-light) !important;
+        border-bottom-color: var(--primary-border);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-3 h-100">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0 fw-bold text-dark">
+            {% block list_title %}Titre de la Liste{% endblock %}
+            <span class="badge bg-light text-secondary border ms-2 rounded-pill small">
+                {{ object_list.count|default:"0" }}
+            </span>
+        </h5>
+        <!-- Toolbar if needed -->
+    </div>
+
+    <!-- DataGrid -->
+    <div class="datagrid-container">
+        <form method="get" id="filter-form" class="h-100 d-flex flex-column">
+            <div class="table-responsive">
+                <table class="table-dense">
+                    <thead>
+                        <!-- Column Headers -->
+                        <tr>
+                            {% block table_headers %}{% endblock %}
+                            <th class="text-end col-action">Actions</th>
+                        </tr>
+                        <!-- Inline Filters -->
+                        <tr class="filter-row">
+                            {% block table_filters %}{% endblock %}
+                            <th>
+                                <button type="submit" class="btn btn-sm btn-light w-100 py-0 btn-filter-apply"
+                                    title="Appliquer filtres">
+                                    <i class="bi bi-funnel-fill text-muted"></i>
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% block table_rows %}
+                        <tr>
+                            <td colspan="100%" class="text-center p-5 text-muted">Aucune donnée définie.</td>
+                        </tr>
+                        {% endblock %}
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+
+    <!-- Floating Action Button -->
+    {% block floating_action %}
+    <a href="#" class="fab-new">
+        <i class="bi bi-plus-lg"></i> Nouveau
+    </a>
+    {% endblock %}
+</div>
+
+
+
+<script>
+    // Auto-submit on Enter in filters
+    document.querySelectorAll('.filter-input').forEach(input => {
+        input.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('filter-form').submit();
+            }
+        });
+    });
+
+    // Master-Detail Logic (Integration with base.html Split View)
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Centralized Click Handler on Body
+        document.body.addEventListener('click', (e) => {
+            // 1. Handle "New" Button (.fab-new) or any element with .open-detail
+            const btn = e.target.closest('.fab-new, .open-detail');
+            if (btn) {
+                e.preventDefault();
+                // Prioritize data-url, then hx-get, then href
+                let url = btn.getAttribute('data-url') || btn.getAttribute('hx-get') || btn.getAttribute('href');
+
+                if (!url || url === '#' || url.startsWith('javascript')) return;
+
+                // Reset Row Selection
+                document.querySelectorAll('tr.active-row').forEach(r => r.classList.remove('active-row'));
+
+                openDetailSidebar(url);
+                return;
+            }
+
+            // 2. Handle Row Click (.table-dense tr)
+            const row = e.target.closest('.table-dense tbody tr');
+            if (row) {
+                // Ignore if clicking interactive elements
+                if (e.target.closest('a') || e.target.closest('button') || e.target.closest('input')) return;
+
+                // Find edit link to get URL
+                const editLink = row.querySelector('a[href*="edit"]');
+                if (!editLink) return;
+
+                const url = editLink.getAttribute('href');
+
+                // Highlight Row
+                document.querySelectorAll('tr.active-row').forEach(r => r.classList.remove('active-row'));
+                row.classList.add('active-row');
+
+                openDetailSidebar(url);
+            }
+        });
+
+        function openDetailSidebar(url) {
+            // Use base.html's global toggle function
+            if (typeof window.toggleDetailPanel === 'function') {
+                window.toggleDetailPanel(true);
+            } else {
+                console.error("Layout Error: toggleDetailPanel not found in base.html logic.");
+            }
+
+            // Show spinner in sidebar
+            const content = document.getElementById('detailSidebarContent');
+            if (content) {
+                content.innerHTML = `
+                    <div class="h-100 d-flex flex-column align-items-center justify-content-center text-muted">
+                        <div class="spinner-border text-primary mb-3" role="status"></div>
+                        <div class="small fw-medium">Chargement...</div>
+                    </div>`;
+
+                // Load content via HTMX
+                htmx.ajax('GET', url, { target: '#detailSidebarContent', swap: 'innerHTML' });
+            }
+        }
+    });
+</script>
+{% endblock %}

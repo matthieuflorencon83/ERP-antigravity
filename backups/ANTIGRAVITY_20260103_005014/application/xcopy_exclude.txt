@@ -1,0 +1,5 @@
+BACKUP_PRE_REDESIGN
+.git
+.vscode
+node_modules
+xcopy_exclude.txt

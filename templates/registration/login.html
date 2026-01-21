@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-box-arrow-in-right me-2"></i> Connexion</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Nom d'utilisateur</label>
+                        {{ form.username.errors }}
+                        <input type="text" name="username" class="form-control" placeholder="Nom d'utilisateur"
+                            aria-label="Nom d'utilisateur" autofocus required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mot de passe</label>
+                        {{ form.password.errors }}
+                        <input type="password" name="password" class="form-control" placeholder="Mot de passe"
+                            aria-label="Mot de passe" required>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary fw-bold">Se connecter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

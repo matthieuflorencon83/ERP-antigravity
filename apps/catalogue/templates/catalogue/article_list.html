@@ -1,0 +1,363 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    /* CUSTOM PAGE STYLES - Antigravity Pro 2.0 */
+
+    /* 1. LAYOUT & SCROLLING */
+    .page-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 2rem;
+        background-color: var(--bs-tertiary-bg);
+        overflow: hidden;
+    }
+
+    /* 2. DATAGRID CARD */
+    .datagrid-card {
+        border: 1px solid var(--bs-border-color) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
+        border-radius: 12px;
+        background: var(--bs-body-bg);
+        /* Adaptive */
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    /* 3. TOOLBAR */
+    .toolbar-area {
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--bs-border-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        background: var(--bs-body-bg);
+    }
+
+    .search-input-group {
+        width: 300px;
+    }
+
+    .search-input {
+        border-radius: 8px 0 0 8px !important;
+        border-right: none;
+        background-color: var(--bs-tertiary-bg);
+        color: var(--bs-body-color);
+        font-size: 0.9rem;
+        border-color: var(--bs-border-color);
+    }
+
+    .search-input:focus {
+        background-color: var(--bs-body-bg);
+        border-color: var(--bs-border-color);
+        /* Correct focus border */
+        color: var(--bs-body-color);
+        box-shadow: none;
+    }
+
+    .search-btn {
+        border-radius: 0 8px 8px 0 !important;
+        background-color: var(--bs-tertiary-bg);
+        border-left: none;
+        color: var(--bs-secondary-color);
+        border-color: var(--bs-border-color);
+    }
+
+    .filter-pill {
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        padding: 0.4rem 1rem;
+        color: var(--bs-secondary-color);
+        background-color: var(--bs-body-bg);
+        border: 1px solid var(--bs-border-color);
+        transition: all 0.2s;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    .filter-pill:hover,
+    .filter-pill.active {
+        background-color: var(--bs-primary-bg-subtle);
+        color: var(--bs-primary);
+        /* Stripe/Linear Blue */
+        border-color: var(--bs-primary-border-subtle);
+    }
+
+    /* 4. TABLE STYLES */
+    .table-container {
+        flex: 1;
+        overflow-y: auto;
+        position: relative;
+    }
+
+    .table-modern {
+        margin-bottom: 0;
+        width: 100%;
+        font-size: 0.9rem;
+        color: var(--bs-body-color);
+        /* Fix layout for stability */
+    }
+
+    .table-modern thead th {
+        position: sticky;
+        top: 0;
+        background-color: var(--bs-tertiary-bg);
+        /* bg-light */
+        color: var(--bs-secondary-color);
+        /* text-muted */
+        font-weight: 600;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 0.75rem 1.25rem;
+        border-bottom: 1px solid var(--bs-border-color);
+        z-index: 10;
+        white-space: nowrap;
+    }
+
+    .table-modern tbody td {
+        padding: 0.65rem 1.25rem;
+        /* Reduced padding (py-2 approx) */
+        border-bottom: 1px solid var(--bs-border-color);
+        vertical-align: middle;
+        color: var(--bs-body-color);
+    }
+
+    .table-modern tbody tr {
+        transition: background-color 0.1s;
+    }
+
+    .table-modern tbody tr:hover {
+        background-color: var(--bs-tertiary-bg);
+    }
+
+    /* Row Actions - Hover Only */
+    .row-actions {
+        opacity: 0;
+        transition: opacity 0.2s ease-in-out;
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+
+    .table-modern tbody tr:hover .row-actions {
+        opacity: 1;
+    }
+
+    .btn-action-icon {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        color: var(--bs-secondary-color);
+        transition: all 0.15s;
+        background: transparent;
+        border: none;
+    }
+
+    .btn-action-icon:hover {
+        background-color: var(--bs-tertiary-bg);
+        color: var(--bs-primary);
+    }
+
+    .btn-action-icon.delete:hover {
+        color: #fa5252;
+        background-color: #ffe3e3;
+    }
+
+    /* Typography & Badges */
+    .text-primary-header {
+        font-size: 0.9rem;
+        font-weight: 600;
+        /* fw-bold but not heavy */
+        color: var(--bs-heading-color);
+        /* text-dark */
+    }
+
+    .text-secondary-sub {
+        font-size: 0.75rem;
+        /* small (12px) */
+        color: var(--bs-secondary-color);
+        /* text-muted */
+        margin-top: 2px;
+    }
+
+    .badge-soft {
+        font-weight: 500;
+        font-size: 0.75rem;
+        padding: 0.35em 0.8em;
+        border-radius: 6px;
+        letter-spacing: 0.02em;
+    }
+
+    .badge-soft-primary {
+        background-color: #e7f5ff;
+        color: #1971c2;
+    }
+
+    .badge-soft-success {
+        background-color: #ebfbee;
+        color: #2f9e44;
+    }
+
+    .badge-soft-secondary {
+        background-color: var(--bs-secondary-bg-subtle);
+        color: var(--bs-secondary-color);
+        border: 1px solid var(--bs-border-color);
+    }
+
+    /* WIDE OFFCANVAS OVERRIDE */
+    .sidebar-detail-width {
+        width: 600px !important;
+        /* As requested */
+    }
+
+    @media (min-width: 1400px) {
+        .sidebar-detail-width {
+            width: 50% !important;
+            /* Even wider on very large screens if desired, or stick to 600px */
+            max-width: 800px;
+        }
+    }
+
+    /* Width Utilities */
+    .w-35 {
+        width: 35% !important;
+    }
+
+    .w-25 {
+        width: 25% !important;
+    }
+
+    .w-15 {
+        width: 15% !important;
+    }
+
+    .w-10 {
+        width: 10% !important;
+    }
+
+    .avatar-sm {
+        width: 36px;
+        height: 36px;
+        /* pastel blue match */
+        color: #1c7ed6;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container h-100">
+
+    <!-- DATAGRID MAIN CONTAINER -->
+    <div class="datagrid-card h-100">
+
+        <!-- TOOLBAR -->
+        <div class="toolbar-area">
+            <!-- Left: Global Search -->
+            <div class="input-group search-input-group">
+                <input type="text" name="q" class="form-control search-input" placeholder="Rechercher un article..."
+                    value="{{ request.GET.q }}" hx-get="{% url 'article_list' %}"
+                    hx-trigger="input changed delay:50ms, search" hx-target="#article-table-body" hx-push-url="true">
+                <button class="btn btn-outline-secondary search-btn" type="submit" aria-label="Rechercher">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+
+            <!-- Middle: Filter Pills -->
+            <div class="d-flex gap-2 mx-auto">
+                <a href="?"
+                    class="filter-pill {% if not request.GET.fournisseur and not request.GET.stock %}active{% endif %}">
+                    Tous
+                </a>
+            </div>
+
+            <!-- Right: Spacer (Empty div to balance flex if needed, or just remove) -->
+            <div></div>
+        </div>
+
+        <!-- TABLE WRAPPER -->
+        <div class="table-container" id="article_grid">
+            <table class="table table-modern table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th class="w-60pct">Article / Référence</th>
+                        <th class="w-40pct">Fournisseur</th>
+                    </tr>
+                </thead>
+                <tbody id="article-table-body">
+                    {% include 'catalogue/partials/article_table_body.html' %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FOOTER / PAGINATION -->
+        <div class="px-3 py-2 border-top d-flex justify-content-between align-items-center small text-muted">
+            <div>
+                Affichage de <strong>{{ page_obj.start_index }}</strong> à <strong>{{ page_obj.end_index }}</strong> sur
+                <strong>{{ total_count }}</strong> articles
+            </div>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm mb-0">
+                    <!-- First Page -->
+                    <li class="page-item {% if not page_obj.has_previous %}d-none{% endif %}">
+                        <a class="page-link"
+                            href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
+                            aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- Previous Page -->
+                    <li class="page-item {% if not page_obj.has_previous %}d-none{% endif %}">
+                        <a class="page-link"
+                            href="?page={% if page_obj.has_previous %}{{ page_obj.previous_page_number }}{% else %}1{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
+                            aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- Current Page -->
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+
+                    <!-- Next Page -->
+                    <li class="page-item {% if not page_obj.has_next %}d-none{% endif %}">
+                        <a class="page-link"
+                            href="?page={% if page_obj.has_next %}{{ page_obj.next_page_number }}{% else %}{{ page_obj.paginator.num_pages }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
+                            aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+
+                    <!-- Last Page -->
+                    <li class="page-item {% if not page_obj.has_next %}d-none{% endif %}">
+                        <a class="page-link"
+                            href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.designation %}&designation={{ request.GET.designation }}{% endif %}"
+                            aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Simple script to highlight active row if needed, mainly visual
+    // Interactions handled by specific hover CSS and HTMX
+</script>
+
+{% endblock %}

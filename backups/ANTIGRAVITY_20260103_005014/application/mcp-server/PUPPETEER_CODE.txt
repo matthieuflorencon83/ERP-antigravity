@@ -1,0 +1,218 @@
+// ============================================
+// PUPPETEER VISUAL INSPECTOR - CODE TO ADD
+// ============================================
+
+// 1. IMPORT (après ligne 24)
+import puppeteer from 'puppeteer';
+
+// 2. VALIDATION URL (après validatePath, ligne ~104)
+/**
+ * Valide qu'une URL est localhost uniquement
+ */
+function validateLocalUrl(url: string): void {
+    if (!url.startsWith('http://localhost') && !url.startsWith('http://127.0.0.1')) {
+        throw new Error('Only localhost URLs are allowed for security reasons');
+    }
+}
+
+// 3. SCHÉMAS ZOD (après RunGitCommandSchema, ligne ~162)
+const TakeScreenshotSchema = z.object({
+    url: z.string().url('Invalid URL format'),
+    device: z.enum(['mobile', 'tablet', 'desktop']).default('desktop'),
+});
+
+const AuditAccessibilitySchema = z.object({
+    url: z.string().url('Invalid URL format'),
+});
+
+// 4. TOOL I : TAKE SCREENSHOT (après runGitCommand, ligne ~395)
+async function takeScreenshot(url: string, device: string): Promise<any> {
+    // Valider URL
+    validateLocalUrl(url);
+    
+    // Configuration viewport selon device
+    const viewports = {
+        mobile: { width: 375, height: 667, isMobile: true, hasTouch: true },
+        tablet: { width: 768, height: 1024, isMobile: true, hasTouch: true },
+        desktop: { width: 1920, height: 1080, isMobile: false, hasTouch: false },
+    };
+    
+    const viewport = viewports[device as keyof typeof viewports];
+    
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    
+    try {
+        const page = await browser.newPage();
+        
+        // Configurer viewport
+        await page.setViewport(viewport);
+        
+        // User-Agent selon device
+        if (device === 'mobile') {
+            await page.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15');
+        } else if (device === 'tablet') {
+            await page.setUserAgent('Mozilla/5.0 (iPad; CPU OS 14_0 like Mac OS X) AppleWebKit/605.1.15');
+        }
+        
+        // Naviguer vers URL
+        await page.goto(url, {
+            waitUntil: 'networkidle0',
+            timeout: 30000,
+        });
+        
+        // Prendre screenshot
+        const screenshot = await page.screenshot({
+            type: 'png',
+            fullPage: false,
+        });
+        
+        // Convertir en Base64
+        const base64 = screenshot.toString('base64');
+        
+        return {
+            success: true,
+            url,
+            device,
+            viewport: { width: viewport.width, height: viewport.height },
+            screenshotBase64: base64,
+            size: screenshot.length,
+        };
+    } finally {
+        // CRITIQUE : Toujours fermer le navigateur
+        await browser.close();
+    }
+}
+
+// 5. TOOL J : AUDIT ACCESSIBILITY (après takeScreenshot)
+async function auditAccessibility(url: string): Promise<any> {
+    // Valider URL
+    validateLocalUrl(url);
+    
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    
+    try {
+        const page = await browser.newPage();
+        
+        // Naviguer vers URL
+        await page.goto(url, {
+            waitUntil: 'networkidle0',
+            timeout: 30000,
+        });
+        
+        // Récupérer l'arbre d'accessibilité
+        const snapshot = await page.accessibility.snapshot();
+        
+        // Analyser les problèmes
+        const issues: any[] = [];
+        
+        // Fonction récursive pour parcourir l'arbre
+        function analyzeNode(node: any, path: string = '') {
+            if (!node) return;
+            
+            const currentPath = path ? `${path} > ${node.role}` : node.role;
+            
+            // Vérifier label manquant
+            if (['button', 'link', 'textbox'].includes(node.role) && !node.name) {
+                issues.push({
+                    type: 'missing-label',
+                    role: node.role,
+                    path: currentPath,
+                    severity: 'warning',
+                });
+            }
+            
+            // Parcourir enfants
+            if (node.children) {
+                node.children.forEach((child: any) => analyzeNode(child, currentPath));
+            }
+        }
+        
+        if (snapshot) {
+            analyzeNode(snapshot);
+        }
+        
+        // Calculer score (100 - nombre d'issues * 5)
+        const score = Math.max(0, 100 - issues.length * 5);
+        
+        return {
+            success: true,
+            url,
+            issuesCount: issues.length,
+            issues,
+            score,
+            accessibilityTree: snapshot,
+        };
+    } finally {
+        // CRITIQUE : Toujours fermer le navigateur
+        await browser.close();
+    }
+}
+
+// 6. ENREGISTREMENT TOOLS (dans tools array, après run_git_command)
+            {
+                name: 'take_screenshot',
+                description: 'Prend une capture d\'écran responsive de l\'application (mobile/tablet/desktop)',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        url: {
+                            type: 'string',
+                            description: 'URL localhost à capturer (ex: "http://localhost/antigravity/dashboard.php")',
+                        },
+                        device: {
+                            type: 'string',
+                            enum: ['mobile', 'tablet', 'desktop'],
+                            description: 'Type d\'appareil (défaut: desktop)',
+                            default: 'desktop',
+                        },
+                    },
+                    required: ['url'],
+                },
+            },
+            {
+                name: 'audit_accessibility',
+                description: 'Audite l\'accessibilité d\'une page (labels, contrastes, rôles ARIA)',
+                inputSchema: {
+                    type: 'object',
+                    properties: {
+                        url: {
+                            type: 'string',
+                            description: 'URL localhost à auditer',
+                        },
+                    },
+                    required: ['url'],
+                },
+            },
+
+// 7. HANDLERS (dans switch, après run_git_command)
+            case 'take_screenshot': {
+                const args = TakeScreenshotSchema.parse(request.params.arguments);
+                const result = await takeScreenshot(args.url, args.device);
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: JSON.stringify(result, null, 2),
+                        },
+                    ],
+                };
+            }
+
+            case 'audit_accessibility': {
+                const args = AuditAccessibilitySchema.parse(request.params.arguments);
+                const result = await auditAccessibility(args.url);
+                return {
+                    content: [
+                        {
+                            type: 'text',
+                            text: JSON.stringify(result, null, 2),
+                        },
+                    ],
+                };
+            }

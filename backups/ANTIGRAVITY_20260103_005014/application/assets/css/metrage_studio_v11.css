@@ -1,0 +1,459 @@
+/* =========================================
+   METRAGE STUDIO V12 - 3-Zone Grid Layout
+   ========================================= */
+
+:root {
+    --studio-bg: #121826;
+    --sidebar-width: 280px;
+    --knowledge-width: 320px;
+    --topbar-height: 60px;
+
+    --bg-dark: #121826;
+    --bg-darker: #0c101a;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.08);
+
+    --accent: #4fc3f7;
+    --accent-gradient: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
+    --success: #66bb6a;
+    --warning: #ffa726;
+    --danger: #ef5350;
+
+    --text: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --radius: 12px;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+body.studio-mode-v11 {
+    background: var(--studio-bg);
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+body.studio-mode-v11 .navbar,
+body.studio-mode-v11 .main-sidebar,
+body.studio-mode-v11 footer {
+    display: none !important;
+}
+
+/* =========================================
+   MAIN LAYOUT (V12 GRID)
+   =========================================*/
+.studio-wrapper.v12-layout {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) 1fr var(--knowledge-width);
+    height: calc(100vh - 70px);
+    width: 100vw;
+    background: var(--bg-dark);
+    position: fixed;
+    top: 70px;
+    left: 0;
+    z-index: 100;
+}
+
+/* =========================================
+   COLUMN 1: SIDEBAR (Context)
+   ========================================= */
+.studio-sidebar {
+    background: rgba(0, 0, 0, 0.2);
+    border-right: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    padding: 15px;
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar-header h3 {
+    font-size: 1rem;
+    color: var(--text);
+    margin: 0;
+}
+
+.btn-close-sidebar {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+}
+
+.context-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+}
+
+.tree-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+/* Tree Styling */
+.tree-product {
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.tree-product:hover {
+    border-color: var(--accent);
+}
+
+.tree-product.active {
+    border-color: var(--accent);
+    background: rgba(79, 195, 247, 0.1);
+}
+
+.tree-product-name {
+    font-weight: 500;
+    color: var(--text);
+}
+
+.tree-product-specs {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    display: block;
+}
+
+.tree-product-completed .fa-check-circle {
+    color: var(--success);
+}
+
+/* =========================================
+   COLUMN 2: MAIN (Assistant Flow)
+   ========================================= */
+.studio-main {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.01);
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.studio-topbar {
+    padding: 10px 20px;
+    background: var(--bg-darker);
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.topbar-title {
+    color: var(--text);
+    font-weight: bold;
+}
+
+.btn-menu,
+.btn-info {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.assistant-stream {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 5%;
+    position: relative;
+    scroll-behavior: smooth;
+}
+
+.assistant-container {
+    margin-bottom: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Chat Bubbles */
+.assistant-bubble {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.3s ease;
+}
+
+.assistant-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-gradient);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.assistant-content {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 0 12px 12px 12px;
+    padding: 15px;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.user-bubble {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.user-content {
+    background: var(--accent-gradient);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 12px 12px 0 12px;
+    max-width: 80%;
+}
+
+/* Action Zone (Inputs) */
+.action-zone-center {
+    max-width: 700px;
+    margin: 0 auto;
+    /* animation: slideUp 0.3s ease-out; Remove animation */
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.bg-dark-input {
+    background: #1a202e;
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 30px rgba(79, 195, 247, 0.1);
+    border-radius: var(--radius);
+}
+
+/* Inputs Styling */
+.input-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.input-option {
+    flex: 1 1 180px;
+    padding: 15px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.input-option:hover {
+    border-color: var(--accent);
+    background: rgba(79, 195, 247, 0.1);
+}
+
+.input-option.selected {
+    border-color: var(--success);
+    background: rgba(102, 187, 106, 0.15);
+}
+
+.input-number input {
+    width: 100%;
+    padding: 12px;
+    background: #0c101a;
+    border: 1px solid var(--card-border);
+    color: var(--text);
+    font-size: 1.2rem;
+    text-align: center;
+    border-radius: 8px;
+}
+
+/* =========================================
+   SELECT2 DARK MODE OVERRIDES
+   ========================================= */
+.select2-container--default .select2-selection--single {
+    background-color: var(--bg-darker) !important;
+    border-color: var(--card-border) !important;
+    color: var(--text) !important;
+    height: 38px;
+    border-radius: var(--radius);
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: var(--text) !important;
+    line-height: 36px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 36px;
+}
+
+.select2-dropdown {
+    background-color: #1e1e1e !important;
+    /* var(--card-bg) sometimes too transparent */
+    border-color: var(--card-border) !important;
+    color: var(--text) !important;
+}
+
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: var(--accent) !important;
+    color: #fff !important;
+}
+
+.select2-container--default .select2-results__option--selectable {
+    color: var(--text) !important;
+}
+
+.select2-search__field {
+    background-color: var(--bg-dark) !important;
+    color: var(--text) !important;
+    border-color: var(--card-border) !important;
+}
+
+/* =========================================
+   COLUMN 3: KNOWLEDGE (Right)
+   ========================================= */
+.studio-knowledge {
+    background: var(--bg-darker);
+    border-left: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.knowledge-header {
+    padding: 15px;
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.knowledge-header h3 {
+    font-size: 1rem;
+    color: var(--text);
+    margin: 0;
+}
+
+.btn-close-recap {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+}
+
+.schema-wrapper {
+    background: #000;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    max-height: 300px;
+}
+
+.schema-wrapper img {
+    object-fit: contain;
+}
+
+.btn-zoom-overlay {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* Scrollbars */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+    .studio-wrapper.v12-layout {
+        grid-template-columns: 260px 1fr 0;
+    }
+
+    .studio-knowledge {
+        display: none;
+        position: fixed;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 320px;
+        z-index: 999;
+        box-shadow: -5px 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .studio-knowledge.open {
+        display: flex;
+    }
+}
+
+@media (max-width: 992px) {
+    .studio-wrapper.v12-layout {
+        grid-template-columns: 100%;
+    }
+
+    .studio-sidebar {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 280px;
+        z-index: 999;
+        background: #1a1a2e;
+    }
+
+    .studio-sidebar.open {
+        display: flex;
+    }
+}

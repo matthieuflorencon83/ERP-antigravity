@@ -1,0 +1,75 @@
+<div id="status-area">
+    {% if commande.statut == 'BROUILLON' %}
+    <h5 class="fw-bold mb-3">🚀 Prêt à commander ?</h5>
+    <div class="d-grid gap-2">
+        <button class="btn btn-primary" hx-post="{% url 'htmx_update_statut_commande' commande.id 'ENVOYEE' %}"
+            hx-target="#status-area" hx-confirm="Confirmez-vous l'envoi de cette commande ?">
+            <i class="bi bi-send me-2"></i>Marquer comme Envoyée
+        </button>
+        <small class="text-muted text-center">La commande passera en statut "En Attente ARC"</small>
+    </div>
+
+    {% elif commande.statut == 'ENVOYEE' %}
+    <h5 class="fw-bold mb-3 text-primary">📩 En attente de l'ARC</h5>
+
+    <form hx-post="{% url 'upload_document_commande' commande.id %}" hx-encoding="multipart/form-data"
+        hx-target="#status-area"
+        class="dropzone-area p-4 border-2 border-dashed border-primary rounded text-center bg-primary-subtle cursor-pointer position-relative">
+        {% csrf_token %}
+        <input type="hidden" name="doc_type" value="ARC">
+
+        <i class="bi bi-file-earmark-pdf fs-1 text-primary opacity-50"></i>
+        <p class="fw-bold mb-1 mt-2 text-primary">Glissez l'ARC ici</p>
+        <p class="small text-muted mb-0">ou cliquez pour sélectionner</p>
+
+        <input type="file" name="document" title="Sélectionner l'ARC"
+            class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
+            onchange="htmx.trigger(this.closest('form'), 'submit')">
+
+        <!-- Loading Indicator -->
+        <div
+            class="htmx-indicator position-absolute top-0 start-0 w-100 h-100 bg-white opacity-75 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+    </form>
+
+    {% elif commande.statut == 'CONFIRME_ARC' %}
+    <h5 class="fw-bold mb-3 text-purple-600">🚚 En attente de Livraison</h5>
+
+    <div class="mb-3">
+        <strong>Date Prévue :</strong>
+        {% if commande.date_livraison_prevue %}
+        {{ commande.date_livraison_prevue|date:"d/m/Y" }}
+        {% else %}
+        <span class="text-muted">-</span>
+        {% endif %}
+    </div>
+
+    <form hx-post="{% url 'upload_document_commande' commande.id %}" hx-encoding="multipart/form-data"
+        hx-target="#status-area"
+        class="dropzone-area p-4 border-2 border-dashed border-info rounded text-center bg-info-subtle cursor-pointer position-relative">
+        {% csrf_token %}
+        <input type="hidden" name="doc_type" value="BL">
+
+        <i class="bi bi-box-seam fs-1 text-info opacity-50"></i>
+        <p class="fw-bold mb-1 mt-2 text-info">Glissez le BL ici</p>
+        <p class="small text-muted mb-0">Confirmer la réception</p>
+
+        <input type="file" name="document" title="Sélectionner le BL"
+            class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
+            onchange="htmx.trigger(this.closest('form'), 'submit')">
+
+        <div
+            class="htmx-indicator position-absolute top-0 start-0 w-100 h-100 bg-white opacity-75 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-info" role="status"></div>
+        </div>
+    </form>
+
+    {% elif commande.statut == 'LIVREE' %}
+    <div class="text-center py-4">
+        <i class="bi bi-check-circle-fill fs-1 text-success mb-3"></i>
+        <h5 class="fw-bold text-success">Commande Livrée</h5>
+        <p class="text-muted">Le processus est terminé.</p>
+    </div>
+    {% endif %}
+</div>

@@ -1,0 +1,294 @@
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bon de Commande {{ commande.numero_bdc }}</title>
+    <style>
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12px;
+            margin: 0;
+            padding: 20px;
+            color: #000;
+        }
+
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                padding: 0;
+            }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+        }
+
+        .logo-area {
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .logo-img {
+            height: 50px;
+        }
+
+        .doc-info {
+            text-align: right;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .addresses {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .addr-box {
+            width: 45%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .addr-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 10px;
+            color: #666;
+        }
+
+        .addr-content {
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .details-bar {
+            background-color: #f8f9fa;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .detail-item strong {
+            margin-right: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th {
+            text-align: left;
+            border-bottom: 2px solid #000;
+            padding: 10px 5px;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+
+        td {
+            padding: 10px 5px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+
+        /* Utility classes replacement for inline styles */
+        .w-15 {
+            width: 15%;
+        }
+
+        .w-45 {
+            width: 45%;
+        }
+
+        .w-10 {
+            width: 10%;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        .fw-bold {
+            font-weight: bold;
+        }
+
+        .notes-box {
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+            padding: 10px;
+        }
+
+        .footer-totals {
+            width: 40%;
+            margin-left: auto;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+        }
+
+        .total-final {
+            font-size: 16px;
+            font-weight: bold;
+            border-top: 2px solid #000;
+            margin-top: 5px;
+            padding-top: 5px;
+        }
+
+        .legal-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #666;
+            font-size: 10px;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+
+<body onload="window.print()">
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-area">
+            {% if societe.logo %}
+            <img src="{{ societe.logo.url }}" alt="Logo Société" class="logo-img">
+            {% else %}
+            {{ societe.nom_societe }}
+            {% endif %}
+        </div>
+        <div class="doc-info">
+            <div class="title">BON DE COMMANDE</div>
+            <div>N° {{ commande.numero_bdc }}</div>
+            <div>Date : {{ commande.date_commande|date:"d/m/Y" }}</div>
+        </div>
+    </div>
+
+    <!-- Adresses -->
+    <div class="addresses">
+        <div class="addr-box">
+            <div class="addr-title">Émetteur</div>
+            <div class="addr-content">
+                <strong>{{ societe.nom_societe }}</strong><br>
+                {{ societe.adresse }}<br>
+                {{ societe.code_postal }} {{ societe.ville }}<br>
+                Tél: {{ societe.telephone }}<br>
+                Email: {{ societe.email }}
+            </div>
+        </div>
+        <div class="addr-box">
+            <div class="addr-title">Fournisseur</div>
+            <div class="addr-content">
+                <strong>{{ commande.fournisseur.nom_fournisseur }}</strong><br>
+                {{ commande.fournisseur.adresse|default:"Adresse non renseignée"|linebreaksbr }}<br>
+                {% if commande.fournisseur.contact_nom %}
+                Attn: {{ commande.fournisseur.contact_nom }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Extra Details -->
+    <div class="details-bar">
+        <div class="detail-item"><strong>Affaire :</strong> {{ commande.affaire.nom_affaire }}</div>
+        <div class="detail-item"><strong>Contact :</strong> {{ societe.contact_principal|default:"-" }}</div>
+        <div class="detail-item"><strong>Ref. Client :</strong> {{ commande.affaire.id }}</div>
+    </div>
+
+    <!-- Lines -->
+    <table>
+        <thead>
+            <tr>
+                <th class="w-15">Réf.</th>
+                <th class="w-45">Désignation</th>
+                <th class="text-center w-10">Qté</th>
+                <th class="text-center w-10">Unité</th>
+                <th class="text-end w-10">P.U. Match</th>
+                <th class="text-end w-10">Total HT</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for line in lines %}
+            <tr>
+                <td>{{ line.article.ref_fournisseur }}</td>
+                <td>
+                    <b>{{ line.article.designation }}</b><br>
+                    {% if line.designation and line.designation != line.article.designation %}
+                    <small>{{ line.designation }}</small>
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ line.quantite }}</td>
+                <td class="text-center">{{ line.unite|default:"U" }}</td>
+                <td class="text-end">{{ line.prix_unitaire|floatformat:2 }} €</td>
+                <td class="text-end fw-bold">{{ line.total_ligne|floatformat:2 }} €</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Generic Box for Notes -->
+    <div class="notes-box">
+        <strong>Notes :</strong><br>
+        Merci de bien vouloir accuser réception de cette commande.
+    </div>
+
+    <!-- Totals -->
+    <div class="footer-totals">
+        <div class="total-row">
+            <span>Total HT :</span>
+            <span>{{ commande.total_ht|floatformat:2 }} €</span>
+        </div>
+        <div class="total-row">
+            <span>TVA (20%) :</span>
+            <span>{{ commande.tva|floatformat:2 }} €</span>
+        </div>
+        <div class="total-row total-final">
+            <span>Total TTC :</span>
+            <span>{{ commande.total_ttc|floatformat:2 }} €</span>
+        </div>
+    </div>
+
+    <!-- Legal Footer -->
+    <div class="legal-footer">
+        {{ societe.nom_societe }} - {{ societe.adresse }} {{ societe.code_postal }} {{ societe.ville }} - SIRET: {{
+        societe.siret }}
+    </div>
+
+</body>
+
+</html>

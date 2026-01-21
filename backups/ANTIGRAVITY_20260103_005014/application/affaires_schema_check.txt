@@ -1,0 +1,23 @@
+=== STRUCTURE TABLE AFFAIRES ===
+
+Colonnes existantes :
+--------------------------------------------------
+id                        int                 
+client_id                 int                 
+numero_prodevis           varchar(50)         
+nom_affaire               varchar(100)        
+designation               varchar(255)        
+montant_ht                decimal(10,2)       
+date_signature            date                
+statut                    enum('Devis','Sign├®','Termin├®')
+chemin_dossier_ged        varchar(255)        
+date_pose_debut           date                
+date_pose_fin             date                
+equipe_pose               varchar(100)        
+statut_chantier           enum('A Planifier','Planifié','En Cours','Terminé','Facturé')
+date_creation             datetime            
+
+❌ Colonne 'adresse_chantier' MANQUANTE
+
+Colonnes contenant 'adresse' ou 'lieu' :
+  - statut_chantier

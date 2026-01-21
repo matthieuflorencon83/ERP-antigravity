@@ -1,0 +1,19 @@
+{
+    "mcpServers": {
+        "antigravity-synapse": {
+            "command": "node",
+            "args": [
+                "C:\\laragon\\www\\antigravity\\mcp-server\\dist\\index.js"
+            ],
+            "env": {
+                "DB_HOST": "localhost",
+                "DB_PORT": "3306",
+                "DB_USER": "antigravity_mcp_reader",
+                "DB_PASSWORD": "MCP_Reader_2026!Secure",
+                "DB_NAME": "antigravity",
+                "PROJECT_ROOT": "C:\\laragon\\www\\antigravity",
+                "LOG_PATH": "C:\\laragon\\logs\\php_error.log"
+            }
+        }
+    }
+}

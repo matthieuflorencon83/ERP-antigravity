@@ -1,0 +1,454 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/upload.css' %}">
+<style>
+    /* Force page content to fill the screen for split layout */
+    #app-content {
+        height: calc(100vh - 60px);
+        /* 60px = topbar height */
+        padding-bottom: 0 !important;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    /* Ensure the split container takes all space */
+    .page-container-full {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    /* Tabs styling */
+    .nav-tabs .nav-link {
+        color: var(--bs-body-color);
+        border: none;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+    }
+
+    .nav-tabs .nav-link:hover {
+        border-bottom-color: var(--bs-secondary);
+        color: var(--bs-primary);
+    }
+
+    .nav-tabs .nav-link.active {
+        color: var(--bs-primary);
+        font-weight: bold;
+        border-bottom: 2px solid var(--bs-primary);
+        background: transparent;
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}
+Validation Documents
+{% endblock %}
+
+{% block header_actions %}
+<div id="uploadIndicator" class="progress position-fixed top-0 start-0 w-100 upload-progress-indicator">
+    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary progress-bar-full"></div>
+</div>
+
+<form method="POST" action="{% url 'upload_document' %}" enctype="multipart/form-data"
+    class="d-flex align-items-center gap-2"
+    onsubmit="const btn = this.querySelector('button[type=submit]'); btn.disabled = true; btn.innerHTML = '<span class=\'spinner-border spinner-border-sm me-2\' role=\'status\' aria-hidden=\'true\'></span> Analyse en cours...'; document.getElementById('uploadIndicator').style.display='block'; return true;">
+    {% csrf_token %}
+
+    <div class="input-group input-group-sm">
+        <select class="form-select doc-type-select" name="document_type" title="Type de document"
+            aria-label="Type de document">
+            <option value="">-- Auto-Détecter --</option>
+            <option value="DEVIS_CLIENT">Devis Client</option>
+            <option value="BON_COMMANDE">Bon de Commande</option>
+            <option value="ARC_FOURNISSEUR">ARC Fournisseur</option>
+            <option value="BON_LIVRAISON">Bon de Livraison</option>
+            <option value="FACTURE">Facture</option>
+        </select>
+
+        <input type="file" name="file" class="form-control file-input-upload" required title="Fichier à analyser"
+            aria-label="Fichier à analyser">
+
+        <button type="submit" class="btn btn-primary d-flex align-items-center gap-2" title="Lancer l'analyse AI">
+            <i class="bi bi-cpu"></i> <span>Analyser</span>
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column h-100 page-container-full">
+
+    <div class="container-fluid py-2">
+        {% if error %}
+        <div class="alert alert-danger shadow-sm text-center py-2 mb-2">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error }}
+        </div>
+        {% endif %}
+        {% if analysis_result.error %}
+        <div class="alert alert-warning shadow-sm text-center py-2 mb-2">
+            <i class="bi bi-robot me-2"></i> IA : {{ analysis_result.error }}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- MAIN SPLIT VIEW (Permanent) -->
+    <div id="main-split-view" class="row h-100 g-0">
+
+        <!-- LEFT: PDF VIEWER -->
+        <div class="col-md-5 pdf-viewer-container bg-dark position-relative">
+            <div class="h-100 d-flex flex-column">
+                <!-- IFRAME -->
+                <iframe id="pdf-viewer-frame" src="{% if document.fichier %}{{ document.fichier.url }}{% endif %}"
+                    width="100%" height="100%"
+                    class="flex-grow-1 border-0 {% if not document.fichier %}d-none{% endif %}" title="Document">
+                </iframe>
+
+                <!-- PLACEHOLDER (Visible when no file) -->
+                <div id="pdf-placeholder"
+                    class="d-flex flex-column align-items-center justify-content-center h-100 text-white {% if document.fichier %}d-none{% endif %}">
+                    <i class="bi bi-file-earmark-pdf fs-1 mb-3 text-secondary"></i>
+                    <p class="text-secondary mb-0">Aucun document sélectionné</p>
+                    <small class="text-muted">Utilisez le menu en haut pour charger un fichier</small>
+                </div>
+
+                <!-- TOOLBAR -->
+                <div id="pdf-toolbar"
+                    class="p-2 d-flex justify-content-center gap-2 bg-dark border-top border-secondary {% if not document.fichier %}d-none{% endif %}">
+                    <a id="btn-open-pdf"
+                        href="{% if document.fichier %}{{ document.fichier.url }}{% else %}#{% endif %}"
+                        class="btn btn-sm btn-outline-light" target="_blank">
+                        <i class="bi bi-box-arrow-up-right"></i> Ouvrir
+                    </a>
+                    <a id="btn-download-pdf"
+                        href="{% if document.fichier %}{{ document.fichier.url }}{% else %}#{% endif %}"
+                        class="btn btn-sm btn-outline-light" download>
+                        <i class="bi bi-download"></i> Télécharger
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: VALIDATION FORM -->
+        <div class="col-md-7 validation-form-container bg-light scrollable-y">
+            <div class="p-4 pb-5">
+                <form method="POST"
+                    action="{% if document %}{% url 'document_detail' document.id %}{% else %}#{% endif %}"
+                    id="validation-form">
+                    {% csrf_token %}
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="h4 mb-0 fw-bold text-dark">
+                            {% if analysis_result %}
+                            Résultat : {{ analysis_result.type_document|default:"NON RECONNU" }}
+                            {% else %}
+                            <span class="text-muted">En attente d'analyse...</span>
+                            {% endif %}
+                        </h2>
+                        {% if document %}
+                        <span class="badge bg-secondary">ID: {{ document.id }}</span>
+                        {% endif %}
+                    </div>
+
+                    {% if not analysis_result and document %}
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> L'analyse n'a renvoyé aucun résultat.
+                    </div>
+                    {% endif %}
+
+                    <!-- TABS NAVIGATION -->
+                    <ul class="nav nav-tabs mb-4" id="validationTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="doc-tab" data-bs-toggle="tab" data-bs-target="#doc-pane"
+                                type="button" role="tab" aria-controls="doc-pane" aria-selected="true">
+                                <i class="bi bi-file-earmark-text me-2"></i>Infos Document
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tiers-tab" data-bs-toggle="tab" data-bs-target="#tiers-pane"
+                                type="button" role="tab" aria-controls="tiers-pane" aria-selected="false">
+                                <i class="bi bi-people me-2"></i>Tiers
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="articles-tab" data-bs-toggle="tab"
+                                data-bs-target="#articles-pane" type="button" role="tab" aria-controls="articles-pane"
+                                aria-selected="false">
+                                <i class="bi bi-cart me-2"></i>Articles
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- TABS CONTENT -->
+                    <div class="tab-content" id="validationTabsContent">
+
+                        <!-- TAB 1: INFOS DOCUMENT -->
+                        <div class="tab-pane fade show active" id="doc-pane" role="tabpanel" aria-labelledby="doc-tab"
+                            tabindex="0">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body p-0">
+                                    <table class="table table-bordered mb-0 align-middle">
+                                        <tbody>
+                                            <!-- COMMON: Date Document -->
+                                            <tr>
+                                                <th class="bg-light w-25">Date Document</th>
+                                                <td>
+                                                    <input type="date" class="form-control form-control-sm border-0"
+                                                        name="date_document"
+                                                        value="{{ analysis_result.date_document|default:'' }}"
+                                                        title="Date du document">
+                                                </td>
+                                            </tr>
+
+                                            <!-- SPECIFIC LINKS & REFS -->
+                                            {% if analysis_result.type_document == "DEVIS_CLIENT" %}
+                                            <tr>
+                                                <th class="bg-light">Total Vente HT</th>
+                                                <td>
+                                                    <input type="text"
+                                                        class="form-control form-control-sm border-0 fw-bold"
+                                                        name="total_vente_ht" value="{{ analysis_result.totaux.ht }}">
+                                                </td>
+                                            </tr>
+
+                                            {% elif analysis_result.type_document == "BON_COMMANDE" %}
+                                            <tr>
+                                                <th class="bg-light">N° Commande</th>
+                                                <td>
+                                                    <input type="text"
+                                                        class="form-control form-control-sm border-0 fw-bold"
+                                                        name="num_commande"
+                                                        value="{{ analysis_result.references.num_commande }}">
+                                                </td>
+                                            </tr>
+
+                                            {% elif analysis_result.type_document == "ARC_FOURNISSEUR" %}
+                                            <tr>
+                                                <th class="bg-light">N° ARC</th>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm border-0"
+                                                        name="num_arc" value="{{ analysis_result.references.num_arc }}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light text-primary">Lier au BDC</th>
+                                                <td>
+                                                    <input type="text"
+                                                        class="form-control form-control-sm border-0 fw-bold text-primary"
+                                                        name="num_bdc_lie"
+                                                        value="{{ analysis_result.references.num_commande }}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light">Date Liv. Prévue</th>
+                                                <td>
+                                                    <input type="date" class="form-control form-control-sm border-0"
+                                                        name="date_livraison_prevue"
+                                                        value="{{ analysis_result.date_livraison_prevue }}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light">Total Achat HT</th>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm border-0"
+                                                        name="total_achat_ht" value="{{ analysis_result.totaux.ht }}">
+                                                </td>
+                                            </tr>
+
+                                            {% elif analysis_result.type_document == "BON_LIVRAISON" %}
+                                            <tr>
+                                                <th class="bg-light">N° BL</th>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm border-0"
+                                                        name="num_bl" value="{{ analysis_result.references.num_bl }}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light text-primary">Lier au BDC</th>
+                                                <td>
+                                                    <input type="text"
+                                                        class="form-control form-control-sm border-0 fw-bold text-primary"
+                                                        name="num_bdc_lie"
+                                                        value="{{ analysis_result.references.num_commande }}">
+                                                </td>
+                                            </tr>
+
+                                            {% elif analysis_result.type_document == "FACTURE" %}
+                                            <tr>
+                                                <th class="bg-light">N° Facture</th>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm border-0"
+                                                        name="num_facture"
+                                                        value="{{ analysis_result.references.num_facture }}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light text-primary">Lier (Devis/BDC)</th>
+                                                <td>
+                                                    <input type="text"
+                                                        class="form-control form-control-sm border-0 fw-bold text-primary"
+                                                        name="num_bdc_lie"
+                                                        value="{{ analysis_result.references.num_commande|default:analysis_result.references.num_devis }}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light">Total HT</th>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm border-0"
+                                                        name="total_achat_ht" value="{{ analysis_result.totaux.ht }}">
+                                                </td>
+                                            </tr>
+                                            {% else %}
+                                            <!-- FALLBACK / DEFAULT EMPTY FIELDS -->
+                                            <tr>
+                                                <th class="bg-light">Référence</th>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm border-0"
+                                                        name="reference_doc" placeholder="N° Document"
+                                                        value="{{ analysis_result.references.num_commande|default:'' }}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light">Total HT</th>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm border-0"
+                                                        name="total_ht" placeholder="0.00"
+                                                        value="{{ analysis_result.totaux.ht|default:'' }}">
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 2: INFOS TIERS -->
+                        <div class="tab-pane fade" id="tiers-pane" role="tabpanel" aria-labelledby="tiers-tab"
+                            tabindex="0">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body p-0">
+                                    <table class="table table-bordered mb-0 align-middle">
+                                        <tbody>
+                                            {% if analysis_result.type_document == "DEVIS_CLIENT" %}
+                                            <tr>
+                                                <th class="bg-light w-25">Client</th>
+                                                <td>
+                                                    <input type="text"
+                                                        class="form-control form-control-sm border-0 fw-bold"
+                                                        name="client_nom" value="{{ analysis_result.client.nom }}">
+                                                </td>
+                                            </tr>
+
+                                            {% else %}
+                                            <!-- All others use Supplier (Default) -->
+                                            <tr>
+                                                <th class="bg-light w-25">Fournisseur / Client</th>
+                                                <td>
+                                                    <input type="text"
+                                                        class="form-control form-control-sm border-0 fw-bold"
+                                                        name="fournisseur_nom" placeholder="Nom..."
+                                                        value="{{ analysis_result.fournisseur.nom|default:analysis_result.client.nom }}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light">SIRET</th>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm border-0"
+                                                        name="fournisseur_siret"
+                                                        value="{{ analysis_result.fournisseur.siret|default:'' }}">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="bg-light">Email</th>
+                                                <td>
+                                                    <input type="text" class="form-control form-control-sm border-0"
+                                                        name="fournisseur_email"
+                                                        value="{{ analysis_result.fournisseur.email|default:'' }}">
+                                                </td>
+                                            </tr>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB 3: ARTICLES -->
+                        <div class="tab-pane fade" id="articles-pane" role="tabpanel" aria-labelledby="articles-tab"
+                            tabindex="0">
+                            <div class="card shadow-sm border-0">
+                                <div class="card-body p-0">
+                                    {% include "documents/partials/articles_table_simple.html" %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {% if document %}
+                    <button type="submit" class="btn btn-primary w-100 mt-4 py-3 fw-bold fs-5 shadow-sm">
+                        <i class="bi bi-check-circle me-2"></i> VALIDER ET ENREGISTRER
+                    </button>
+                    {% else %}
+                    <button type="button" class="btn btn-secondary w-100 mt-4 py-3 fw-bold fs-5 shadow-sm" disabled>
+                        <i class="bi bi-arrow-up-circle me-2"></i> Veullez analyser un document
+                    </button>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function initUploadPreview() {
+        const fileInput = document.querySelector('.file-input-upload');
+
+        // Viewer elements
+        const iframe = document.getElementById('pdf-viewer-frame');
+        const placeholder = document.getElementById('pdf-placeholder');
+        const toolbar = document.getElementById('pdf-toolbar');
+        const openBtn = document.getElementById('btn-open-pdf');
+        const downloadBtn = document.getElementById('btn-download-pdf');
+
+        if (fileInput) {
+            fileInput.removeEventListener('change', handleFileSelect); // Avoid dupes
+            fileInput.addEventListener('change', handleFileSelect);
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                console.log("File selected locally:", file.name);
+                const fileURL = URL.createObjectURL(file);
+
+                // Update Viewer
+                if (iframe) {
+                    iframe.src = fileURL;
+                    iframe.classList.remove('d-none');
+                }
+                if (placeholder) placeholder.classList.add('d-none');
+                if (toolbar) toolbar.classList.remove('d-none');
+
+                // Update buttons
+                if (openBtn) openBtn.href = fileURL;
+                if (downloadBtn) {
+                    downloadBtn.href = fileURL;
+                    downloadBtn.download = file.name;
+                }
+            }
+        }
+    }
+
+    // Initialize on load and after HTMX swap
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initUploadPreview);
+    } else {
+        initUploadPreview();
+    }
+    document.addEventListener('htmx:afterSwap', initUploadPreview);
+</script>
+{% endblock %}
