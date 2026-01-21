@@ -51,7 +51,11 @@ jobs:
           - 5432:5432
     
     env:
-      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+      DB_NAME: test_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: localhost
+      DB_PORT: 5432
       SECRET_KEY: test-secret-key-for-ci-only
       DEBUG: False
     
