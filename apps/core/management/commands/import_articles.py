@@ -76,7 +76,8 @@ class Command(BaseCommand):
 
                     # 4. Conditionnement & New Fields
                     conditionnement = str(row.get('Conditionnement', '')).strip()
-                    if conditionnement == 'nan': conditionnement = ''
+                    if conditionnement == 'nan':
+                        conditionnement = ''
                     
                     fabricant = str(row.get('Fabricant', '')).strip().replace('nan', '')
                     type_article = str(row.get('Type', '')).strip().replace('nan', '')
