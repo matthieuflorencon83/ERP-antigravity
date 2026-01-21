@@ -60,7 +60,7 @@ class CommandeTestCase(TestCase):
         
         # Let's perform the calculation explicitly to verify our expectations 
         # (This matches what the view `update_commande_totals` does)
-        total_ht = sum(l.total_ligne for l in c.lignes.all())
+        total_ht = sum(line.quantite * line.prix_unitaire for line in c.lignes.all())
         c.total_ht = Decimal(total_ht)
         c.tva = c.total_ht * Decimal('0.20')
         c.total_ttc = c.total_ht + c.tva
