@@ -16,10 +16,9 @@ from apps.ged.models import Document
 from apps.core.models import CoreParametre
 from apps.core.forms import CommandeForm
 from apps.ventes.models import Affaire, Besoin # Added for generer_commande
+from apps.ged.services import analyze_document, archive_document_locally
 
-# ... existing imports ...
-
-# [Rest of existing file content is unchanged until the end]
+logger = logging.getLogger(__name__)
 
 @login_required
 @require_POST
@@ -116,11 +115,9 @@ def generer_commande(request, pk):
         logger.exception("Erreur lors de la génération de commande")
         messages.error(request, f"Erreur technique : {e}")
 
-    return redirect('besoins_affaire', pk=pk)
-from apps.ged.services import analyze_document, archive_document_locally
-
-logger = logging.getLogger(__name__)
-
+    return redirect('besoins_affaire', pk=pk) 
+    
+    
 @login_required
 def commande_list(request):
     queryset = Commande.objects.select_related('affaire__client', 'fournisseur').filter(statut__in=['BROUILLON', 'COMMANDE', 'CONFIRME_ARC', 'LIVRE']).order_by('-date_commande')
