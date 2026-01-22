@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
-{% block extra_css %}
-{% endblock %}
-{% block page_title %}
-    Ajouter un Client
-{% endblock %}
+{% block extra_css %}{% endblock %}
+{% block page_title %}Ajouter un Client{% endblock %}
 {% block content %}
     <div class="container py-4">
         <div class="card shadow-sm border-0 mx-auto client-form-card">
@@ -18,9 +15,7 @@
                     {% csrf_token %}
                     <div class="row g-3">
                         <div class="col-md-12">
-                            <label for="nom" class="form-label">
-                                Nom du Client (ou Raison Sociale)
-                            </label>
+                            <label for="nom" class="form-label">Nom du Client (ou Raison Sociale)</label>
                             <input type="text"
                                    id="nom"
                                    name="nom"
@@ -30,25 +25,17 @@
                                    title="Nom du client">
                         </div>
                         <div class="col-md-6">
-                            <label for="type_client" class="form-label">
-                                Type Client
-                            </label>
+                            <label for="type_client" class="form-label">Type Client</label>
                             <select id="type_client"
                                     name="type_client"
                                     class="form-select"
                                     title="Sélectionnez le type de client">
-                                <option value="PARTICULIER">
-                                    Particulier
-                                </option>
-                                <option value="PROFESSIONNEL">
-                                    Professionnel / Entreprise
-                                </option>
+                                <option value="PARTICULIER">Particulier</option>
+                                <option value="PROFESSIONNEL">Professionnel / Entreprise</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="telephone" class="form-label">
-                                Téléphone
-                            </label>
+                            <label for="telephone" class="form-label">Téléphone</label>
                             <input type="tel"
                                    id="telephone"
                                    name="telephone"
@@ -57,9 +44,7 @@
                                    placeholder="06 00 00 00 00">
                         </div>
                         <div class="col-md-12">
-                            <label for="email" class="form-label">
-                                Email
-                            </label>
+                            <label for="email" class="form-label">Email</label>
                             <input type="email"
                                    id="email"
                                    name="email"
@@ -68,9 +53,7 @@
                                    title="Email">
                         </div>
                         <div class="col-md-12">
-                            <label for="adresse" class="form-label">
-                                Adresse Principale (Facturation)
-                            </label>
+                            <label for="adresse" class="form-label">Adresse Principale (Facturation)</label>
                             <textarea id="adresse"
                                       name="adresse"
                                       class="form-control"
@@ -81,9 +64,7 @@
                     </div>
                     <div class="mt-4 pt-3 border-top d-flex justify-content-between">
                         <a href="{% url 'client_list' %}" class="btn btn-light">Annuler</a>
-                        <button type="submit" class="btn btn-primary px-4">
-                            Créer le Client
-                        </button>
+                        <button type="submit" class="btn btn-primary px-4">Créer le Client</button>
                     </div>
                 </form>
             </div>

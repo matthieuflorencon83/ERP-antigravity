@@ -1,9 +1,6 @@
 {% extends 'base.html' %}
-{% block extra_css %}
-{% endblock %}
-{% block page_title %}
-    Ajouter un Fournisseur
-{% endblock %}
+{% block extra_css %}{% endblock %}
+{% block page_title %}Ajouter un Fournisseur{% endblock %}
 {% block content %}
     <div class="container py-4">
         <div class="card shadow-sm border-0 mx-auto fournisseur-form-card">
@@ -17,9 +14,7 @@
                     {% csrf_token %}
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label for="nom" class="form-label">
-                                Nom Officiel (Enseigne)
-                            </label>
+                            <label for="nom" class="form-label">Nom Officiel (Enseigne)</label>
                             <input type="text"
                                    id="nom"
                                    name="nom"
@@ -29,9 +24,7 @@
                                    title="Nom officiel du fournisseur">
                         </div>
                         <div class="col-md-6">
-                            <label for="nom_usage" class="form-label">
-                                Nom d'usage (Alias)
-                            </label>
+                            <label for="nom_usage" class="form-label">Nom d'usage (Alias)</label>
                             <input type="text"
                                    id="nom_usage"
                                    name="nom_usage"
@@ -40,9 +33,7 @@
                                    title="Nom d'usage ou alias">
                         </div>
                         <div class="col-md-6">
-                            <label for="code_fournisseur" class="form-label">
-                                Code Fournisseur
-                            </label>
+                            <label for="code_fournisseur" class="form-label">Code Fournisseur</label>
                             <input type="text"
                                    id="code_fournisseur"
                                    name="code_fournisseur"
@@ -51,9 +42,7 @@
                                    title="Code interne fournisseur">
                         </div>
                         <div class="col-md-6">
-                            <label for="siret" class="form-label">
-                                N° SIRET
-                            </label>
+                            <label for="siret" class="form-label">N° SIRET</label>
                             <input type="text"
                                    id="siret"
                                    name="siret"
@@ -62,9 +51,7 @@
                                    title="Numéro SIRET">
                         </div>
                         <div class="col-md-12">
-                            <label for="tva_intracommunautaire" class="form-label">
-                                N° TVA Intracommunautaire
-                            </label>
+                            <label for="tva_intracommunautaire" class="form-label">N° TVA Intracommunautaire</label>
                             <input type="text"
                                    id="tva_intracommunautaire"
                                    name="tva_intracommunautaire"
@@ -73,9 +60,7 @@
                                    title="Numéro de TVA">
                         </div>
                         <div class="col-md-12">
-                            <label for="adresse" class="form-label">
-                                Adresse Siège
-                            </label>
+                            <label for="adresse" class="form-label">Adresse Siège</label>
                             <textarea id="adresse"
                                       name="adresse"
                                       class="form-control"
@@ -84,9 +69,7 @@
                                       placeholder="Rue, CP, Ville..."></textarea>
                         </div>
                         <div class="col-md-12">
-                            <label for="notes" class="form-label">
-                                Notes / Observations
-                            </label>
+                            <label for="notes" class="form-label">Notes / Observations</label>
                             <textarea id="notes"
                                       name="notes"
                                       class="form-control"
@@ -97,9 +80,7 @@
                     </div>
                     <div class="mt-4 pt-3 border-top d-flex justify-content-between">
                         <a href="{% url 'fournisseur_list' %}" class="btn btn-light">Annuler</a>
-                        <button type="submit" class="btn btn-success px-4">
-                            Créer le Fournisseur
-                        </button>
+                        <button type="submit" class="btn btn-success px-4">Créer le Fournisseur</button>
                     </div>
                 </form>
             </div>

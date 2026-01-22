@@ -12,9 +12,7 @@
                     <form method="post">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label class="form-label">
-                                Nom d'utilisateur
-                            </label>
+                            <label class="form-label">Nom d'utilisateur</label>
                             {{ form.username.errors }}
                             <input type="text"
                                    name="username"
@@ -25,9 +23,7 @@
                                    required>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">
-                                Mot de passe
-                            </label>
+                            <label class="form-label">Mot de passe</label>
                             {{ form.password.errors }}
                             <input type="password"
                                    name="password"
@@ -37,9 +33,7 @@
                                    required>
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary fw-bold">
-                                Se connecter
-                            </button>
+                            <button type="submit" class="btn btn-primary fw-bold">Se connecter</button>
                         </div>
                     </form>
                 </div>

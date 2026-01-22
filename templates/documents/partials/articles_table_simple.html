@@ -7,52 +7,31 @@
         <table class="table table-striped table-hover align-middle mb-0">
             <thead class="table-light">
                 <tr>
-                    <th style="width: 15%">
-                        Code
-                    </th>
-                    <th style="width: 40%">
-                        Désignation
-                    </th>
-                    <th style="width: 10%" class="text-center">
-                        Qté
-                    </th>
-                    <th style="width: 15%" class="text-end">
-                        P.U. HT
-                    </th>
-                    <th style="width: 15%" class="text-end">
-                        Total HT
-                    </th>
-                    <th style="width: 5%">
-                    </th>
+                    <th style="width: 15%">Code</th>
+                    <th style="width: 40%">Désignation</th>
+                    <th style="width: 10%" class="text-center">Qté</th>
+                    <th style="width: 15%" class="text-end">P.U. HT</th>
+                    <th style="width: 15%" class="text-end">Total HT</th>
+                    <th style="width: 5%"></th>
                 </tr>
             </thead>
             <tbody>
                 {% for l in analysis_result.lignes %}
                     <tr>
                         <td>
-                            <div class="fw-bold text-dark">
-                                {{ l.code|default:"-" }}
-                            </div>
+                            <div class="fw-bold text-dark">{{ l.code|default:"-" }}</div>
                             <input type="hidden"
                                    name="lignes[{{ forloop.counter0 }}][code_article]"
                                    value="{{ l.code|default:'' }}">
                         </td>
                         <td>
-                            <div>
-                                {{ l.designation }}
-                            </div>
+                            <div>{{ l.designation }}</div>
                             {% if l.ral or l.finition %}
                                 <small class="text-muted fst-italic">
                                     <i class="bi bi-palette me-1"></i>
-                                    {% if l.ral %}
-                                        RAL {{ l.ral }}
-                                    {% endif %}
-                                    {% if l.ral and l.finition %}
-                                        -
-                                    {% endif %}
-                                    {% if l.finition %}
-                                        {{ l.finition }}
-                                    {% endif %}
+                                    {% if l.ral %}RAL {{ l.ral }}{% endif %}
+                                    {% if l.ral and l.finition %}-{% endif %}
+                                    {% if l.finition %}{{ l.finition }}{% endif %}
                                 </small>
                             {% endif %}
                             <input type="hidden"
@@ -87,9 +66,7 @@
                                 <span class="input-group-text">€</span>
                             </div>
                         </td>
-                        <td class="text-end fw-bold text-primary">
-                            {% widthratio l.quantite 1 l.prix_unitaire %} €
-                        </td>
+                        <td class="text-end fw-bold text-primary">{% widthratio l.quantite 1 l.prix_unitaire %} €</td>
                         <td class="text-end text-success">
                             <i class="bi bi-check-circle-fill"></i>
                         </td>
