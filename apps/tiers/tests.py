@@ -7,8 +7,7 @@ class TiersTestCase(TestCase):
         client = Client.objects.create(
             nom="Entreprise Test",
             id="CLI-TEST-001",
-            email_client="test@example.com",
-            ville="Paris"
+            email_client="test@example.com"
         )
         
         self.assertEqual(client.nom, "Entreprise Test")
@@ -19,8 +18,7 @@ class TiersTestCase(TestCase):
         """Test basic supplier creation"""
         fournisseur = Fournisseur.objects.create(
             nom_fournisseur="Maccario Vitrage",
-            siret="40281230000099",
-            email="contact@maccario.com"
+            siret="40281230000099"
         )
         
         self.assertIsNotNone(fournisseur.id)
