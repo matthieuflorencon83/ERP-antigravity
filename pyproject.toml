@@ -59,3 +59,8 @@ skip-magic-trailing-comma = false
 
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
+
+[tool.djlint]
+# Ignore ARIA attribute validation for Django templates
+# Django template syntax in ARIA attributes is a known limitation
+ignore = "H031"
