@@ -2,46 +2,23 @@
     <table class="table table-hover align-middle mb-0">
         <thead class="bg-light sticky-top">
             <tr>
-                <th class="ps-4">
-                    N° Commande
-                </th>
-                <th>
-                    Fournisseur
-                </th>
-                <th>
-                    Affaire
-                </th>
-                <th>
-                    Date
-                </th>
-                <th>
-                    Montant HT
-                </th>
-                {% if mode == 'livraison' %}
-                    <th>
-                        Date Prévue
-                    </th>
-                {% endif %}
-                <th class="text-end pe-4">
-                    Statut
-                </th>
+                <th class="ps-4">N° Commande</th>
+                <th>Fournisseur</th>
+                <th>Affaire</th>
+                <th>Date</th>
+                <th>Montant HT</th>
+                {% if mode == 'livraison' %}<th>Date Prévue</th>{% endif %}
+                <th class="text-end pe-4">Statut</th>
             </tr>
         </thead>
         <tbody>
             {% for c in commandes %}
                 <!-- Row Clickable -> Detail -->
-                <tr class="cursor-pointer position-relative
-                           {% if c.is_late %}
-                               table-danger
-                           {% endif %}"
+                <tr class="cursor-pointer position-relative {% if c.is_late %}table-danger{% endif %}"
                     onclick="window.location.href='{% url 'commande_edit' c.id %}';">
-                    <td class="ps-4 fw-bold text-primary">
-                        {{ c.numero_bdc|default:c.id|truncatechars:8 }}
-                    </td>
+                    <td class="ps-4 fw-bold text-primary">{{ c.numero_bdc|default:c.id|truncatechars:8 }}</td>
                     <td>
-                        <div class="fw-bold">
-                            {{ c.fournisseur.nom_fournisseur }}
-                        </div>
+                        <div class="fw-bold">{{ c.fournisseur.nom_fournisseur }}</div>
                         {% if c.ref_externe_web %}
                             <small class="text-muted"><i class="bi bi-globe me-1"></i>{{ c.ref_externe_web }}</small>
                         {% endif %}
@@ -62,9 +39,7 @@
                             {{ c.date_creation|date:"d/m/Y" }}
                         {% endif %}
                     </td>
-                    <td class="fw-bold text-dark">
-                        {{ c.total_ht|floatformat:2 }} €
-                    </td>
+                    <td class="fw-bold text-dark">{{ c.total_ht|floatformat:2 }} €</td>
                     {% if mode == 'livraison' %}
                         <td>
                             {% if c.date_livraison_prevue %}
@@ -95,9 +70,7 @@
                 <tr>
                     <td colspan="8" class="text-center py-5 text-muted">
                         <i class="bi bi-inbox display-6 opacity-25"></i>
-                        <p class="mt-2 text-uppercase fs-075 fw-bold letter-spacing-1">
-                            Aucune commande dans cette catégorie
-                        </p>
+                        <p class="mt-2 text-uppercase fs-075 fw-bold letter-spacing-1">Aucune commande dans cette catégorie</p>
                     </td>
                 </tr>
             {% endfor %}

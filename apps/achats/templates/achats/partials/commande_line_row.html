@@ -1,12 +1,8 @@
 {% load custom_filters %}
 <tr>
     <td>
-        <div class="fw-bold text-truncate max-w-200">
-            {{ line.article.designation }}
-        </div>
-        <div class="text-muted fs-075">
-            {{ line.article.ref_fournisseur }} - {{ line.designation }}
-        </div>
+        <div class="fw-bold text-truncate max-w-200">{{ line.article.designation }}</div>
+        <div class="text-muted fs-075">{{ line.article.ref_fournisseur }} - {{ line.designation }}</div>
     </td>
     <td class="text-center align-middle w-100px">
         <input type="number"
@@ -32,9 +28,7 @@
                hx-target="closest tr"
                hx-swap="outerHTML">
     </td>
-    <td class="text-end align-middle fw-bold">
-        {{ line.quantite|multiply:line.prix_unitaire|floatformat:2 }} €
-    </td>
+    <td class="text-end align-middle fw-bold">{{ line.quantite|multiply:line.prix_unitaire|floatformat:2 }} €</td>
     <td class="text-end align-middle">
         <button class="btn btn-sm btn-link text-danger p-0"
                 title="Supprimer la ligne"
@@ -48,12 +42,7 @@
 </tr>
 <!-- OOB Update for Totals Footer -->
 <tr id="commande-footer-totals" hx-swap-oob="true">
-    <td colspan="3" class="text-end">
-        Total HT
-    </td>
-    <td class="text-end fw-bold fs-6">
-        {{ form.instance.total_ht|floatformat:2 }} €
-    </td>
-    <td>
-    </td>
+    <td colspan="3" class="text-end">Total HT</td>
+    <td class="text-end fw-bold fs-6">{{ form.instance.total_ht|floatformat:2 }} €</td>
+    <td></td>
 </tr>

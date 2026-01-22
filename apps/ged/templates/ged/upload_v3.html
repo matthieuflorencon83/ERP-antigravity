@@ -221,19 +221,13 @@
 {% block content %}
     <!-- AUTOCOMPLETE DATALISTS (Injected from views.py) -->
     <datalist id="datalist-clients">
-        {% for nom in existing_clients %}
-            <option value="{{ nom }}">
-            {% endfor %}
+        {% for nom in existing_clients %}<option value="{{ nom }}">{% endfor %}
         </datalist>
         <datalist id="datalist-fournisseurs">
-            {% for nom in existing_fournisseurs %}
-                <option value="{{ nom }}">
-                {% endfor %}
+            {% for nom in existing_fournisseurs %}<option value="{{ nom }}">{% endfor %}
             </datalist>
             <datalist id="datalist-articles">
-                {% for code in existing_articles %}
-                    <option value="{{ code }}">
-                    {% endfor %}
+                {% for code in existing_articles %}<option value="{{ code }}">{% endfor %}
                 </datalist>
                 <div class="split-container">
                     <!-- === LEFT PANE: VISUALISEUR PDF === -->
@@ -243,14 +237,11 @@
                                  role="alert">
                                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
                                 <strong>Erreur IA :</strong> {{ error }}
-                                <p class="mb-0 mt-1 x-small opacity-75">
-                                    Vérifiez vos quotas ou votre clé API dans le fichier .env
-                                </p>
+                                <p class="mb-0 mt-1 x-small opacity-75">Vérifiez vos quotas ou votre clé API dans le fichier .env</p>
                                 <button type="button"
                                         class="btn-close small"
                                         data-bs-dismiss="alert"
-                                        aria-label="Close">
-                                </button>
+                                        aria-label="Close"></button>
                             </div>
                         {% endif %}
                         <!-- HEADER (Upload Bar) -->
@@ -266,9 +257,7 @@
                                         name="document_type"
                                         aria-label="Type de document"
                                         title="Type de document">
-                                    <option value="">
-                                        Auto-Détecter
-                                    </option>
+                                    <option value="">Auto-Détecter</option>
                                     <option value="DEVIS_CLIENT">
                                         Devis
                                         Client
@@ -285,9 +274,7 @@
                                         Bon de
                                         Livraison
                                     </option>
-                                    <option value="FACTURE">
-                                        Facture
-                                    </option>
+                                    <option value="FACTURE">Facture</option>
                                 </select>
                                 <div class="input-group input-group-sm input-group-fixed">
                                     <input type="file"
@@ -331,9 +318,7 @@
                             {% else %}
                                 <div class="text-center text-secondary">
                                     <i class="bi bi-cloud-upload fs-1 d-block mb-3"></i>
-                                    <p>
-                                        Aucun document chargé
-                                    </p>
+                                    <p>Aucun document chargé</p>
                                 </div>
                             {% endif %}
                         </div>
@@ -348,9 +333,7 @@
                         <div class="form-header-sticky">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <div>
-                                    <h5 class="fw-bold mb-1">
-                                        Validation Données
-                                    </h5>
+                                    <h5 class="fw-bold mb-1">Validation Données</h5>
                                     {% if analysis_result %}
                                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill">
                                             {{ analysis_result.type_document|default:"NON RECONNU" }}
@@ -365,9 +348,7 @@
                                     {% endif %}
                                 </div>
                                 <!-- ID Document -->
-                                {% if document %}
-                                    <span class="text-muted font-monospace small">#{{ document.id|stringformat:"05d" }}</span>
-                                {% endif %}
+                                {% if document %}<span class="text-muted font-monospace small">#{{ document.id|stringformat:"05d" }}</span>{% endif %}
                             </div>
                             <!-- ScrollSpy Nav -->
                             <ul class="nav nav-pills nav-fill bg-body-tertiary p-1 rounded-pill border">
@@ -396,9 +377,7 @@
                             <div class="row g-3">
                                 <!-- Date -->
                                 <div class="col-6">
-                                    <label class="form-label small text-muted text-uppercase fw-bold">
-                                        Date Document
-                                    </label>
+                                    <label class="form-label small text-muted text-uppercase fw-bold">Date Document</label>
                                     <input type="date"
                                            name="date_document"
                                            class="form-control"
@@ -408,9 +387,7 @@
                                 <!-- Fields based on Type -->
                                 {% if analysis_result.type_document == "DEVIS_CLIENT" %}
                                     <div class="col-6">
-                                        <label class="form-label small text-muted text-uppercase fw-bold">
-                                            N° ProDevis / Devis
-                                        </label>
+                                        <label class="form-label small text-muted text-uppercase fw-bold">N° ProDevis / Devis</label>
                                         <input type="text"
                                                name="numero_prodevis"
                                                class="form-control fw-bold"
@@ -419,9 +396,7 @@
                                     </div>
                                 {% elif analysis_result.type_document == "BON_COMMANDE" %}
                                     <div class="col-6">
-                                        <label class="form-label small text-muted text-uppercase fw-bold">
-                                            N° Commande
-                                        </label>
+                                        <label class="form-label small text-muted text-uppercase fw-bold">N° Commande</label>
                                         <input type="text"
                                                name="num_commande"
                                                class="form-control fw-bold"
@@ -430,9 +405,7 @@
                                     </div>
                                 {% elif analysis_result.type_document == "ARC_FOURNISSEUR" %}
                                     <div class="col-6">
-                                        <label class="form-label small text-muted text-uppercase fw-bold">
-                                            N° ARC
-                                        </label>
+                                        <label class="form-label small text-muted text-uppercase fw-bold">N° ARC</label>
                                         <input type="text"
                                                name="num_arc"
                                                class="form-control fw-bold"
@@ -440,9 +413,7 @@
                                                title="N° ARC">
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label small text-muted text-uppercase fw-bold">
-                                            Lier au BDC
-                                        </label>
+                                        <label class="form-label small text-muted text-uppercase fw-bold">Lier au BDC</label>
                                         <input type="text"
                                                name="num_bdc_lie"
                                                class="form-control text-primary"
@@ -451,9 +422,7 @@
                                                title="Lier au BDC">
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label small text-muted text-uppercase fw-bold">
-                                            Date Livraison Prévue
-                                        </label>
+                                        <label class="form-label small text-muted text-uppercase fw-bold">Date Livraison Prévue</label>
                                         <input type="date"
                                                name="date_livraison_prevue"
                                                class="form-control"
@@ -462,9 +431,7 @@
                                     </div>
                                 {% elif analysis_result.type_document == "BON_LIVRAISON" %}
                                     <div class="col-6">
-                                        <label class="form-label small text-muted text-uppercase fw-bold">
-                                            N° BL
-                                        </label>
+                                        <label class="form-label small text-muted text-uppercase fw-bold">N° BL</label>
                                         <input type="text"
                                                name="num_bl"
                                                class="form-control fw-bold"
@@ -472,9 +439,7 @@
                                                title="N° BL">
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label small text-muted text-uppercase fw-bold">
-                                            Lier au BDC
-                                        </label>
+                                        <label class="form-label small text-muted text-uppercase fw-bold">Lier au BDC</label>
                                         <input type="text"
                                                name="num_bdc_lie"
                                                class="form-control text-primary"
@@ -483,9 +448,7 @@
                                     </div>
                                 {% elif analysis_result.type_document == "FACTURE" %}
                                     <div class="col-6">
-                                        <label class="form-label small text-muted text-uppercase fw-bold">
-                                            N° Facture
-                                        </label>
+                                        <label class="form-label small text-muted text-uppercase fw-bold">N° Facture</label>
                                         <input type="text"
                                                name="num_facture"
                                                class="form-control fw-bold"
@@ -493,9 +456,7 @@
                                                title="N° Facture">
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label small text-muted text-uppercase fw-bold">
-                                            Lier (BDC/Devis)
-                                        </label>
+                                        <label class="form-label small text-muted text-uppercase fw-bold">Lier (BDC/Devis)</label>
                                         <input type="text"
                                                name="num_bdc_lie"
                                                class="form-control text-primary"
@@ -514,9 +475,7 @@
                             {% if analysis_result.type_document == "DEVIS_CLIENT" %}
                                 <!-- CLIENT MODE -->
                                 <div class="mb-3">
-                                    <label class="form-label small text-muted text-uppercase fw-bold">
-                                        Client
-                                    </label>
+                                    <label class="form-label small text-muted text-uppercase fw-bold">Client</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-body-tertiary"><i class="bi bi-search text-muted"></i></span>
                                         <input type="text"
@@ -530,15 +489,12 @@
                                                oninput="checkTiers('client')"
                                                title="Nom du client">
                                     </div>
-                                    <div id="client-status-msg" class="form-text mt-1">
-                                    </div>
+                                    <div id="client-status-msg" class="form-text mt-1"></div>
                                 </div>
                             {% else %}
                                 <!-- FOURNISSEUR MODE (Default for ARC, BDC, BL, Facture) -->
                                 <div class="mb-3">
-                                    <label class="form-label small text-muted text-uppercase fw-bold">
-                                        Fournisseur
-                                    </label>
+                                    <label class="form-label small text-muted text-uppercase fw-bold">Fournisseur</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-body-tertiary"><i class="bi bi-truck text-muted"></i></span>
                                         <input type="text"
@@ -552,15 +508,12 @@
                                                oninput="checkTiers('fournisseur')"
                                                title="Nom du fournisseur">
                                     </div>
-                                    <div id="fournisseur-status-msg" class="form-text mt-1">
-                                    </div>
+                                    <div id="fournisseur-status-msg" class="form-text mt-1"></div>
                                 </div>
                                 <!-- Extra supplier fields -->
                                 <div class="row g-2">
                                     <div class="col-6">
-                                        <label class="form-label small text-muted text-muted">
-                                            Email
-                                        </label>
+                                        <label class="form-label small text-muted text-muted">Email</label>
                                         <input type="email"
                                                name="fournisseur_email"
                                                class="form-control form-control-sm"
@@ -568,9 +521,7 @@
                                                title="Email fournisseur">
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label small text-muted text-muted">
-                                            SIRET
-                                        </label>
+                                        <label class="form-label small text-muted text-muted">SIRET</label>
                                         <input type="text"
                                                name="fournisseur_siret"
                                                class="form-control form-control-sm"
@@ -597,18 +548,10 @@
                                 <table class="table table-sm table-striped mb-0 table-text-sm">
                                     <thead class="bg-body-tertiary">
                                         <tr>
-                                            <th class="col-w-40">
-                                                Désignation / Code
-                                            </th>
-                                            <th class="col-w-15 text-center">
-                                                Qté
-                                            </th>
-                                            <th class="col-w-20 text-end">
-                                                P.U.
-                                            </th>
-                                            <th class="col-w-25 text-end">
-                                                Total
-                                            </th>
+                                            <th class="col-w-40">Désignation / Code</th>
+                                            <th class="col-w-15 text-center">Qté</th>
+                                            <th class="col-w-20 text-end">P.U.</th>
+                                            <th class="col-w-25 text-end">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody id="articles-tbody">
@@ -670,9 +613,7 @@
                                             {% endfor %}
                                         {% else %}
                                             <tr>
-                                                <td colspan="4" class="text-center text-muted py-3">
-                                                    Aucune ligne détectée
-                                                </td>
+                                                <td colspan="4" class="text-center text-muted py-3">Aucune ligne détectée</td>
                                             </tr>
                                         {% endif %}
                                     </tbody>
@@ -704,27 +645,19 @@
                                 <button type="button"
                                         class="btn btn-secondary w-100 py-2"
                                         disabled
-                                        title="Aucun document">
-                                    Aucun document
-                                </button>
+                                        title="Aucun document">Aucun document</button>
                             {% endif %}
                         </div>
                     </form>
                     <!-- Datalists for Autocomplete -->
                     <datalist id="datalist-clients">
-                        {% for name in existing_clients %}
-                            <option value="{{ name }}">
-                            {% endfor %}
+                        {% for name in existing_clients %}<option value="{{ name }}">{% endfor %}
                         </datalist>
                         <datalist id="datalist-fournisseurs">
-                            {% for name in existing_fournisseurs %}
-                                <option value="{{ name }}">
-                                {% endfor %}
+                            {% for name in existing_fournisseurs %}<option value="{{ name }}">{% endfor %}
                             </datalist>
                             <datalist id="datalist-articles">
-                                {% for code in existing_articles %}
-                                    <option value="{{ code }}">
-                                    {% endfor %}
+                                {% for code in existing_articles %}<option value="{{ code }}">{% endfor %}
                                 </datalist>
                             </div>
                             <script>

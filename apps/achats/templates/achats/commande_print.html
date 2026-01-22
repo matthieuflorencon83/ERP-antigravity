@@ -190,23 +190,15 @@
                 {% endif %}
             </div>
             <div class="doc-info">
-                <div class="title">
-                    BON DE COMMANDE
-                </div>
-                <div>
-                    N° {{ commande.numero_bdc }}
-                </div>
-                <div>
-                    Date : {{ commande.date_commande|date:"d/m/Y" }}
-                </div>
+                <div class="title">BON DE COMMANDE</div>
+                <div>N° {{ commande.numero_bdc }}</div>
+                <div>Date : {{ commande.date_commande|date:"d/m/Y" }}</div>
             </div>
         </div>
         <!-- Adresses -->
         <div class="addresses">
             <div class="addr-box">
-                <div class="addr-title">
-                    Émetteur
-                </div>
+                <div class="addr-title">Émetteur</div>
                 <div class="addr-content">
                     <strong>{{ societe.nom_societe }}</strong>
                     <br>
@@ -220,17 +212,13 @@
                 </div>
             </div>
             <div class="addr-box">
-                <div class="addr-title">
-                    Fournisseur
-                </div>
+                <div class="addr-title">Fournisseur</div>
                 <div class="addr-content">
                     <strong>{{ commande.fournisseur.nom_fournisseur }}</strong>
                     <br>
                     {{ commande.fournisseur.adresse|default:"Adresse non renseignée"|linebreaksbr }}
                     <br>
-                    {% if commande.fournisseur.contact_nom %}
-                        Attn: {{ commande.fournisseur.contact_nom }}
-                    {% endif %}
+                    {% if commande.fournisseur.contact_nom %}Attn: {{ commande.fournisseur.contact_nom }}{% endif %}
                 </div>
             </div>
         </div>
@@ -250,32 +238,18 @@
         <table>
             <thead>
                 <tr>
-                    <th class="w-15">
-                        Réf.
-                    </th>
-                    <th class="w-45">
-                        Désignation
-                    </th>
-                    <th class="text-center w-10">
-                        Qté
-                    </th>
-                    <th class="text-center w-10">
-                        Unité
-                    </th>
-                    <th class="text-end w-10">
-                        P.U. Match
-                    </th>
-                    <th class="text-end w-10">
-                        Total HT
-                    </th>
+                    <th class="w-15">Réf.</th>
+                    <th class="w-45">Désignation</th>
+                    <th class="text-center w-10">Qté</th>
+                    <th class="text-center w-10">Unité</th>
+                    <th class="text-end w-10">P.U. Match</th>
+                    <th class="text-end w-10">Total HT</th>
                 </tr>
             </thead>
             <tbody>
                 {% for line in lines %}
                     <tr>
-                        <td>
-                            {{ line.article.ref_fournisseur }}
-                        </td>
+                        <td>{{ line.article.ref_fournisseur }}</td>
                         <td>
                             <b>{{ line.article.designation }}</b>
                             <br>
@@ -283,18 +257,10 @@
                                 <small>{{ line.designation }}</small>
                             {% endif %}
                         </td>
-                        <td class="text-center">
-                            {{ line.quantite }}
-                        </td>
-                        <td class="text-center">
-                            {{ line.unite|default:"U" }}
-                        </td>
-                        <td class="text-end">
-                            {{ line.prix_unitaire|floatformat:2 }} €
-                        </td>
-                        <td class="text-end fw-bold">
-                            {{ line.total_ligne|floatformat:2 }} €
-                        </td>
+                        <td class="text-center">{{ line.quantite }}</td>
+                        <td class="text-center">{{ line.unite|default:"U" }}</td>
+                        <td class="text-end">{{ line.prix_unitaire|floatformat:2 }} €</td>
+                        <td class="text-end fw-bold">{{ line.total_ligne|floatformat:2 }} €</td>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -278,28 +278,20 @@
                 <!-- Middle: Filter Pills -->
                 <div class="d-flex gap-2 mx-auto">
                     <a href="?"
-                       class="filter-pill
-                              {% if not request.GET.fournisseur and not request.GET.stock %}
-                                  active
-                              {% endif %}">
+                       class="filter-pill {% if not request.GET.fournisseur and not request.GET.stock %}active{% endif %}">
                         Tous
                     </a>
                 </div>
                 <!-- Right: Spacer (Empty div to balance flex if needed, or just remove) -->
-                <div>
-                </div>
+                <div></div>
             </div>
             <!-- TABLE WRAPPER -->
             <div class="table-container" id="article_grid">
                 <table class="table table-modern table-hover align-middle">
                     <thead>
                         <tr>
-                            <th class="w-60pct">
-                                Article / Référence
-                            </th>
-                            <th class="w-40pct">
-                                Fournisseur
-                            </th>
+                            <th class="w-60pct">Article / Référence</th>
+                            <th class="w-40pct">Fournisseur</th>
                         </tr>
                     </thead>
                     <tbody id="article-table-body">

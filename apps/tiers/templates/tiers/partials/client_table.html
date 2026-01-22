@@ -2,33 +2,19 @@
     <table class="table table-striped table-hover align-middle mb-0">
         <thead class="table-light">
             <tr>
-                <th scope="col">
-                    Client
-                </th>
-                <th scope="col">
-                    Type
-                </th>
-                <th scope="col" class="min-w-250px">
-                    Contacts
-                </th>
-                <th scope="col">
-                    Lieu
-                </th>
-                <th scope="col" class="text-end">
-                    Actions
-                </th>
+                <th scope="col">Client</th>
+                <th scope="col">Type</th>
+                <th scope="col" class="min-w-250px">Contacts</th>
+                <th scope="col">Lieu</th>
+                <th scope="col" class="text-end">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for client in clients %}
                 <tr>
                     <td>
-                        <div class="fw-bold text-dark">
-                            {{ client.nom|upper }} {{ client.prenom|default:'' }}
-                        </div>
-                        {% if client.siret %}
-                            <small class="text-muted fs-085">SIRET: {{ client.siret }}</small>
-                        {% endif %}
+                        <div class="fw-bold text-dark">{{ client.nom|upper }} {{ client.prenom|default:'' }}</div>
+                        {% if client.siret %}<small class="text-muted fs-085">SIRET: {{ client.siret }}</small>{% endif %}
                     </td>
                     <td>
                         {% if client.type_tiers == 'PROFESSIONNEL' %}

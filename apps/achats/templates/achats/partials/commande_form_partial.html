@@ -20,44 +20,28 @@
     <!-- Scrollable Form Body -->
     <div class="flex-grow-1 overflow-y-auto p-4">
         <form id="commande-form"
-              hx-post="{% if form.instance.pk %}
-                           {% url 'commande_edit' form.instance.pk %}
-                       {% else %}
-                           {% url 'commande_create' %}
-                       {% endif %}"
+              hx-post="{% if form.instance.pk %} {% url 'commande_edit' form.instance.pk %} {% else %} {% url 'commande_create' %} {% endif %}"
               hx-target="#detailSidebarContent"
               hx-swap="innerHTML">
             {% csrf_token %}
             <!-- SECTION 1: ENTÊTE -->
-            <h6 class="text-uppercase text-secondary fw-bold fs-xs mb-3 ls-1">
-                Informations Principales
-            </h6>
+            <h6 class="text-uppercase text-secondary fw-bold fs-xs mb-3 ls-1">Informations Principales</h6>
             <div class="row g-3 mb-4">
                 <div class="col-md-6">
-                    <label class="form-label small fw-bold">
-                        Numéro BDC
-                    </label>
+                    <label class="form-label small fw-bold">Numéro BDC</label>
                     {{ form.numero_bdc|add_class:"form-control form-control-sm" }}
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label small fw-bold">
-                        Date Commande
-                    </label>
+                    <label class="form-label small fw-bold">Date Commande</label>
                     {{ form.date_commande|add_class:"form-control form-control-sm" }}
                 </div>
                 <div class="col-md-12">
-                    <label class="form-label small fw-bold">
-                        Affaire / Chantier
-                    </label>
+                    <label class="form-label small fw-bold">Affaire / Chantier</label>
                     {{ form.affaire|add_class:"form-select form-select-sm" }}
-                    <div class="form-text fs-xs">
-                        L'affaire lie le client à la commande.
-                    </div>
+                    <div class="form-text fs-xs">L'affaire lie le client à la commande.</div>
                 </div>
                 <div class="col-md-12">
-                    <label class="form-label small fw-bold">
-                        Statut
-                    </label>
+                    <label class="form-label small fw-bold">Statut</label>
                     {{ form.statut|add_class:"form-select form-select-sm" }}
                 </div>
             </div>
@@ -74,18 +58,10 @@
                         <table class="table table-sm table-striped mb-0 small">
                             <thead class="table-light">
                                 <tr>
-                                    <th>
-                                        Article
-                                    </th>
-                                    <th class="text-center">
-                                        Qté
-                                    </th>
-                                    <th class="text-end">
-                                        P.U.
-                                    </th>
-                                    <th class="text-end">
-                                        Total
-                                    </th>
+                                    <th>Article</th>
+                                    <th class="text-center">Qté</th>
+                                    <th class="text-end">P.U.</th>
+                                    <th class="text-end">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -95,14 +71,9 @@
                             </tbody>
                             <tfoot class="table-light fw-bold">
                                 <tr id="commande-footer-totals">
-                                    <td colspan="3" class="text-end">
-                                        Total HT
-                                    </td>
-                                    <td class="text-end fw-bold fs-6">
-                                        {{ form.instance.total_ht|floatformat:2 }} €
-                                    </td>
-                                    <td>
-                                    </td>
+                                    <td colspan="3" class="text-end">Total HT</td>
+                                    <td class="text-end fw-bold fs-6">{{ form.instance.total_ht|floatformat:2 }} €</td>
+                                    <td></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -118,11 +89,7 @@
                 </div>
             {% endif %}
             <!-- Hidden generic error display -->
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger small mt-3">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
+            {% if form.non_field_errors %}<div class="alert alert-danger small mt-3">{{ form.non_field_errors }}</div>{% endif %}
         </form>
     </div>
     <!-- Stick Footer -->
@@ -139,8 +106,7 @@
                 <i class="bi bi-trash"></i>
             </button>
         {% else %}
-            <div>
-            </div>
+            <div></div>
         {% endif %}
         <!-- Lifecycle Actions (Center/Right) -->
         <div class="d-flex gap-2">
@@ -153,17 +119,14 @@
             {% endif %}
             <button type="button"
                     class="btn btn-sm btn-outline-secondary"
-                    onclick="toggleDetailPanel(false)">
-                Fermer
-            </button>
+                    onclick="toggleDetailPanel(false)">Fermer</button>
             <button type="submit"
                     form="commande-form"
                     class="btn btn-sm btn-primary fw-bold">
                 <i class="bi bi-save me-1"></i> Enregistrer
             </button>
             {% if form.instance.pk %}
-                <div class="vr mx-2">
-                </div>
+                <div class="vr mx-2"></div>
                 {% if form.instance.statut == 'BROUILLON' %}
                     <button type="button"
                             class="btn btn-sm btn-success fw-bold"

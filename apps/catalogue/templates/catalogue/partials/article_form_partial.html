@@ -21,24 +21,16 @@
             </h6>
             <div class="row g-3">
                 <div class="col-md-12">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Désignation
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Désignation</label>
                     {{ form.designation|add_class:"form-control bg-body-tertiary border-0" }}
-                    <div class="form-text text-muted small">
-                        Nom commercial complet de l'article.
-                    </div>
+                    <div class="form-text text-muted small">Nom commercial complet de l'article.</div>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Code Article
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Code Article</label>
                     {{ form.code_article|add_class:"form-control bg-body-tertiary border-0 font-monospace" }}
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Référence Usine
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Référence Usine</label>
                     {{ form.ref_fournisseur|add_class:"form-control bg-body-tertiary border-0" }}
                 </div>
             </div>
@@ -50,24 +42,18 @@
             </h6>
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Prix Achat HT
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Prix Achat HT</label>
                     <div class="input-group">
                         {{ form.prix_achat|add_class:"form-control bg-body-tertiary border-0 text-end fw-bold" }}
                         <span class="input-group-text bg-body-tertiary border-0 text-muted">€</span>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Unité
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Unité</label>
                     {{ form.unite|add_class:"form-select bg-body-tertiary border-0" }}
                 </div>
                 <div class="col-md-12">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Fournisseur Principal
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Fournisseur Principal</label>
                     {{ form.fournisseur|add_class:"form-select bg-body-tertiary border-0" }}
                 </div>
             </div>
@@ -79,9 +65,7 @@
             </h6>
             <div class="row g-3">
                 <div class="col-12">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Notes Internes
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Notes Internes</label>
                     <!-- Check if 'notes' field exists, otherwise generic textarea -->
                     <textarea name="notes"
                               class="form-control bg-body-tertiary border-0"
@@ -103,9 +87,7 @@
         {% endif %}
         <!-- Save/Cancel Buttons (Right) -->
         <div class="d-flex gap-2 ms-auto">
-            <button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm">
-                Enregistrer
-            </button>
+            <button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm">Enregistrer</button>
         </div>
     </div>
 </form>

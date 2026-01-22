@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}
-    Paramètres - Antigravity ERP
-{% endblock %}
+{% block title %}Paramètres - Antigravity ERP{% endblock %}
 {% block content %}
     <div class="container-fluid p-4">
         <div class="row mb-4">
@@ -21,9 +19,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <p class="text-muted">
-                            Choisissez le thème de l'application.
-                        </p>
+                        <p class="text-muted">Choisissez le thème de l'application.</p>
                         <div class="d-grid gap-2">
                             <button type="button"
                                     class="btn btn-outline-secondary d-flex align-items-center justify-content-between"
@@ -60,9 +56,7 @@
                             {% csrf_token %}
                             <!-- Company Info -->
                             <div class="mb-4">
-                                <h6 class="text-uppercase text-muted small fw-bold mb-3">
-                                    Général
-                                </h6>
+                                <h6 class="text-uppercase text-muted small fw-bold mb-3">Général</h6>
                                 <div class="mb-3">
                                     <label for="{{ form.nom_societe.id_for_label }}" class="form-label">
                                         Nom de la
@@ -78,9 +72,7 @@
                                         Stockage Local
                                     </label>
                                     {{ form.chemin_stockage_local }}
-                                    <div class="form-text">
-                                        Chemin absolu où seront stockés les fichiers temporaires/backups.
-                                    </div>
+                                    <div class="form-text">Chemin absolu où seront stockés les fichiers temporaires/backups.</div>
                                 </div>
                             </div>
                             <hr class="my-4">

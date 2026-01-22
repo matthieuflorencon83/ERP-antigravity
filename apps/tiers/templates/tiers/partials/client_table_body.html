@@ -7,17 +7,11 @@
         <!-- Client Name -->
         <td>
             <div class="d-flex align-items-center gap-3">
-                <div class="avatar-circle-sm bg-primary-subtle text-primary fw-bold">
-                    {{ client.nom|slice:":2"|upper }}
-                </div>
+                <div class="avatar-circle-sm bg-primary-subtle text-primary fw-bold">{{ client.nom|slice:":2"|upper }}</div>
                 <div>
-                    <div class="fw-bold text-body">
-                        {{ client.nom }} {{ client.prenom|default:"" }}
-                    </div>
+                    <div class="fw-bold text-body">{{ client.nom }} {{ client.prenom|default:"" }}</div>
                     <div class="text-muted small fs-075">
-                        {% if client.code_client %}
-                            ref: {{ client.code_client }}
-                        {% endif %}
+                        {% if client.code_client %}ref: {{ client.code_client }}{% endif %}
                     </div>
                 </div>
             </div>
@@ -25,13 +19,9 @@
         <!-- Type Badge -->
         <td>
             {% if client.type_tiers == 'PROFESSIONNEL' %}
-                <span class="badge bg-purple-subtle text-purple border border-purple-subtle badge-pill-text badge-pro">
-                    PRO
-                </span>
+                <span class="badge bg-purple-subtle text-purple border border-purple-subtle badge-pill-text badge-pro">PRO</span>
             {% else %}
-                <span class="badge bg-success-subtle text-success border border-success-subtle badge-pill-text">
-                    PARTICULIER
-                </span>
+                <span class="badge bg-success-subtle text-success border border-success-subtle badge-pill-text">PARTICULIER</span>
             {% endif %}
         </td>
         <!-- Contact -->
@@ -87,12 +77,8 @@
         <td colspan="5" class="text-center py-5">
             <div class="d-flex flex-column align-items-center justify-content-center opacity-50">
                 <i class="bi bi-people fs-1 mb-3"></i>
-                <p class="mb-0 fw-medium">
-                    Aucun client trouvé.
-                </p>
-                <p class="small">
-                    Essayez de modifier vos filtres.
-                </p>
+                <p class="mb-0 fw-medium">Aucun client trouvé.</p>
+                <p class="small">Essayez de modifier vos filtres.</p>
             </div>
         </td>
     </tr>

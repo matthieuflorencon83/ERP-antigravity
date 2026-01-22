@@ -58,4 +58,8 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 
 # Like Black, automatically detect the appropriate line ending.
-line-ending = "auto"
+
+[tool.djlint]
+profile = "django"
+exclude = "htmlcov|backups|sauvegarde|\\.git|\\.venv|venv|\\.tox|build|dist|staticfiles|media|node_modules|__pycache__"
+ignore = "H006,H030,H031"

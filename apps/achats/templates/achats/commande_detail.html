@@ -10,9 +10,7 @@
                        class="text-decoration-none text-muted small mb-1 d-inline-block">
                         <i class="bi bi-arrow-left me-1"></i>Retour aux commandes
                     </a>
-                    <h3 class="fw-bold mb-0">
-                        Commande {{ commande.numero_bdc|default:commande.id }}
-                    </h3>
+                    <h3 class="fw-bold mb-0">Commande {{ commande.numero_bdc|default:commande.id }}</h3>
                     <span class="text-muted">{{ commande.fournisseur.nom_fournisseur }} • {{ commande.affaire.nom_affaire
                     }}</span>
                 </div>
@@ -33,57 +31,26 @@
             <!-- Progress Bar -->
             <div class="position-relative mx-5 mb-2">
                 <div class="progress h-2px">
-                    <div class="progress-bar bg-success
-                                {% if commande.statut == 'LIVREE' %}
-                                    w-100
-                                {% elif commande.statut == 'CONFIRME_ARC' %}
-                                    w-66
-                                {% elif commande.statut == 'ENVOYEE' %}
-                                    w-33
-                                {% else %}
-                                    w-0
-                                {% endif %}"
+                    <div class="progress-bar bg-success {% if commande.statut == 'LIVREE' %} w-100 {% elif commande.statut == 'CONFIRME_ARC' %} w-66 {% elif commande.statut == 'ENVOYEE' %} w-33 {% else %} w-0 {% endif %}"
                          role="progressbar"
-                         aria-valuenow="{% if commande.statut == 'LIVREE' %}
-                                            100
-                                        {% elif commande.statut == 'CONFIRME_ARC' %}
-                                            66
-                                        {% elif commande.statut == 'ENVOYEE' %}
-                                            33
-                                        {% else %}
-                                            0
-                                        {% endif %}"
+                         aria-valuenow="{% if commande.statut == 'LIVREE' %} 100 {% elif commande.statut == 'CONFIRME_ARC' %} 66 {% elif commande.statut == 'ENVOYEE' %} 33 {% else %} 0 {% endif %}"
                          aria-valuemin="0"
                          aria-valuemax="100"
-                         aria-label="Progression de la commande">
-                    </div>
+                         aria-label="Progression de la commande"></div>
                 </div>
                 <div class="d-flex justify-content-between position-absolute top-0 w-100 start-0 translate-middle-y">
                     {% for step in steps %}
-                        <div class="text-center bg-white px-2
-                                    {% if step.completed or step.current %}
-                                        text-success fw-bold
-                                    {% else %}
-                                        text-muted
-                                    {% endif %}">
-                            <div class="rounded-circle border d-inline-flex align-items-center justify-content-center mb-1 size-24px
-                                        {% if step.completed or step.current %}
-                                            border-success bg-success text-white
-                                        {% else %}
-                                            border-secondary bg-white
-                                        {% endif %}">
+                        <div class="text-center bg-white px-2 {% if step.completed or step.current %} text-success fw-bold {% else %} text-muted {% endif %}">
+                            <div class="rounded-circle border d-inline-flex align-items-center justify-content-center mb-1 size-24px {% if step.completed or step.current %} border-success bg-success text-white {% else %} border-secondary bg-white {% endif %}">
                                 {% if step.completed %}
                                     <i class="bi bi-check fs-07"></i>
                                 {% elif step.current %}
-                                    <div class="spinner-grow spinner-grow-sm text-white max-w-100 max-h-100">
-                                    </div>
+                                    <div class="spinner-grow spinner-grow-sm text-white max-w-100 max-h-100"></div>
                                 {% else %}
                                     <span class="fs-07">{{ forloop.counter }}</span>
                                 {% endif %}
                             </div>
-                            <div class="small fs-075 text-uppercase letter-spacing-1">
-                                {{ step.label }}
-                            </div>
+                            <div class="small fs-075 text-uppercase letter-spacing-1">{{ step.label }}</div>
                         </div>
                     {% endfor %}
                 </div>
@@ -98,9 +65,7 @@
                 </h6>
                 <!-- ACTION CARD -->
                 <div class="card border-0 shadow-sm bg-body-tertiary mb-4">
-                    <div class="card-body">
-                        {% include 'core/partials/commande_status_area.html' %}
-                    </div>
+                    <div class="card-body">{% include 'core/partials/commande_status_area.html' %}</div>
                 </div>
                 <!-- EXPLANATION / CONTEXT -->
                 <div class="card border-info-subtle bg-info-subtle">
@@ -112,15 +77,9 @@
                             {% if commande.statut == 'ENVOYEE' %}
                                 Glissez l'ARC (Accusé de Réception) PDF ici. L'IA va :
                                 <ul class="mb-0 ps-3">
-                                    <li>
-                                        Vérifier les prix unitaires
-                                    </li>
-                                    <li>
-                                        Vérifier les délais (Date Prévue)
-                                    </li>
-                                    <li>
-                                        Signaler les écarts
-                                    </li>
+                                    <li>Vérifier les prix unitaires</li>
+                                    <li>Vérifier les délais (Date Prévue)</li>
+                                    <li>Signaler les écarts</li>
                                 </ul>
                             {% elif commande.statut == 'CONFIRME_ARC' %}
                                 Glissez le BL (Bon de Livraison) ici pour valider la réception.
@@ -135,47 +94,29 @@
             <div class="col-md-8 bg-light overflow-y-auto p-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0 fw-bold">
-                            Lignes de commande
-                        </h6>
+                        <h6 class="mb-0 fw-bold">Lignes de commande</h6>
                         <span class="badge bg-secondary-subtle text-dark border">{{ lines.count }} lignes</span>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="w-40pct ps-4">
-                                        Désignation
-                                    </th>
-                                    <th class="text-center w-10pct">
-                                        Qté
-                                    </th>
-                                    <th class="text-end w-15pct">
-                                        P.U. Match
-                                    </th>
-                                    <th class="text-center w-15pct">
-                                        Statut
-                                    </th>
-                                    <th class="text-center w-20pct">
-                                        IA Comparaison
-                                    </th>
+                                    <th class="w-40pct ps-4">Désignation</th>
+                                    <th class="text-center w-10pct">Qté</th>
+                                    <th class="text-end w-15pct">P.U. Match</th>
+                                    <th class="text-center w-15pct">Statut</th>
+                                    <th class="text-center w-20pct">IA Comparaison</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for line in lines %}
                                     <tr>
                                         <td class="ps-4">
-                                            <div class="fw-bold text-dark">
-                                                {{ line.designation }}
-                                            </div>
+                                            <div class="fw-bold text-dark">{{ line.designation }}</div>
                                             <small class="text-muted font-monospace">{{ line.article.ref_fournisseur }}</small>
                                         </td>
-                                        <td class="text-center fw-bold">
-                                            {{ line.quantite|floatformat:1 }} {{ line.unite }}
-                                        </td>
-                                        <td class="text-end">
-                                            {{ line.prix_unitaire|floatformat:2 }} €
-                                        </td>
+                                        <td class="text-center fw-bold">{{ line.quantite|floatformat:1 }} {{ line.unite }}</td>
+                                        <td class="text-end">{{ line.prix_unitaire|floatformat:2 }} €</td>
                                         <td class="text-center">
                                             {% if line.statut_ligne == 'RELIQUAT' %}
                                                 <span class="badge bg-danger-subtle text-danger">Reliquat</span>
@@ -194,14 +135,9 @@
                             </tbody>
                             <tfoot class="bg-light fw-bold">
                                 <tr>
-                                    <td colspan="2" class="text-end text-uppercase fs-075">
-                                        Total HT
-                                    </td>
-                                    <td class="text-end">
-                                        {{ commande.total_ht|floatformat:2 }} €
-                                    </td>
-                                    <td colspan="2">
-                                    </td>
+                                    <td colspan="2" class="text-end text-uppercase fs-075">Total HT</td>
+                                    <td class="text-end">{{ commande.total_ht|floatformat:2 }} €</td>
+                                    <td colspan="2"></td>
                                 </tr>
                             </tfoot>
                         </table>

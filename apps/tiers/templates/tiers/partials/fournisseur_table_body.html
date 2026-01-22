@@ -7,17 +7,11 @@
         <!-- Name & Usage -->
         <td>
             <div class="d-flex align-items-center gap-3">
-                <div class="avatar-circle-sm bg-info-subtle text-info fw-bold">
-                    {{ f.nom_fournisseur|slice:":2"|upper }}
-                </div>
+                <div class="avatar-circle-sm bg-info-subtle text-info fw-bold">{{ f.nom_fournisseur|slice:":2"|upper }}</div>
                 <div>
-                    <div class="fw-bold text-body">
-                        {{ f.nom_fournisseur }}
-                    </div>
+                    <div class="fw-bold text-body">{{ f.nom_fournisseur }}</div>
                     {% if f.nom_usage and f.nom_usage != f.nom_fournisseur %}
-                        <div class="text-muted small fs-075">
-                            (Alias: {{ f.nom_usage }})
-                        </div>
+                        <div class="text-muted small fs-075">(Alias: {{ f.nom_usage }})</div>
                     {% endif %}
                 </div>
             </div>
@@ -27,14 +21,8 @@
         <td>
             {% for contact in f.corecontact_set.all %}
                 {% if forloop.first %}
-                    <div class="fw-medium text-body small">
-                        {{ contact.prenom|default:"" }} {{ contact.nom }}
-                    </div>
-                    {% if contact.telephone %}
-                        <div class="text-muted text-xxs">
-                            {{ contact.telephone }}
-                        </div>
-                    {% endif %}
+                    <div class="fw-medium text-body small">{{ contact.prenom|default:"" }} {{ contact.nom }}</div>
+                    {% if contact.telephone %}<div class="text-muted text-xxs">{{ contact.telephone }}</div>{% endif %}
                 {% endif %}
             {% empty %}
                 <span class="text-muted small italic">-</span>
@@ -45,9 +33,7 @@
             {% if f.adresse %}
                 <div class="d-flex align-items-center gap-2 text-muted small">
                     <i class="bi bi-geo-alt"></i>
-                    <span class="text-truncate max-w-200" title="{{ f.adresse }}">
-                        {{ f.adresse|truncatechars:40 }}
-                    </span>
+                    <span class="text-truncate max-w-200" title="{{ f.adresse }}">{{ f.adresse|truncatechars:40 }}</span>
                 </div>
             {% else %}
                 <span class="text-muted small italic">-</span>
@@ -73,9 +59,7 @@
         <td colspan="5" class="text-center py-5">
             <div class="d-flex flex-column align-items-center justify-content-center opacity-50">
                 <i class="bi bi-truck fs-1 mb-3"></i>
-                <p class="mb-0 fw-medium">
-                    Aucun fournisseur trouvé.
-                </p>
+                <p class="mb-0 fw-medium">Aucun fournisseur trouvé.</p>
             </div>
         </td>
     </tr>

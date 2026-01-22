@@ -13,22 +13,14 @@
                     {{ form.instance.nom|slice:":1"|upper }}
                 </div>
                 <div>
-                    <div class="fs-6">
-                        Modifier Client
-                    </div>
-                    <div class="text-primary small fw-normal">
-                        {{ form.instance.nom }} {{ form.instance.prenom|default:"" }}
-                    </div>
+                    <div class="fs-6">Modifier Client</div>
+                    <div class="text-primary small fw-normal">{{ form.instance.nom }} {{ form.instance.prenom|default:"" }}</div>
                 </div>
             {% else %}
                 <i class="bi bi-person-plus-fill me-3 text-success fs-3"></i>
                 <div>
-                    <div class="fs-6">
-                        Nouveau Client
-                    </div>
-                    <div class="text-muted small fw-normal">
-                        Création d'une fiche tiers
-                    </div>
+                    <div class="fs-6">Nouveau Client</div>
+                    <div class="text-muted small fw-normal">Création d'une fiche tiers</div>
                 </div>
             {% endif %}
         </h5>
@@ -45,15 +37,11 @@
                     {{ form.nom|add_class:"form-control bg-body-tertiary border-0" }}
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Prénom
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Prénom</label>
                     {{ form.prenom|add_class:"form-control bg-body-tertiary border-0" }}
                 </div>
                 <div class="col-md-12">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Type de Tiers
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Type de Tiers</label>
                     <div class="d-flex gap-3">
                         {% for radio in form.type_tiers %}
                             <div class="form-check">
@@ -75,27 +63,21 @@
             </h6>
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Téléphone
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Téléphone</label>
                     <div class="input-group">
                         <span class="input-group-text bg-body-tertiary border-0"><i class="bi bi-telephone"></i></span>
                         {{ form.telephone_client|add_class:"form-control bg-body-tertiary border-0" }}
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Email
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Email</label>
                     <div class="input-group">
                         <span class="input-group-text bg-body-tertiary border-0"><i class="bi bi-envelope"></i></span>
                         {{ form.email_client|add_class:"form-control bg-body-tertiary border-0" }}
                     </div>
                 </div>
                 <div class="col-12">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        Adresse (Facturation)
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Adresse (Facturation)</label>
                     {{ form.adresse_facturation|add_class:"form-control bg-body-tertiary border-0" }}
                 </div>
                 <!-- Optional: Adresse Chantier if needed -->
@@ -108,15 +90,11 @@
             </h6>
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        SIRET
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">SIRET</label>
                     {{ form.siret|add_class:"form-control bg-body-tertiary border-0 font-monospace" }}
                 </div>
                 <div class="col-md-6">
-                    <label class="form-label small fw-bold text-secondary text-uppercase">
-                        TVA Intracom.
-                    </label>
+                    <label class="form-label small fw-bold text-secondary text-uppercase">TVA Intracom.</label>
                     {{ form.tva_intracommunautaire|add_class:"form-control bg-body-tertiary border-0 font-monospace" }}
                 </div>
             </div>
@@ -134,12 +112,8 @@
         <div class="d-flex gap-2 ms-auto">
             <button type="button"
                     class="btn btn-outline-secondary px-4 border-0"
-                    onclick="toggleDetailPanel(false)">
-                Annuler
-            </button>
-            <button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm">
-                Enregistrer
-            </button>
+                    onclick="toggleDetailPanel(false)">Annuler</button>
+            <button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm">Enregistrer</button>
         </div>
     </div>
 </form>

@@ -12,13 +12,9 @@
                 <i class="bi bi-check-circle-fill text-success opacity-50"></i>
             {% endif %}
         </td>
-        <td class="text-nowrap font-monospace text-muted small">
-            {{ besoin.article.ref_fournisseur|default:"-" }}
-        </td>
+        <td class="text-nowrap font-monospace text-muted small">{{ besoin.article.ref_fournisseur|default:"-" }}</td>
         <td>
-            <div class="fw-bold text-dark">
-                {{ besoin.article.designation }}
-            </div>
+            <div class="fw-bold text-dark">{{ besoin.article.designation }}</div>
             {% if besoin.notes %}
                 <div class="small text-muted fst-italic">
                     <i class="bi bi-chat-left-text me-1"></i>{{ besoin.notes }}
@@ -34,12 +30,8 @@
                 -
             {% endif %}
         </td>
-        <td class="text-center fw-bold">
-            {{ besoin.quantite|floatformat:1 }}
-        </td>
-        <td class="text-center small text-muted">
-            {{ besoin.unite }}
-        </td>
+        <td class="text-center fw-bold">{{ besoin.quantite|floatformat:1 }}</td>
+        <td class="text-center small text-muted">{{ besoin.unite }}</td>
         <td class="text-center">
             {% if besoin.ral %}
                 <span class="badge rounded-pill text-bg-secondary">{{ besoin.ral }}</span>

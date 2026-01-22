@@ -204,12 +204,8 @@
         <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0 fw-bold text-dark">
-                {% block list_title %}
-                    Titre de la Liste
-                {% endblock %}
-                <span class="badge bg-light text-secondary border ms-2 rounded-pill small">
-                    {{ object_list.count|default:"0" }}
-                </span>
+                {% block list_title %}Titre de la Liste{% endblock %}
+                <span class="badge bg-light text-secondary border ms-2 rounded-pill small">{{ object_list.count|default:"0" }}</span>
             </h5>
             <!-- Toolbar if needed -->
         </div>
@@ -221,16 +217,12 @@
                         <thead>
                             <!-- Column Headers -->
                             <tr>
-                                {% block table_headers %}
-                                {% endblock %}
-                                <th class="text-end col-action">
-                                    Actions
-                                </th>
+                                {% block table_headers %}{% endblock %}
+                                <th class="text-end col-action">Actions</th>
                             </tr>
                             <!-- Inline Filters -->
                             <tr class="filter-row">
-                                {% block table_filters %}
-                                {% endblock %}
+                                {% block table_filters %}{% endblock %}
                                 <th>
                                     <button type="submit"
                                             class="btn btn-sm btn-light w-100 py-0 btn-filter-apply"
@@ -243,9 +235,7 @@
                         <tbody>
                             {% block table_rows %}
                                 <tr>
-                                    <td colspan="100%" class="text-center p-5 text-muted">
-                                        Aucune donnée définie.
-                                    </td>
+                                    <td colspan="100%" class="text-center p-5 text-muted">Aucune donnée définie.</td>
                                 </tr>
                             {% endblock %}
                         </tbody>

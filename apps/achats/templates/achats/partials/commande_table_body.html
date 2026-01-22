@@ -6,12 +6,8 @@
         hx-swap="innerHTML">
         <!-- Date -->
         <td class="text-nowrap">
-            <div class="fw-medium text-dark">
-                {{ obj.date_commande|date:"d/m/Y"|default:"-" }}
-            </div>
-            <div class="small text-muted fs-075">
-                {{ obj.date_creation|timesince }}
-            </div>
+            <div class="fw-medium text-dark">{{ obj.date_commande|date:"d/m/Y"|default:"-" }}</div>
+            <div class="small text-muted fs-075">{{ obj.date_creation|timesince }}</div>
         </td>
         <!-- N° BDC / ARC -->
         <td>
@@ -33,16 +29,12 @@
                 {% endif %}
                 {% if obj.affaire %}
                     <span class="small text-muted text-truncate max-w-200"
-                          title="{{ obj.affaire.nom_affaire }}">
-                        {{ obj.affaire.nom_affaire }}
-                    </span>
+                          title="{{ obj.affaire.nom_affaire }}">{{ obj.affaire.nom_affaire }}</span>
                 {% endif %}
             </div>
         </td>
         <!-- Montant HT -->
-        <td class="text-center font-monospace text-dark">
-            {{ obj.prix_total_ht|default:"0" }} €
-        </td>
+        <td class="text-center font-monospace text-dark">{{ obj.prix_total_ht|default:"0" }} €</td>
         <!-- Statut -->
         <td class="text-center">
             {% if obj.statut == 'BROUILLON' %}
@@ -102,12 +94,8 @@
         <td colspan="7" class="text-center py-5">
             <div class="d-flex flex-column align-items-center justify-content-center opacity-50">
                 <i class="bi bi-cart-x fs-1 mb-3"></i>
-                <p class="mb-0 fw-medium">
-                    Aucune commande trouvée.
-                </p>
-                <p class="small">
-                    Essayez de modifier vos filtres.
-                </p>
+                <p class="mb-0 fw-medium">Aucune commande trouvée.</p>
+                <p class="small">Essayez de modifier vos filtres.</p>
             </div>
         </td>
     </tr>

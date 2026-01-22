@@ -185,21 +185,11 @@
                     </div>
                     <!-- Filters -->
                     <div class="d-flex gap-2" id="statusFilters">
-                        <button class="filter-pill active" onclick="setStatusFilter('', this)">
-                            Toutes
-                        </button>
-                        <button class="filter-pill" onclick="setStatusFilter('BROUILLON', this)">
-                            Brouillons
-                        </button>
-                        <button class="filter-pill" onclick="setStatusFilter('COMMANDE', this)">
-                            En cours
-                        </button>
-                        <button class="filter-pill" onclick="setStatusFilter('CONFIRME_ARC', this)">
-                            ARC Reçu
-                        </button>
-                        <button class="filter-pill" onclick="setStatusFilter('LIVRE', this)">
-                            Livrées
-                        </button>
+                        <button class="filter-pill active" onclick="setStatusFilter('', this)">Toutes</button>
+                        <button class="filter-pill" onclick="setStatusFilter('BROUILLON', this)">Brouillons</button>
+                        <button class="filter-pill" onclick="setStatusFilter('COMMANDE', this)">En cours</button>
+                        <button class="filter-pill" onclick="setStatusFilter('CONFIRME_ARC', this)">ARC Reçu</button>
+                        <button class="filter-pill" onclick="setStatusFilter('LIVRE', this)">Livrées</button>
                     </div>
                 </div>
                 <!-- Right: Actions -->
@@ -220,27 +210,13 @@
                 <table class="table table-modern align-middle mb-0">
                     <thead>
                         <tr>
-                            <th class="w-15pct">
-                                Date
-                            </th>
-                            <th class="w-15pct">
-                                N° BDC / ARC
-                            </th>
-                            <th class="w-20pct">
-                                Client / Affaire
-                            </th>
-                            <th class="w-15pct text-center">
-                                Montant HT
-                            </th>
-                            <th class="w-15pct text-center">
-                                Statut
-                            </th>
-                            <th class="w-15pct">
-                                Livraison
-                            </th>
-                            <th class="w-10pct text-end">
-                                Actions
-                            </th>
+                            <th class="w-15pct">Date</th>
+                            <th class="w-15pct">N° BDC / ARC</th>
+                            <th class="w-20pct">Client / Affaire</th>
+                            <th class="w-15pct text-center">Montant HT</th>
+                            <th class="w-15pct text-center">Statut</th>
+                            <th class="w-15pct">Livraison</th>
+                            <th class="w-10pct text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="commande-table-body">

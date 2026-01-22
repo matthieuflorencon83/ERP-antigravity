@@ -1,20 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load humanize %}
-{% block extra_css %}
-    <!-- Styles loaded from static/css/styles.css -->
-{% endblock %}
+{% block extra_css %}<!-- Styles loaded from static/css/styles.css -->{% endblock %}
 {% block content %}
     <div class="container-fluid p-4 bg-body-tertiary min-vh-100">
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h1 class="h3 fw-bold mb-1 ls-tight">
-                    Tableau de Bord
-                </h1>
-                <p class="text-muted small">
-                    Vue d'ensemble de l'activité.
-                </p>
+                <h1 class="h3 fw-bold mb-1 ls-tight">Tableau de Bord</h1>
+                <p class="text-muted small">Vue d'ensemble de l'activité.</p>
             </div>
             <div class="d-flex gap-2">
                 <a href="{% url 'ventes:besoins_affaire' '1' %}"
@@ -40,12 +34,8 @@
                             </div>
                             <span class="badge bg-primary-subtle text-primary rounded-pill">+12%</span>
                         </div>
-                        <h6 class="text-muted text-uppercase fs-xs fw-bold ls-1 mb-1">
-                            Pipeline Ventes
-                        </h6>
-                        <div class="h3 fw-bold mb-0 text-dark">
-                            {{ kpi.total_pipeline_ventes|floatformat:0 }} €
-                        </div>
+                        <h6 class="text-muted text-uppercase fs-xs fw-bold ls-1 mb-1">Pipeline Ventes</h6>
+                        <div class="h3 fw-bold mb-0 text-dark">{{ kpi.total_pipeline_ventes|floatformat:0 }} €</div>
                         <div class="mt-2 text-muted small">
                             <span class="text-dark fw-bold">{{ kpi.nb_affaires_cours }}</span> affaires en cours
                         </div>
@@ -62,12 +52,8 @@
                             </div>
                             <span class="badge bg-warning-subtle text-warning rounded-pill">Encours</span>
                         </div>
-                        <h6 class="text-muted text-uppercase fs-xs fw-bold ls-1 mb-1">
-                            Engagements Achats
-                        </h6>
-                        <div class="h3 fw-bold mb-0 text-dark">
-                            {{ kpi.total_pipeline_achats|floatformat:0 }} €
-                        </div>
+                        <h6 class="text-muted text-uppercase fs-xs fw-bold ls-1 mb-1">Engagements Achats</h6>
+                        <div class="h3 fw-bold mb-0 text-dark">{{ kpi.total_pipeline_achats|floatformat:0 }} €</div>
                         <div class="mt-2 text-muted small">
                             <span class="text-dark fw-bold">{{ kpi.nb_commandes_cours }}</span> commandes actives
                         </div>
@@ -83,9 +69,7 @@
                                 <i class="bi bi-file-earmark-text me-2"></i> {{ kpi.nb_devis_attente }}
                             </div>
                         </div>
-                        <h6 class="text-muted text-uppercase fs-xs fw-bold ls-1 mb-1">
-                            Devis en Attente
-                        </h6>
+                        <h6 class="text-muted text-uppercase fs-xs fw-bold ls-1 mb-1">Devis en Attente</h6>
                         <div class="d-flex align-items-center gap-2 mt-3">
                             <a href="#" class="btn btn-sm btn-outline-success w-100">Voir les Devis</a>
                         </div>
@@ -101,9 +85,7 @@
                                 <i class="bi bi-exclamation-lg"></i>
                             </div>
                         </div>
-                        <h6 class="text-muted text-uppercase fs-xs fw-bold ls-1 mb-1">
-                            Actions Requises
-                        </h6>
+                        <h6 class="text-muted text-uppercase fs-xs fw-bold ls-1 mb-1">Actions Requises</h6>
                         <div class="d-flex flex-column gap-1 mt-2">
                             {% if kpi.nb_brouillons > 0 %}
                                 <a href="{% url 'achats:commande_list' %}?statut=BROUILLON"
@@ -131,9 +113,7 @@
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm rounded-4 h-100">
                     <div class="card-header bg-white border-0 py-3 px-4">
-                        <h6 class="mb-0 fw-bold">
-                            Activité Récente
-                        </h6>
+                        <h6 class="mb-0 fw-bold">Activité Récente</h6>
                     </div>
                     <div class="card-body px-0 pt-0">
                         <ul class="nav nav-tabs nav-tabs-modern px-4 mb-3"
@@ -146,9 +126,7 @@
                                         data-bs-target="#orders"
                                         type="button"
                                         role="tab"
-                                        aria-selected="true">
-                                    Dernières Commandes
-                                </button>
+                                        aria-selected="true">Dernières Commandes</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link fw-bold small"
@@ -157,9 +135,7 @@
                                         data-bs-target="#projects"
                                         type="button"
                                         role="tab"
-                                        aria-selected="false">
-                                    Chantiers Récents
-                                </button>
+                                        aria-selected="false">Chantiers Récents</button>
                             </li>
                         </ul>
                         <div class="tab-content px-4" id="activityTabContent">
@@ -169,33 +145,19 @@
                                     <table class="table table-dashboard table-nowrap mb-0">
                                         <thead>
                                             <tr>
-                                                <th>
-                                                    Réf. / Date
-                                                </th>
-                                                <th>
-                                                    Fournisseur
-                                                </th>
-                                                <th>
-                                                    Affaire
-                                                </th>
-                                                <th class="text-end">
-                                                    Montant
-                                                </th>
-                                                <th class="text-end">
-                                                    Statut
-                                                </th>
+                                                <th>Réf. / Date</th>
+                                                <th>Fournisseur</th>
+                                                <th>Affaire</th>
+                                                <th class="text-end">Montant</th>
+                                                <th class="text-end">Statut</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for cmd in latest_commandes %}
                                                 <tr>
                                                     <td>
-                                                        <div class="fw-bold text-dark">
-                                                            {{ cmd.numero_bdc|default:"Brouillon" }}
-                                                        </div>
-                                                        <div class="small text-muted">
-                                                            {{ cmd.date_creation|date:"d/m/Y" }}
-                                                        </div>
+                                                        <div class="fw-bold text-dark">{{ cmd.numero_bdc|default:"Brouillon" }}</div>
+                                                        <div class="small text-muted">{{ cmd.date_creation|date:"d/m/Y" }}</div>
                                                     </td>
                                                     <td>
                                                         <div class="d-flex align-items-center gap-2">
@@ -210,9 +172,7 @@
                                                         <span class="badge bg-light text-dark border">{{
                                                         cmd.affaire.nom_affaire|truncatechars:20 }}</span>
                                                     </td>
-                                                    <td class="text-end fw-bold">
-                                                        {{ cmd.total_ht|floatformat:2 }} €
-                                                    </td>
+                                                    <td class="text-end fw-bold">{{ cmd.total_ht|floatformat:2 }} €</td>
                                                     <td class="text-end">
                                                         {% if cmd.statut == 'BROUILLON' %}
                                                             <span class="badge bg-secondary-subtle text-secondary rounded-pill">Brouillon</span>
@@ -228,9 +188,7 @@
                                                 </tr>
                                             {% empty %}
                                                 <tr>
-                                                    <td colspan="5" class="text-center py-4 text-muted">
-                                                        Aucune commande récente.
-                                                    </td>
+                                                    <td colspan="5" class="text-center py-4 text-muted">Aucune commande récente.</td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
@@ -243,34 +201,20 @@
                                     <table class="table table-dashboard table-nowrap mb-0">
                                         <thead>
                                             <tr>
-                                                <th>
-                                                    Nom / Client
-                                                </th>
-                                                <th>
-                                                    Date Création
-                                                </th>
-                                                <th class="text-center">
-                                                    Satut
-                                                </th>
-                                                <th class="text-end">
-                                                    Ventes HT
-                                                </th>
+                                                <th>Nom / Client</th>
+                                                <th>Date Création</th>
+                                                <th class="text-center">Satut</th>
+                                                <th class="text-end">Ventes HT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {% for aff in latest_affaires %}
                                                 <tr>
                                                     <td>
-                                                        <div class="fw-bold text-dark">
-                                                            {{ aff.nom_affaire }}
-                                                        </div>
-                                                        <div class="small text-muted">
-                                                            {{ aff.client.nom }}
-                                                        </div>
+                                                        <div class="fw-bold text-dark">{{ aff.nom_affaire }}</div>
+                                                        <div class="small text-muted">{{ aff.client.nom }}</div>
                                                     </td>
-                                                    <td>
-                                                        {{ aff.date_creation|date:"d M Y" }}
-                                                    </td>
+                                                    <td>{{ aff.date_creation|date:"d M Y" }}</td>
                                                     <td class="text-center">
                                                         {% if aff.statut == 'EN_COURS' %}
                                                             <span class="badge bg-primary-subtle text-primary">En Cours</span>
@@ -279,15 +223,11 @@
                                                             aff.get_statut_display }}</span>
                                                         {% endif %}
                                                     </td>
-                                                    <td class="text-end fw-bold">
-                                                        {{ aff.total_vente_ht|floatformat:0 }} €
-                                                    </td>
+                                                    <td class="text-end fw-bold">{{ aff.total_vente_ht|floatformat:0 }} €</td>
                                                 </tr>
                                             {% empty %}
                                                 <tr>
-                                                    <td colspan="4" class="text-center py-4 text-muted">
-                                                        Aucune affaire récente.
-                                                    </td>
+                                                    <td colspan="4" class="text-center py-4 text-muted">Aucune affaire récente.</td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
@@ -303,9 +243,7 @@
                 <!-- Quick Actions -->
                 <div class="card border-0 shadow-sm rounded-4 mb-4">
                     <div class="card-header bg-white border-0 py-3 px-4">
-                        <h6 class="mb-0 fw-bold">
-                            Outils Rapides
-                        </h6>
+                        <h6 class="mb-0 fw-bold">Outils Rapides</h6>
                     </div>
                     <div class="card-body p-2">
                         <div class="list-group list-group-flush">
@@ -315,9 +253,7 @@
                                     <i class="bi bi-cloud-upload"></i>
                                 </div>
                                 <div>
-                                    <h6 class="mb-0 fw-bold text-dark">
-                                        Scan Documents
-                                    </h6>
+                                    <h6 class="mb-0 fw-bold text-dark">Scan Documents</h6>
                                     <small class="text-muted">Analyser PDF/Factures</small>
                                 </div>
                                 <i class="bi bi-chevron-right ms-auto text-muted small"></i>
@@ -328,9 +264,7 @@
                                     <i class="bi bi-box-seam"></i>
                                 </div>
                                 <div>
-                                    <h6 class="mb-0 fw-bold text-dark">
-                                        Catalogue
-                                    </h6>
+                                    <h6 class="mb-0 fw-bold text-dark">Catalogue</h6>
                                     <small class="text-muted">Gérer les articles</small>
                                 </div>
                                 <i class="bi bi-chevron-right ms-auto text-muted small"></i>
@@ -341,15 +275,10 @@
                 <!-- System Status (Simple) -->
                 <div class="card border-0 shadow-sm rounded-4 bg-primary text-white overflow-hidden position-relative">
                     <!-- Decorative Circle -->
-                    <div class="position-absolute top-0 end-0 translate-middle rounded-circle bg-white opacity-10 circle-decoration">
-                    </div>
+                    <div class="position-absolute top-0 end-0 translate-middle rounded-circle bg-white opacity-10 circle-decoration"></div>
                     <div class="card-body p-4 position-relative z-1">
-                        <h5 class="fw-bold mb-1">
-                            Système Opérationnel
-                        </h5>
-                        <p class="opacity-75 small mb-4">
-                            Dernière sauvegarde : Aujourd'hui 04:00
-                        </p>
+                        <h5 class="fw-bold mb-1">Système Opérationnel</h5>
+                        <p class="opacity-75 small mb-4">Dernière sauvegarde : Aujourd'hui 04:00</p>
                         <button class="btn btn-sm btn-white text-primary fw-bold shadow-sm"
                                 hx-get="{% url 'settings' %}"
                                 hx-push-url="true">

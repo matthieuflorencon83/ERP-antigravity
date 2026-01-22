@@ -2,33 +2,19 @@
     <table class="table table-striped table-hover align-middle mb-0">
         <thead class="table-light">
             <tr>
-                <th scope="col">
-                    Article
-                </th>
-                <th scope="col">
-                    Fournisseur
-                </th>
-                <th scope="col">
-                    Réf Usine
-                </th>
-                <th scope="col" class="text-end">
-                    Prix Achat
-                </th>
-                <th scope="col" class="text-center">
-                    Unité
-                </th>
-                <th scope="col" class="text-end">
-                    Actions
-                </th>
+                <th scope="col">Article</th>
+                <th scope="col">Fournisseur</th>
+                <th scope="col">Réf Usine</th>
+                <th scope="col" class="text-end">Prix Achat</th>
+                <th scope="col" class="text-center">Unité</th>
+                <th scope="col" class="text-end">Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for art in articles %}
                 <tr>
                     <td>
-                        <div class="fw-bold text-dark">
-                            {{ art.designation }}
-                        </div>
+                        <div class="fw-bold text-dark">{{ art.designation }}</div>
                         {% if art.code_article %}
                             <small class="text-muted"><i class="bi bi-upc-scan me-1"></i>{{ art.code_article }}</small>
                         {% endif %}
@@ -46,9 +32,7 @@
                         <span class="text-muted small font-monospace">{{ art.ref_fournisseur|default:"-" }}</span>
                     </td>
                     <td class="text-end">
-                        <span class="fw-bold text-primary">
-                            {{ art.prix_unitaire_ht|floatformat:2 }} €
-                        </span>
+                        <span class="fw-bold text-primary">{{ art.prix_unitaire_ht|floatformat:2 }} €</span>
                     </td>
                     <td class="text-center">
                         <span class="badge bg-secondary-subtle text-secondary-emphasis border">{{

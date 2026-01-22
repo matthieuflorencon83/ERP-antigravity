@@ -37,30 +37,14 @@
                                                aria-label="Tout sélectionner"
                                                @change="document.querySelectorAll('.row-checkbox').forEach(el => { el.checked = $event.target.checked; if(el.checked) { if(!selected.includes(el.value)) selected.push(el.value) } else { selected = [] } })">
                                     </th>
-                                    <th class="w-10pct">
-                                        Réf.
-                                    </th>
-                                    <th class="w-30pct">
-                                        Désignation
-                                    </th>
-                                    <th class="w-15pct">
-                                        Fournisseur
-                                    </th>
-                                    <th class="w-10pct text-center">
-                                        Qté
-                                    </th>
-                                    <th class="w-5pct text-center">
-                                        Unité
-                                    </th>
-                                    <th class="w-10pct text-center">
-                                        Finition/RAL
-                                    </th>
-                                    <th class="w-10pct text-center">
-                                        Statut
-                                    </th>
-                                    <th class="w-5pct text-end pe-4">
-                                        Actions
-                                    </th>
+                                    <th class="w-10pct">Réf.</th>
+                                    <th class="w-30pct">Désignation</th>
+                                    <th class="w-15pct">Fournisseur</th>
+                                    <th class="w-10pct text-center">Qté</th>
+                                    <th class="w-5pct text-center">Unité</th>
+                                    <th class="w-10pct text-center">Finition/RAL</th>
+                                    <th class="w-10pct text-center">Statut</th>
+                                    <th class="w-5pct text-end pe-4">Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="besoinsTableBody" class="bg-body">
@@ -86,8 +70,7 @@
                                       x-text="selected.length">0</span>
                                 <span class="fw-bold">Besoins sélectionnés</span>
                             </div>
-                            <div class="vr bg-secondary mx-2">
-                            </div>
+                            <div class="vr bg-secondary mx-2"></div>
                             <button type="submit"
                                     form="commandeForm"
                                     class="btn btn-primary rounded-pill fw-bold px-4">
@@ -136,14 +119,8 @@
                                         hx-get="{% url 'htmx_load_familles' %}"
                                         hx-target="#id_famille"
                                         hx-on:change="document.getElementById('id_sous_famille').innerHTML = '<option value=\'\'>-- Sous-Famille --</option>'; htmx.trigger('#searchInput', 'search')">
-                                    <option value="">
-                                        -- Fournisseur --
-                                    </option>
-                                    {% for f in fournisseurs %}
-                                        <option value="{{ f.id }}">
-                                            {{ f.nom_fournisseur }}
-                                        </option>
-                                    {% endfor %}
+                                    <option value="">-- Fournisseur --</option>
+                                    {% for f in fournisseurs %}<option value="{{ f.id }}">{{ f.nom_fournisseur }}</option>{% endfor %}
                                 </select>
                             </div>
                             <!-- Famille & Sous-Famille Row -->
@@ -156,23 +133,15 @@
                                         hx-include="#id_fournisseur"
                                         aria-label="Famille"
                                         hx-on:change="htmx.trigger('#searchInput', 'search')">
-                                    <option value="">
-                                        -- Famille --
-                                    </option>
-                                    {% for fam in familles %}
-                                        <option value="{{ fam }}">
-                                            {{ fam }}
-                                        </option>
-                                    {% endfor %}
+                                    <option value="">-- Famille --</option>
+                                    {% for fam in familles %}<option value="{{ fam }}">{{ fam }}</option>{% endfor %}
                                 </select>
                                 <select name="sous_famille"
                                         id="id_sous_famille"
                                         class="form-select form-select-sm border-secondary-subtle"
                                         aria-label="Sous-famille"
                                         onchange="htmx.trigger('#searchInput', 'search')">
-                                    <option value="">
-                                        -- Sous-Famille --
-                                    </option>
+                                    <option value="">-- Sous-Famille --</option>
                                 </select>
                             </div>
                         </div>
@@ -184,9 +153,7 @@
                     <!-- Initial Empty State or Top Results -->
                     <div class="text-center text-muted py-5">
                         <i class="bi bi-arrow-up-circle fs-1 opacity-25"></i>
-                        <p class="mt-2 small">
-                            Utilisez la recherche ou les filtres pour trouver des articles.
-                        </p>
+                        <p class="mt-2 small">Utilisez la recherche ou les filtres pour trouver des articles.</p>
                     </div>
                 </div>
             </div>
@@ -207,9 +174,6 @@
     });
     </script>
     <!-- Modal Container -->
-    <div id="modal-container">
-    </div>
+    <div id="modal-container"></div>
 {% endblock %}
-{% block extra_js %}
-    <!-- ... specific scripts ... -->
-{% endblock %}
+{% block extra_js %}<!-- ... specific scripts ... -->{% endblock %}

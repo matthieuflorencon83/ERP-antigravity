@@ -2,18 +2,10 @@
     <table class="table table-hover align-middle">
         <thead class="table-light">
             <tr>
-                <th>
-                    Société
-                </th>
-                <th>
-                    Adresse / Info
-                </th>
-                <th>
-                    Contacts Clés
-                </th>
-                <th>
-                    Actions
-                </th>
+                <th>Société</th>
+                <th>Adresse / Info</th>
+                <th>Contacts Clés</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -22,12 +14,8 @@
                     <td>
                         <div class="d-flex align-items-center">
                             <div class="ms-2">
-                                <h6 class="mb-0 fw-bold text-primary">
-                                    {{ f.nom_fournisseur }}
-                                </h6>
-                                {% if f.siret %}
-                                    <small class="text-muted fs-08">SIRET: {{ f.siret }}</small>
-                                {% endif %}
+                                <h6 class="mb-0 fw-bold text-primary">{{ f.nom_fournisseur }}</h6>
+                                {% if f.siret %}<small class="text-muted fs-08">SIRET: {{ f.siret }}</small>{% endif %}
                             </div>
                         </div>
                     </td>
@@ -64,9 +52,7 @@
                                         {% endif %}
                                     </small>
                                 </div>
-                                {% if not forloop.last %}
-                                    <hr class="my-1 dashed">
-                                {% endif %}
+                                {% if not forloop.last %}<hr class="my-1 dashed">{% endif %}
                             {% endfor %}
                         {% else %}
                             <span class="text-muted fst-italic"><small>Aucun contact enregistré</small></span>
@@ -82,9 +68,7 @@
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="4" class="text-center py-4 text-muted">
-                        Aucun fournisseur trouvé.
-                    </td>
+                    <td colspan="4" class="text-center py-4 text-muted">Aucun fournisseur trouvé.</td>
                 </tr>
             {% endfor %}
         </tbody>

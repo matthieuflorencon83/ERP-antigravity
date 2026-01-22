@@ -1,8 +1,6 @@
 {% if not articles %}
     <div class="text-center text-muted py-4">
-        <p class="small">
-            Aucun article trouvé.
-        </p>
+        <p class="small">Aucun article trouvé.</p>
     </div>
 {% else %}
     <div class="d-flex flex-column gap-2">
@@ -17,16 +15,12 @@
                 <div class="card-body p-2">
                     <div class="d-flex justify-content-between align-items-start mb-2">
                         <div>
-                            <div class="badge bg-primary-subtle text-primary border border-primary-subtle mb-1">
-                                {{ article.ref_fournisseur }}
-                            </div>
+                            <div class="badge bg-primary-subtle text-primary border border-primary-subtle mb-1">{{ article.ref_fournisseur }}</div>
                             <h6 class="card-title mb-0 text-truncate small max-w-200 cursor-pointer"
                                 title="{{ article.designation }}"
                                 hx-get="{% url 'htmx_article_detail' article.id %}"
                                 hx-target="#modal-container"
-                                hx-trigger="click">
-                                {{ article.designation }}
-                            </h6>
+                                hx-trigger="click">{{ article.designation }}</h6>
                             <small class="text-muted fs-075">
                                 {{ article.fournisseur.nom_fournisseur }} • Stock: {{ article.stock|floatformat:0 }}
                             </small>
@@ -34,9 +28,7 @@
                     </div>
                     <div class="d-flex align-items-end gap-1">
                         <div class="flex-fill">
-                            <label class="form-label visually-hidden">
-                                Qté
-                            </label>
+                            <label class="form-label visually-hidden">Qté</label>
                             <input type="number"
                                    step="any"
                                    name="quantite"
