@@ -67,4 +67,8 @@ line-ending = "auto"
 # H029: Uppercase form methods (POST is standard in Django)
 # H019: javascript: in href (used for dynamic actions)
 # H031: ARIA attributes (Django template syntax limitation)
-ignore = "H021,H025,H029,H019,H031"
+# H030: Meta description (not widely used in internal apps)
+# H005: Html lang attribute (often handled by base template)
+# H020: Empty tag pair (sometimes used for spacing/placeholders)
+# H023: Entity references (using &laquo; etc is fine)
+ignore = "H021,H025,H029,H019,H031,H030,H005,H020,H023"

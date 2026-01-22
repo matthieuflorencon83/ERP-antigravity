@@ -29,7 +29,7 @@ jobs:
     
     - name: Lint templates with djlint
       run: |
-        djlint . --lint --ignore H021,H025,H029,H019,H031
+        djlint . --lint --ignore H021,H025,H029,H019,H031,H030,H005,H020,H023
 
   test:
     runs-on: ubuntu-latest
