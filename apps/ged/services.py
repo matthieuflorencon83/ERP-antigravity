@@ -9,7 +9,9 @@ from decimal import Decimal
 import datetime
 import uuid
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
+
 from django.conf import settings
 from django.db import transaction
 from django.core.files import File
@@ -95,20 +97,22 @@ def analyze_document(file_obj: File, doc_type_hint: Optional[str] = None) -> Dic
 
     for i, key in enumerate(api_keys):
         try:
-            genai.configure(api_key=key)
+            client = genai.Client(api_key=key)
             models_to_try = ["gemini-1.5-flash", "gemini-flash-latest", "gemini-1.5-flash-8b"]
             
             for model_name in models_to_try:
                 try:
                     logger.info(f"Trying model {model_name} with key {i+1}")
-                    model = genai.GenerativeModel(model_name)
                     file_obj.seek(0)
                     file_data = file_obj.read()
                     
-                    response = model.generate_content([
-                        system_prompt, 
-                        {"mime_type": "application/pdf", "data": file_data}
-                    ])
+                    response = client.models.generate_content(
+                        model=model_name,
+                        contents=[
+                            system_prompt,
+                            types.Part.from_bytes(data=file_data, mime_type="application/pdf")
+                        ]
+                    )
                     
                     # Nettoyage de la réponse
                     raw_text = response.text
