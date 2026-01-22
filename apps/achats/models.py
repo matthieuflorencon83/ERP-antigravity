@@ -59,6 +59,16 @@ class Commande(models.Model):
         managed = True
         db_table = 'commandes_commande' # LEGACY
 
+    @property
+    def progression_pourcentage(self):
+        if self.statut == 'LIVREE':
+            return 100
+        elif self.statut == 'CONFIRME_ARC':
+            return 66
+        elif self.statut == 'ENVOYEE':
+            return 33
+        return 0
+
     def __str__(self):
         return f"CDE {self.pk} - {self.fournisseur}"
 

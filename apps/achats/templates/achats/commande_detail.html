@@ -33,7 +33,7 @@
                 <div class="progress h-2px">
                     <div class="progress-bar bg-success {% if commande.statut == 'LIVREE' %} w-100 {% elif commande.statut == 'CONFIRME_ARC' %} w-66 {% elif commande.statut == 'ENVOYEE' %} w-33 {% else %} w-0 {% endif %}"
                          role="progressbar"
-                         aria-valuenow="{% if commande.statut == 'LIVREE' %} 100 {% elif commande.statut == 'CONFIRME_ARC' %} 66 {% elif commande.statut == 'ENVOYEE' %} 33 {% else %} 0 {% endif %}"
+                         aria-valuenow="{{ commande.progression_pourcentage }}"
                          aria-valuemin="0"
                          aria-valuemax="100"
                          aria-label="Progression de la commande"></div>
