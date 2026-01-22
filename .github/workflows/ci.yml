@@ -29,7 +29,7 @@ jobs:
     
     - name: Lint templates with djlint
       run: |
-        djlint . --check --ignore H031
+        djlint . --lint --ignore H031
 
   test:
     runs-on: ubuntu-latest
