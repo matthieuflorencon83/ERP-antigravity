@@ -61,6 +61,10 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.djlint]
-# Ignore ARIA attribute validation for Django templates
-# Django template syntax in ARIA attributes is a known limitation
-ignore = "H031"
+# Ignore cosmetic template linting rules
+# H021: Inline styles (acceptable in Django templates)
+# H025: Orphan tags (Django template syntax causes false positives)
+# H029: Uppercase form methods (POST is standard in Django)
+# H019: javascript: in href (used for dynamic actions)
+# H031: ARIA attributes (Django template syntax limitation)
+ignore = "H021,H025,H029,H019,H031"
