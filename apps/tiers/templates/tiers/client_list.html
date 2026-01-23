@@ -206,7 +206,7 @@
         <!-- FOOTER / PAGINATION (Optional) -->
         <div class="px-3 py-2 border-top bg-body-tertiary d-flex align-items-center justify-content-between">
             <small class="text-muted">
-                Affichage de <strong>{{ clients|length }}</strong> clients
+                Affichage de <strong>{{ page_obj.paginator.count }}</strong> clients
             </small>
             <!-- Pagination could go here -->
         </div>

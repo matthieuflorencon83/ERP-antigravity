@@ -1,4 +1,4 @@
-{% for client in clients %}
+{% for client in page_obj %}
 <tr class="cursor-pointer" onclick="handleRowClick(event, this)" hx-get="{% url 'tiers:client_edit' client.pk %}"
     hx-target="#detailSidebarContent" hx-swap="innerHTML">
     <!-- Client Name -->

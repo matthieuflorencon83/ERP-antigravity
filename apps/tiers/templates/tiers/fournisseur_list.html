@@ -206,7 +206,7 @@
         <!-- FOOTER -->
         <div class="px-3 py-2 border-top bg-body-tertiary d-flex align-items-center justify-content-between">
             <small class="text-muted">
-                Affichage de <strong>{{ fournisseurs|length }}</strong> fournisseurs
+                Affichage de <strong>{{ page_obj.paginator.count }}</strong> fournisseurs
             </small>
         </div>
     </div>

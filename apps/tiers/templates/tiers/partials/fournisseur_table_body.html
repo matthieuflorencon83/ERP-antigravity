@@ -1,4 +1,4 @@
-{% for f in fournisseurs %}
+{% for f in page_obj %}
 <tr class="cursor-pointer" onclick="handleRowClick(event, this)" hx-get="{% url 'tiers:fournisseur_edit' f.pk %}"
     hx-target="#detailSidebarContent" hx-swap="innerHTML">
     <!-- Name & Usage -->
