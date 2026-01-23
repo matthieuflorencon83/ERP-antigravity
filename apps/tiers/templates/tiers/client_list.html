@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block extra_css %}
-    <style>
+<style>
     /* CUSTOM PAGE STYLES - Antigravity Pro 2.0 */
     /* (Ported from article_list.html for consistency) */
 
@@ -155,68 +155,61 @@
         border-radius: 6px;
         font-size: 0.75rem;
     }
-    </style>
+</style>
 {% endblock %}
 {% block content %}
-    <div class="page-container">
-        <!-- DATAGRID CARD -->
-        <div class="datagrid-card">
-            <!-- TOOLBAR -->
-            <div class="toolbar-area">
-                <!-- Left: Search & Filters -->
-                <div class="d-flex align-items-center gap-3">
-                    <!-- Search -->
-                    <div class="input-group search-input-group">
-                        <input type="text"
-                               name="q"
-                               class="form-control search-input"
-                               placeholder="Rechercher un client..."
-                               autocomplete="off"
-                               hx-get="{% url 'client_list' %}"
-                               hx-target="#client-table-body"
-                               hx-trigger="input changed delay:50ms, search">
-                        <button class="btn btn-outline-secondary search-btn"
-                                type="button"
-                                title="Lancer la recherche">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                    <!-- Filters (Visual / Future Impl) -->
-                    <div class="d-flex gap-2">
-                        <a href="{% url 'client_list' %}" class="filter-pill active">Tous</a>
-                        <a href="javascript:void(0)" class="filter-pill">Professionnels</a>
-                        <a href="javascript:void(0)" class="filter-pill">Particuliers</a>
-                    </div>
+<div class="page-container">
+    <!-- DATAGRID CARD -->
+    <div class="datagrid-card">
+        <!-- TOOLBAR -->
+        <div class="toolbar-area">
+            <!-- Left: Search & Filters -->
+            <div class="d-flex align-items-center gap-3">
+                <!-- Search -->
+                <div class="input-group search-input-group">
+                    <input type="text" name="q" class="form-control search-input" placeholder="Rechercher un client..."
+                        autocomplete="off" hx-get="{% url 'tiers:client_list' %}" hx-target="#client-table-body"
+                        hx-trigger="input changed delay:50ms, search">
+                    <button class="btn btn-outline-secondary search-btn" type="button" title="Lancer la recherche">
+                        <i class="bi bi-search"></i>
+                    </button>
                 </div>
-                <!-- Right: Actions -->
-                <div class="d-flex align-items-center gap-2">
-                    <!-- Buttons are in Sidebar -->
+                <!-- Filters (Visual / Future Impl) -->
+                <div class="d-flex gap-2">
+                    <a href="{% url 'tiers:client_list' %}" class="filter-pill active">Tous</a>
+                    <a href="javascript:void(0)" class="filter-pill">Professionnels</a>
+                    <a href="javascript:void(0)" class="filter-pill">Particuliers</a>
                 </div>
             </div>
-            <!-- TABLE HEADER (Sticky) & BODY (Scrollable) -->
-            <div class="table-container">
-                <table class="table table-modern align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th class="w-30pct">Client / Société</th>
-                            <th class="w-15pct">Type</th>
-                            <th class="w-20pct">Contact</th>
-                            <th class="w-25pct">Localisation</th>
-                            <th class="w-10pct text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="client-table-body">
-                        {% include 'tiers/partials/client_table_body.html' %}
-                    </tbody>
-                </table>
-            </div>
-            <!-- FOOTER / PAGINATION (Optional) -->
-            <div class="px-3 py-2 border-top bg-body-tertiary d-flex align-items-center justify-content-between">
-                <small class="text-muted">
-                    Affichage de <strong>{{ clients|length }}</strong> clients
-                </small>
-                <!-- Pagination could go here -->
+            <!-- Right: Actions -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- Buttons are in Sidebar -->
             </div>
         </div>
+        <!-- TABLE HEADER (Sticky) & BODY (Scrollable) -->
+        <div class="table-container">
+            <table class="table table-modern align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="w-30pct">Client / Société</th>
+                        <th class="w-15pct">Type</th>
+                        <th class="w-20pct">Contact</th>
+                        <th class="w-25pct">Localisation</th>
+                        <th class="w-10pct text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="client-table-body">
+                    {% include 'tiers/partials/client_table_body.html' %}
+                </tbody>
+            </table>
+        </div>
+        <!-- FOOTER / PAGINATION (Optional) -->
+        <div class="px-3 py-2 border-top bg-body-tertiary d-flex align-items-center justify-content-between">
+            <small class="text-muted">
+                Affichage de <strong>{{ clients|length }}</strong> clients
+            </small>
+            <!-- Pagination could go here -->
+        </div>
     </div>
+</div>
 {% endblock %}

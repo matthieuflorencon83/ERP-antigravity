@@ -42,7 +42,7 @@ def upload_document(request):
                 uploaded_file = request.FILES['file']
                 doc = Document.objects.create(fichier=uploaded_file, type_document=doc_type_input)
                 # Success - return page with PDF but NO analysis yet
-                return render(request, 'documents/upload_v3.html', {
+                return render(request, 'ged/upload_v3.html', {
                     'document': doc,
                     'analysis_result': empty_result,
                     'doc_type_selected': doc_type_input,
@@ -52,7 +52,7 @@ def upload_document(request):
                 })
             except Exception as e:
                 logger.exception("Upload auto-trigger failed")
-                return render(request, 'documents/upload_v3.html', {
+                return render(request, 'ged/upload_v3.html', {
                     'error': f"Erreur de chargement : {str(e)}",
                     'analysis_result': empty_result,
                     'doc_type_selected': doc_type_input
@@ -78,7 +78,7 @@ def upload_document(request):
                         doc.date_document = date_str
                     doc.save()
 
-                return render(request, 'documents/upload_v3.html', {
+                return render(request, 'ged/upload_v3.html', {
                     'document': doc,
                     'analysis_result': analysis_result,
                     'doc_type_selected': doc.type_document,
@@ -88,7 +88,7 @@ def upload_document(request):
                 })
             except Exception as e:
                 logger.exception("Manual analysis failed")
-                return render(request, 'documents/upload_v3.html', {
+                return render(request, 'ged/upload_v3.html', {
                     'document': Document.objects.filter(pk=doc_id).first(),
                     'error': f"Erreur d'analyse : {str(e)}",
                     'analysis_result': empty_result,
@@ -96,7 +96,7 @@ def upload_document(request):
                 })
 
     # BASE GET REQUEST
-    return render(request, 'documents/upload_v3.html', {
+    return render(request, 'ged/upload_v3.html', {
         'analysis_result': empty_result,
         'existing_clients': existing_clients,
         'existing_fournisseurs': existing_fournisseurs,

@@ -1,0 +1,129 @@
+﻿python : C:\Antigravity\Matt 
+Dev\ERP\apps\ged\services.py:12: FutureWarning: 
+Au caractère Ligne:1 : 17
++ ... :CI='true'; python manage.py test apps.achats 
+apps.ventes apps.ged ap ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\Ant 
+   igravity\...FutureWarning: :String) [], RemoteE  
+  xception
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+All support for the `google.generativeai` package 
+has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the 
+`google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generati
+ve-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+Creating test database for alias 'default'...
+
+.E...s.........EE.
+====================================================
+==================
+ERROR: test_totals_calculation (apps.achats.tests.Co
+mmandeTestCase.test_totals_calculation)
+Test calculation of HT, TVA, TTC
+----------------------------------------------------
+------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt 
+Dev\ERP\apps\achats\tests.py", line 63, in 
+test_totals_calculation
+    total_ht = sum(line.quantite * 
+line.prix_unitaire for line in c.lignes.all())
+  File "C:\Antigravity\Matt 
+Dev\ERP\apps\achats\tests.py", line 63, in <genexpr>
+    total_ht = sum(line.quantite * 
+line.prix_unitaire for line in c.lignes.all())
+                   
+~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for *: 
+'float' and 'decimal.Decimal'
+
+====================================================
+==================
+ERROR: test_client_creation (apps.tiers.tests.TiersT
+estCase.test_client_creation)
+Test basic client creation
+----------------------------------------------------
+------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt 
+Dev\ERP\apps\tiers\tests.py", line 7, in 
+test_client_creation
+    client = Client.objects.create(
+        nom="Entreprise Test",
+    ...<2 lines>...
+        ville="Paris"
+    )
+  File "C:\Users\utopi\AppData\Roaming\Python\Python
+314\site-packages\django\db\models\manager.py", 
+line 87, in manager_method
+    return getattr(self.get_queryset(), 
+name)(*args, **kwargs)
+           
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python
+314\site-packages\django\db\models\query.py", line 
+667, in create
+    obj = self.model(**kwargs)
+  File "C:\Users\utopi\AppData\Roaming\Python\Python
+314\site-packages\django\db\models\base.py", line 
+590, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: Client() got unexpected keyword 
+arguments: 'ville'
+
+====================================================
+==================
+ERROR: test_fournisseur_creation (apps.tiers.tests.T
+iersTestCase.test_fournisseur_creation)
+Test basic supplier creation
+----------------------------------------------------
+------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt 
+Dev\ERP\apps\tiers\tests.py", line 20, in 
+test_fournisseur_creation
+    fournisseur = Fournisseur.objects.create(
+        nom_fournisseur="Maccario Vitrage",
+        siret="40281230000099",
+        email="contact@maccario.com"
+    )
+  File "C:\Users\utopi\AppData\Roaming\Python\Python
+314\site-packages\django\db\models\manager.py", 
+line 87, in manager_method
+    return getattr(self.get_queryset(), 
+name)(*args, **kwargs)
+           
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python
+314\site-packages\django\db\models\query.py", line 
+667, in create
+    obj = self.model(**kwargs)
+  File "C:\Users\utopi\AppData\Roaming\Python\Python
+314\site-packages\django\db\models\base.py", line 
+590, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: Fournisseur() got unexpected keyword 
+arguments: 'email'
+
+----------------------------------------------------
+------------------
+Ran 18 tests in 0.043s
+
+FAILED (errors=3, skipped=1)
+Destroying test database for alias 'default'...
+
+Found 18 test(s).
+System check identified no issues (0 silenced).

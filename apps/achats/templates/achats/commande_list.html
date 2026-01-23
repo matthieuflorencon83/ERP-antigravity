@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block extra_css %}
-    <style>
+<style>
     /* CUSTOM PAGE STYLES - Commandes DataGrid */
 
     /* 1. LAYOUT & SCROLLING */
@@ -156,149 +156,121 @@
         border-radius: 6px;
         font-size: 0.75rem;
     }
-    </style>
+</style>
 {% endblock %}
 {% block content %}
-    <div class="page-container">
-        <!-- DATAGRID CARD -->
-        <div class="datagrid-card">
-            <!-- TOOLBAR -->
-            <div class="toolbar-area">
-                <!-- Left: Search & Filters -->
-                <div class="d-flex align-items-center gap-3">
-                    <!-- Search -->
-                    <div class="input-group search-input-group w-35">
-                        <button class="btn btn-outline-secondary search-btn ps-3 pe-2"
-                                type="button"
-                                title="Lancer la recherche">
-                            <i class="bi bi-search"></i>
-                        </button>
-                        <input type="text"
-                               name="q"
-                               class="form-control search-input ps-0"
-                               placeholder="Rechercher (BDC, Client, Affaire)..."
-                               autocomplete="off"
-                               hx-get="{% url 'commande_list' %}"
-                               hx-target="#commande-table-body"
-                               hx-trigger="input changed delay:50ms, search">
-                        <input type="hidden" name="statut" id="activeStatusFilter" value="">
-                    </div>
-                    <!-- Filters -->
-                    <div class="d-flex gap-2" id="statusFilters">
-                        <button class="filter-pill active" onclick="setStatusFilter('', this)">Toutes</button>
-                        <button class="filter-pill" onclick="setStatusFilter('BROUILLON', this)">Brouillons</button>
-                        <button class="filter-pill" onclick="setStatusFilter('COMMANDE', this)">En cours</button>
-                        <button class="filter-pill" onclick="setStatusFilter('CONFIRME_ARC', this)">ARC Reçu</button>
-                        <button class="filter-pill" onclick="setStatusFilter('LIVRE', this)">Livrées</button>
-                    </div>
-                </div>
-                <!-- Right: Actions -->
-                <div class="d-flex align-items-center gap-2">
-                    <button class="btn btn-primary d-flex align-items-center gap-2 fw-medium px-3 shadow-sm"
-                            type="button"
-                            hx-get="{% url 'commande_create' %}"
-                            hx-target="#detailSidebarContent"
-                            hx-swap="innerHTML"
-                            onclick="toggleDetailPanel(true)">
-                        <i class="bi bi-plus-lg"></i>
-                        <span>Nouvelle Commande</span>
+<div class="page-container">
+    <!-- DATAGRID CARD -->
+    <div class="datagrid-card">
+        <!-- TOOLBAR -->
+        <div class="toolbar-area">
+            <!-- Left: Search & Filters -->
+            <div class="d-flex align-items-center gap-3">
+                <!-- Search -->
+                <div class="input-group search-input-group w-35">
+                    <button class="btn btn-outline-secondary search-btn ps-3 pe-2" type="button"
+                        title="Lancer la recherche">
+                        <i class="bi bi-search"></i>
                     </button>
+                    <input type="text" name="q" class="form-control search-input ps-0"
+                        placeholder="Rechercher (BDC, Client, Affaire)..." autocomplete="off"
+                        hx-get="{% url 'achats:commande_list' %}" hx-target="#commande-table-body"
+                        hx-trigger="input changed delay:50ms, search">
+                    <input type="hidden" name="statut" id="activeStatusFilter" value="">
+                </div>
+                <!-- Filters -->
+                <div class="d-flex gap-2" id="statusFilters">
+                    <button class="filter-pill active" onclick="setStatusFilter('', this)">Toutes</button>
+                    <button class="filter-pill" onclick="setStatusFilter('BROUILLON', this)">Brouillons</button>
+                    <button class="filter-pill" onclick="setStatusFilter('COMMANDE', this)">En cours</button>
+                    <button class="filter-pill" onclick="setStatusFilter('CONFIRME_ARC', this)">ARC Reçu</button>
+                    <button class="filter-pill" onclick="setStatusFilter('LIVRE', this)">Livrées</button>
                 </div>
             </div>
-            <!-- TABLE HEADER (Sticky) & BODY (Scrollable) -->
-            <div class="table-container">
-                <table class="table table-modern align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th class="w-15pct">Date</th>
-                            <th class="w-15pct">N° BDC / ARC</th>
-                            <th class="w-20pct">Client / Affaire</th>
-                            <th class="w-15pct text-center">Montant HT</th>
-                            <th class="w-15pct text-center">Statut</th>
-                            <th class="w-15pct">Livraison</th>
-                            <th class="w-10pct text-end">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="commande-table-body">
-                        {% include 'achats/partials/commande_table_body.html' %}
-                    </tbody>
-                </table>
-            </div>
-            <!-- FOOTER / PAGINATION -->
-            <div class="px-3 py-2 border-top bg-body-tertiary d-flex align-items-center justify-content-between">
-                <small class="text-muted">
-                    Affichage de <strong>{{ page_obj.object_list|length }}</strong> commandes sur {{
-                    page_obj.paginator.count|default:0 }}
-                </small>
-                {% if page_obj.has_other_pages %}
-                    <div class="btn-group" role="group" aria-label="Pagination">
-                        {% if page_obj.has_previous %}
-                            <button type="button"
-                                    class="btn btn-outline-secondary btn-sm"
-                                    hx-get="{% url 'commande_list' %}?page=1&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
-                                    hx-target="#commande-table-body"
-                                    title="Première page">
-                                <i class="bi bi-chevron-double-left"></i>
-                            </button>
-                            <button type="button"
-                                    class="btn btn-outline-secondary btn-sm"
-                                    hx-get="{% url 'commande_list' %}?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
-                                    hx-target="#commande-table-body"
-                                    title="Page précédente">
-                                <i class="bi bi-chevron-left"></i>
-                            </button>
-                        {% else %}
-                            <button type="button"
-                                    class="btn btn-outline-secondary btn-sm"
-                                    disabled
-                                    title="Première page">
-                                <i class="bi bi-chevron-double-left"></i>
-                            </button>
-                            <button type="button"
-                                    class="btn btn-outline-secondary btn-sm"
-                                    disabled
-                                    title="Page précédente">
-                                <i class="bi bi-chevron-left"></i>
-                            </button>
-                        {% endif %}
-                        <span class="btn btn-outline-secondary btn-sm disabled text-dark border-secondary">
-                            Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
-                        </span>
-                        {% if page_obj.has_next %}
-                            <button type="button"
-                                    class="btn btn-outline-secondary btn-sm"
-                                    hx-get="{% url 'commande_list' %}?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
-                                    hx-target="#commande-table-body"
-                                    title="Page suivante">
-                                <i class="bi bi-chevron-right"></i>
-                            </button>
-                            <button type="button"
-                                    class="btn btn-outline-secondary btn-sm"
-                                    hx-get="{% url 'commande_list' %}?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
-                                    hx-target="#commande-table-body"
-                                    title="Dernière page">
-                                <i class="bi bi-chevron-double-right"></i>
-                            </button>
-                        {% else %}
-                            <button type="button"
-                                    class="btn btn-outline-secondary btn-sm"
-                                    disabled
-                                    title="Page suivante">
-                                <i class="bi bi-chevron-right"></i>
-                            </button>
-                            <button type="button"
-                                    class="btn btn-outline-secondary btn-sm"
-                                    disabled
-                                    title="Dernière page">
-                                <i class="bi bi-chevron-double-right"></i>
-                            </button>
-                        {% endif %}
-                    </div>
-                {% endif %}
+            <!-- Right: Actions -->
+            <div class="d-flex align-items-center gap-2">
+                <button class="btn btn-primary d-flex align-items-center gap-2 fw-medium px-3 shadow-sm" type="button"
+                    hx-get="{% url 'achats:commande_create' %}" hx-target="#detailSidebarContent" hx-swap="innerHTML"
+                    onclick="toggleDetailPanel(true)">
+                    <i class="bi bi-plus-lg"></i>
+                    <span>Nouvelle Commande</span>
+                </button>
             </div>
         </div>
+        <!-- TABLE HEADER (Sticky) & BODY (Scrollable) -->
+        <div class="table-container">
+            <table class="table table-modern align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="w-15pct">Date</th>
+                        <th class="w-15pct">N° BDC / ARC</th>
+                        <th class="w-20pct">Client / Affaire</th>
+                        <th class="w-15pct text-center">Montant HT</th>
+                        <th class="w-15pct text-center">Statut</th>
+                        <th class="w-15pct">Livraison</th>
+                        <th class="w-10pct text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="commande-table-body">
+                    {% include 'achats/partials/commande_table_body.html' %}
+                </tbody>
+            </table>
+        </div>
+        <!-- FOOTER / PAGINATION -->
+        <div class="px-3 py-2 border-top bg-body-tertiary d-flex align-items-center justify-content-between">
+            <small class="text-muted">
+                Affichage de <strong>{{ page_obj.object_list|length }}</strong> commandes sur {{
+                page_obj.paginator.count|default:0 }}
+            </small>
+            {% if page_obj.has_other_pages %}
+            <div class="btn-group" role="group" aria-label="Pagination">
+                {% if page_obj.has_previous %}
+                <button type="button" class="btn btn-outline-secondary btn-sm"
+                    hx-get="{% url 'achats:commande_list' %}?page=1&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
+                    hx-target="#commande-table-body" title="Première page">
+                    <i class="bi bi-chevron-double-left"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm"
+                    hx-get="{% url 'achats:commande_list' %}?page={{ page_obj.previous_page_number }}&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
+                    hx-target="#commande-table-body" title="Page précédente">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Première page">
+                    <i class="bi bi-chevron-double-left"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Page précédente">
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+                {% endif %}
+                <span class="btn btn-outline-secondary btn-sm disabled text-dark border-secondary">
+                    Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_next %}
+                <button type="button" class="btn btn-outline-secondary btn-sm"
+                    hx-get="{% url 'achats:commande_list' %}?page={{ page_obj.next_page_number }}&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
+                    hx-target="#commande-table-body" title="Page suivante">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm"
+                    hx-get="{% url 'achats:commande_list' %}?page={{ page_obj.paginator.num_pages }}&q={{ request.GET.q }}&statut={{ request.GET.statut }}"
+                    hx-target="#commande-table-body" title="Dernière page">
+                    <i class="bi bi-chevron-double-right"></i>
+                </button>
+                {% else %}
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Page suivante">
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+                <button type="button" class="btn btn-outline-secondary btn-sm" disabled title="Dernière page">
+                    <i class="bi bi-chevron-double-right"></i>
+                </button>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
     </div>
-    <script>
+</div>
+<script>
     function setStatusFilter(status, btn) {
         // Update hidden input
         const input = document.getElementById('activeStatusFilter');
@@ -311,5 +283,5 @@
         // Trigger HTMX request on the form
         htmx.trigger(input.closest('form'), 'submit');
     }
-    </script>
+</script>
 {% endblock %}

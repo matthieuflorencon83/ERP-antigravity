@@ -194,7 +194,11 @@ def commande_edit(request, pk=None):
             'lines': lines
         })
     
-    return render(request, 'core/form_generic.html', {'form': form})
+    return render(request, 'achats/commande_detail.html', {
+        'form': form,
+        'commande': commande,
+        'lines': lines
+    })
 
 @login_required
 def commande_detail(request, pk):

@@ -75,7 +75,30 @@ def analyze_document(file_obj: File, doc_type_hint: Optional[str] = None) -> Dic
     last_error = None
     
     system_prompt = """
-    Tu es expert BTP. Extrais les données en JSON STRICT.
+    Tu es expert BTP et analyse de documents commerciaux. Extrais les données en JSON STRICT.
+    
+    DÉTECTION DU TYPE DE DOCUMENT (IMPORTANT):
+    - "ARC_FOURNISSEUR": Si le document contient "Accusé", "Confirmation", "Commande confirmée", ou vient d'un fournisseur avec liste d'articles + prix
+    - "BON_COMMANDE": Si c'est une commande émise par le client
+    - "BON_LIVRAISON": Si mention "Livraison", "BL", "Bon de livraison"
+    - "DEVIS_CLIENT": Si mention "Devis", "Proposition"
+    - "FACTURE": Si mention "Facture", "Invoice"
+    
+    EXTRACTION DES RÉFÉRENCES (chercher partout dans le document):
+    - num_commande: Chercher "Réf. client", "N° Commande", "Commande client", "V/Réf", "Votre commande", "Client Order"
+    - num_arc: Chercher "N° ARC", "Notre référence", "Ref.", "N° confirmation"
+    - num_devis: Chercher "Devis N°", "Quote"
+    - num_bl: Chercher "BL", "Bon de livraison N°"
+    
+    DATE DE LIVRAISON:
+    - Chercher "Livraison prévue", "Délai", "Semaine", "Date de livraison", "Delivery"
+    - Format: "YYYY-MM-DD" ou "Semaine W/YYYY"
+    
+    TOTAUX:
+    - Chercher "Total HT", "Montant HT", "Total", "Subtotal"
+    - Chercher "Total TTC", "Montant TTC", "Total à payer"
+    
+    FORMAT JSON ATTENDU:
     {
       "type_document": "DEVIS_CLIENT" | "BON_COMMANDE" | "ARC_FOURNISSEUR" | "BON_LIVRAISON" | "FACTURE",
       "date_document": "YYYY-MM-DD",
@@ -85,14 +108,24 @@ def analyze_document(file_obj: File, doc_type_hint: Optional[str] = None) -> Dic
       "fournisseur": { "nom": "String", "siret": "String", "email": "String" },
       "references": { 
         "num_devis": "String", 
-        "num_commande": "String (Chercher 'Réf.client', 'N° Commande', 'Commande client', 'V/Réf')", 
+        "num_commande": "String", 
         "num_arc": "String", 
         "num_bl": "String", 
         "num_facture": "String" 
       },
       "totaux": { "ht": "String (ex: 123.45)", "ttc": "String" },
-      "lignes": [{ "code": "String", "designation": "String", "quantite": Float, "prix_unitaire": "String (ex: 15.50)", "ral": "String", "finition": "String", "conditionnement": "String (Type d'emballage ex: 'Crt 12', 'Palette', '300ml', vide si inconnu)" }]
+      "lignes": [{ 
+        "code": "String", 
+        "designation": "String", 
+        "quantite": Float, 
+        "prix_unitaire": "String (ex: 15.50)", 
+        "ral": "String", 
+        "finition": "String", 
+        "conditionnement": "String (Type d'emballage ex: 'Crt 12', 'Palette', '300ml', 'ML', 'U', vide si inconnu)" 
+      }]
     }
+    
+    IMPORTANT: Ne mets JAMAIS null pour type_document, déduis-le du contexte.
     """
 
     for i, key in enumerate(api_keys):

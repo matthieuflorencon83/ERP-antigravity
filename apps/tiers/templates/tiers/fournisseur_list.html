@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block extra_css %}
-    <style>
+<style>
     /* CUSTOM PAGE STYLES - Antigravity Pro 2.0 */
     /* (Ported from client_list.html for consistency) */
 
@@ -156,65 +156,59 @@
         border-radius: 6px;
         font-size: 0.75rem;
     }
-    </style>
+</style>
 {% endblock %}
 {% block content %}
-    <div class="page-container">
-        <!-- DATAGRID CARD -->
-        <div class="datagrid-card">
-            <!-- TOOLBAR -->
-            <div class="toolbar-area">
-                <!-- Left: Search & Filters -->
-                <div class="d-flex align-items-center gap-3">
-                    <!-- Search -->
-                    <div class="input-group search-input-group">
-                        <input type="text"
-                               name="q"
-                               class="form-control search-input"
-                               placeholder="Rechercher un fournisseur..."
-                               autocomplete="off"
-                               hx-get="{% url 'fournisseur_list' %}"
-                               hx-target="#fournisseur-table-body"
-                               hx-trigger="input changed delay:50ms, search">
-                        <button class="btn btn-outline-secondary search-btn"
-                                type="button"
-                                title="Lancer la recherche">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
-                    <!-- Filters -->
-                    <div class="d-flex gap-2">
-                        <a href="{% url 'fournisseur_list' %}" class="filter-pill active">Tous</a>
-                        <!-- Future: Add family/category filters -->
-                    </div>
+<div class="page-container">
+    <!-- DATAGRID CARD -->
+    <div class="datagrid-card">
+        <!-- TOOLBAR -->
+        <div class="toolbar-area">
+            <!-- Left: Search & Filters -->
+            <div class="d-flex align-items-center gap-3">
+                <!-- Search -->
+                <div class="input-group search-input-group">
+                    <input type="text" name="q" class="form-control search-input"
+                        placeholder="Rechercher un fournisseur..." autocomplete="off"
+                        hx-get="{% url 'tiers:fournisseur_list' %}" hx-target="#fournisseur-table-body"
+                        hx-trigger="input changed delay:50ms, search">
+                    <button class="btn btn-outline-secondary search-btn" type="button" title="Lancer la recherche">
+                        <i class="bi bi-search"></i>
+                    </button>
                 </div>
-                <!-- Right: Actions -->
-                <div class="d-flex align-items-center gap-2">
-                    <!-- Buttons moved to Sidebar -->
+                <!-- Filters -->
+                <div class="d-flex gap-2">
+                    <a href="{% url 'tiers:fournisseur_list' %}" class="filter-pill active">Tous</a>
+                    <!-- Future: Add family/category filters -->
                 </div>
             </div>
-            <!-- TABLE HEADER (Sticky) & BODY (Scrollable) -->
-            <div class="table-container">
-                <table class="table table-modern align-middle mb-0">
-                    <thead>
-                        <tr>
-                            <th class="w-30pct">Société</th>
-                            <th class="w-20pct">Contact Principal</th>
-                            <th class="w-25pct">Localisation</th>
-                            <th class="w-auto text-end"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="fournisseur-table-body">
-                        {% include 'tiers/partials/fournisseur_table_body.html' %}
-                    </tbody>
-                </table>
-            </div>
-            <!-- FOOTER -->
-            <div class="px-3 py-2 border-top bg-body-tertiary d-flex align-items-center justify-content-between">
-                <small class="text-muted">
-                    Affichage de <strong>{{ fournisseurs|length }}</strong> fournisseurs
-                </small>
+            <!-- Right: Actions -->
+            <div class="d-flex align-items-center gap-2">
+                <!-- Buttons moved to Sidebar -->
             </div>
         </div>
+        <!-- TABLE HEADER (Sticky) & BODY (Scrollable) -->
+        <div class="table-container">
+            <table class="table table-modern align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th class="w-30pct">Société</th>
+                        <th class="w-20pct">Contact Principal</th>
+                        <th class="w-25pct">Localisation</th>
+                        <th class="w-auto text-end"></th>
+                    </tr>
+                </thead>
+                <tbody id="fournisseur-table-body">
+                    {% include 'tiers/partials/fournisseur_table_body.html' %}
+                </tbody>
+            </table>
+        </div>
+        <!-- FOOTER -->
+        <div class="px-3 py-2 border-top bg-body-tertiary d-flex align-items-center justify-content-between">
+            <small class="text-muted">
+                Affichage de <strong>{{ fournisseurs|length }}</strong> fournisseurs
+            </small>
+        </div>
     </div>
+</div>
 {% endblock %}

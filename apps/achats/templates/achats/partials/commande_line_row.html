@@ -1,48 +1,67 @@
-{% load custom_filters %}
-<tr>
-    <td>
-        <div class="fw-bold text-truncate max-w-200">{{ line.article.designation }}</div>
-        <div class="text-muted fs-075">{{ line.article.ref_fournisseur }} - {{ line.designation }}</div>
+<tr id="line-{{ line.id }}">
+    <td class="align-middle ps-4">
+        <div class="fw-bold text-dark">{{ line.designation }}</div>
+        <div class="small text-muted">{{ line.article.ref_fournisseur }}</div>
     </td>
-    <td class="text-center align-middle w-100px">
-        <input type="number"
-               step="0.5"
-               name="quantite"
-               class="form-control form-control-sm text-center fw-bold"
-               value="{{ line.quantite }}"
-               aria-label="Quantité"
-               hx-post="{% url 'htmx_update_ligne_commande' line.pk %}"
-               hx-trigger="change delay:500ms"
-               hx-target="closest tr"
-               hx-swap="outerHTML">
+    <td class="align-middle">
+        <input type="number" name="quantite" value="{{ line.quantite }}"
+            class="form-control form-control-sm text-center fw-bold" style="max-width: 80px;"
+            aria-label="Quantité pour {{ line.designation }}"
+            hx-post="{% url 'achats:htmx_update_ligne_commande' line.id %}" hx-trigger="change delay:500ms"
+            hx-swap="outerHTML" hx-target="#line-{{ line.id }}">
     </td>
-    <td class="text-end align-middle w-120px">
-        <input type="number"
-               step="0.01"
-               name="prix_unitaire"
-               class="form-control form-control-sm text-end"
-               value="{{ line.prix_unitaire }}"
-               aria-label="Prix Unitaire"
-               hx-post="{% url 'htmx_update_ligne_commande' line.pk %}"
-               hx-trigger="change delay:500ms"
-               hx-target="closest tr"
-               hx-swap="outerHTML">
+    <td class="align-middle">
+        <div class="input-group input-group-sm flex-nowrap">
+            <input type="number" name="prix_unitaire" value="{{ line.prix_unitaire }}" step="0.01"
+                class="form-control text-end fw-bold" style="min-width: 80px;"
+                aria-label="Prix unitaire pour {{ line.designation }}"
+                hx-post="{% url 'achats:htmx_update_ligne_commande' line.id %}" hx-trigger="change delay:500ms"
+                hx-swap="outerHTML" hx-target="#line-{{ line.id }}">
+            <span class="input-group-text bg-light text-muted">€</span>
+        </div>
     </td>
-    <td class="text-end align-middle fw-bold">{{ line.quantite|multiply:line.prix_unitaire|floatformat:2 }} €</td>
-    <td class="text-end align-middle">
+    <td class="align-middle text-end fw-bold text-dark">
+        {{ line.total_ligne|floatformat:2 }} €
+    </td>
+    <td class="align-middle text-end pe-4">
         <button class="btn btn-sm btn-link text-danger p-0"
-                title="Supprimer la ligne"
-                hx-post="{% url 'htmx_delete_ligne_commande' line.pk %}"
-                hx-confirm="Supprimer cette ligne ?"
-                hx-target="closest tr"
-                hx-swap="outerHTML">
-            <i class="bi bi-x-lg"></i>
+            hx-delete="{% url 'achats:htmx_delete_ligne_commande' line.id %}" hx-confirm="Supprimer cette ligne ?"
+            hx-target="#line-{{ line.id }}" hx-swap="outerHTML">
+            <i class="bi bi-trash"></i>
         </button>
     </td>
 </tr>
-<!-- OOB Update for Totals Footer -->
-<tr id="commande-footer-totals" hx-swap-oob="true">
-    <td colspan="3" class="text-end">Total HT</td>
-    <td class="text-end fw-bold fs-6">{{ form.instance.total_ht|floatformat:2 }} €</td>
-    <td></td>
-</tr>
+
+<!-- OOB Swap to update footer totals whenever a row renders (after update) -->
+{% if request.headers.HX_Request %}
+<tbody hx-swap-oob="innerHTML:#commande-lines-footer-container">
+    <!-- Hack: Since footer is multiple TRs, we might need a container or swap them individually. 
+             Let's try swapping the include. 
+             Ideally the footer should be wrapped in a TFOOT or similar with an ID.
+             In commande_detail.html I used <tfoot class="bg-light fw-bold"> {% include ... %} </tfoot>
+             Let's assume we can swap the content of TFOOT if we give it an ID.
+             I'll assume TFOOT has id="commande-lines-footer".
+             Let's check commande_detail.html... I didn't give it an ID. I should fix that next.
+        -->
+    <!-- Wait, I can just swap the individual rows if they have IDs. 
+             In commande_lines_footer.html I gave IDs: commande-footer, commande-footer-ttc, commande-footer-total.
+        -->
+
+    <tr id="commande-footer" hx-swap-oob="true">
+        <td colspan="3" class="text-end text-muted small text-uppercase ls-1 align-middle pt-3">Total HT</td>
+        <td class="text-end fw-bold fs-5 align-middle pt-3 text-dark">{{ line.commande.total_ht|floatformat:2 }} €</td>
+        <td></td>
+    </tr>
+    <tr id="commande-footer-ttc" hx-swap-oob="true">
+        <td colspan="3" class="text-end text-muted small text-uppercase ls-1 align-middle border-0">TVA (20%)</td>
+        <td class="text-end text-muted align-middle border-0">{{ line.commande.tva|floatformat:2 }} €</td>
+        <td class="border-0"></td>
+    </tr>
+    <tr id="commande-footer-total" hx-swap-oob="true">
+        <td colspan="3" class="text-end fw-bold small text-uppercase ls-1 align-middle border-0 pb-4">Total TTC</td>
+        <td class="text-end fw-bold text-primary fs-5 align-middle border-0 pb-4">{{
+            line.commande.total_ttc|floatformat:2 }} €</td>
+        <td class="border-0 pb-4"></td>
+    </tr>
+</tbody>
+{% endif %}

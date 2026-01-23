@@ -1,0 +1,27 @@
+<tr id="commande-footer">
+    <td colspan="3" class="text-end text-muted small text-uppercase ls-1 align-middle pt-3">
+        Total HT
+    </td>
+    <td class="text-end fw-bold fs-5 align-middle pt-3 text-dark">
+        {{ line.commande.total_ht|default:commande.total_ht|floatformat:2 }} €
+    </td>
+    <td></td>
+</tr>
+<tr id="commande-footer-ttc">
+    <td colspan="3" class="text-end text-muted small text-uppercase ls-1 align-middle border-0">
+        TVA (20%)
+    </td>
+    <td class="text-end text-muted align-middle border-0">
+        {{ line.commande.tva|default:commande.tva|floatformat:2 }} €
+    </td>
+    <td class="border-0"></td>
+</tr>
+<tr id="commande-footer-total">
+    <td colspan="3" class="text-end fw-bold small text-uppercase ls-1 align-middle border-0 pb-4">
+        Total TTC
+    </td>
+    <td class="text-end fw-bold text-primary fs-5 align-middle border-0 pb-4">
+        {{ line.commande.total_ttc|default:commande.total_ttc|floatformat:2 }} €
+    </td>
+    <td class="border-0 pb-4"></td>
+</tr>

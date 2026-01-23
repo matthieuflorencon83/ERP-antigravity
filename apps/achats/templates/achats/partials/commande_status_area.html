@@ -1,69 +1,88 @@
-<div id="status-area">
-    {% if commande.statut == 'BROUILLON' %}
-        <h5 class="fw-bold mb-3">🚀 Prêt à commander ?</h5>
-        <div class="d-grid gap-2">
-            <button class="btn btn-primary"
-                    hx-post="{% url 'htmx_update_statut_commande' commande.id 'ENVOYEE' %}"
-                    hx-target="#status-area"
-                    hx-confirm="Confirmez-vous l'envoi de cette commande ?">
-                <i class="bi bi-send me-2"></i>Marquer comme Envoyée
+<div class="card-body p-4">
+    <!-- STEPPER TIMELINE -->
+    <div class="position-relative mb-5 mx-4">
+        <div class="progress" style="height: 2px;">
+            <div class="progress-bar bg-primary" role="progressbar"
+                style="width: {{ commande.progression_pourcentage }}%;"
+                aria-valuenow="{{ commande.progression_pourcentage|default:'0' }}" aria-valuemin="0" aria-valuemax="100"
+                aria-label="Progression de la commande">
+            </div>
+        </div>
+
+        <div class="position-absolute top-0 start-0 translate-middle btn btn-sm rounded-pill {{ commande.statut == 'BROUILLON'|yesno:'btn-primary,btn-secondary' }}"
+            style="top: 0;">
+            1
+        </div>
+        <div class="position-absolute top-0 start-33 translate-middle btn btn-sm rounded-pill {{ commande.statut == 'ENVOYEE'|yesno:'btn-primary,btn-secondary' }}"
+            style="left: 33%;">
+            2
+        </div>
+        <div class="position-absolute top-0 start-66 translate-middle btn btn-sm rounded-pill {{ commande.statut == 'CONFIRME_ARC'|yesno:'btn-primary,btn-secondary' }}"
+            style="left: 66%;">
+            3
+        </div>
+        <div class="position-absolute top-0 start-100 translate-middle btn btn-sm rounded-pill {{ commande.statut == 'LIVREE'|yesno:'btn-primary,btn-secondary' }}"
+            style="left: 100%;">
+            4
+        </div>
+
+        <!-- Labels -->
+        <div
+            class="d-flex justify-content-between mt-2 small fw-bold text-uppercase ls-1 text-muted pixel-perfect-labels">
+            <span>Brouillon</span>
+            <span>Envoyée</span>
+            <span>ARC Reçu</span>
+            <span>Livrée</span>
+        </div>
+    </div>
+
+    <!-- CONTEXTUAL ACTIONS -->
+    <div
+        class="d-flex flex-column align-items-center justify-content-center p-4 bg-light rounded-3 border-dashed border-2">
+        {% if commande.statut == 'BROUILLON' %}
+        <div class="text-center">
+            <h6 class="fw-bold mb-2">Commande prête à envoyer ?</h6>
+            <p class="small text-muted mb-3">Vérifiez les lignes ci-dessous avant de valider.</p>
+            <button class="btn btn-primary shadow-sm"
+                hx-post="{% url 'achats:htmx_update_statut_commande' commande.id 'ENVOYEE' %}" hx-target="#status-area"
+                hx-swap="outerHTML">
+                <i class="bi bi-send me-2"></i> Marquer comme Envoyée
             </button>
-            <small class="text-muted text-center">La commande passera en statut "En Attente ARC"</small>
         </div>
-    {% elif commande.statut == 'ENVOYEE' %}
-        <h5 class="fw-bold mb-3 text-primary">📩 En attente de l'ARC</h5>
-        <form hx-post="{% url 'upload_document_commande' commande.id %}"
-              hx-encoding="multipart/form-data"
-              hx-target="#status-area"
-              class="dropzone-area p-4 border-2 border-dashed border-primary rounded text-center bg-primary-subtle cursor-pointer position-relative">
-            {% csrf_token %}
-            <input type="hidden" name="doc_type" value="ARC">
-            <i class="bi bi-file-earmark-pdf fs-1 text-primary opacity-50"></i>
-            <p class="fw-bold mb-1 mt-2 text-primary">Glissez l'ARC ici</p>
-            <p class="small text-muted mb-0">ou cliquez pour sélectionner</p>
-            <input type="file"
-                   name="document"
-                   title="Sélectionner l'ARC"
-                   class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                   onchange="htmx.trigger(this.closest('form'), 'submit')">
-            <!-- Loading Indicator -->
-            <div class="htmx-indicator position-absolute top-0 start-0 w-100 h-100 bg-white opacity-75 d-flex align-items-center justify-content-center">
-                <div class="spinner-border text-primary" role="status"></div>
+        {% elif commande.statut == 'ENVOYEE' %}
+        <div class="text-center w-100">
+            <h6 class="fw-bold mb-2 text-primary">En attente de l'ARC</h6>
+            <p class="small text-muted mb-3">Glissez l'Accusé de Réception de Commande (PDF/Image) ici pour valider.</p>
+
+            <form hx-post="{% url 'achats:upload_document_commande' commande.id %}" hx-encoding="multipart/form-data"
+                hx-target="#status-area" hx-swap="outerHTML" class="file-drop-zone">
+                <input type="hidden" name="doc_type" value="ARC">
+                <label for="arc-upload" class="visually-hidden">Télécharger l'ARC</label>
+                <input type="file" id="arc-upload" name="document" class="form-control"
+                    aria-label="Télécharger l'Accusé de Réception de Commande" onchange="this.form.requestSubmit()">
+            </form>
+        </div>
+        {% elif commande.statut == 'CONFIRME_ARC' %}
+        <div class="text-center w-100">
+            <h6 class="fw-bold mb-2 text-success">Commande Confirmée</h6>
+            <p class="small text-muted mb-3">En attente de livraison. Glissez le Bon de Livraison (BL) ici.</p>
+
+            <form hx-post="{% url 'achats:upload_document_commande' commande.id %}" hx-encoding="multipart/form-data"
+                hx-target="#status-area" hx-swap="outerHTML" class="file-drop-zone">
+                <input type="hidden" name="doc_type" value="BL">
+                <label for="bl-upload" class="visually-hidden">Télécharger le BL</label>
+                <input type="file" id="bl-upload" name="document" class="form-control"
+                    aria-label="Télécharger le Bon de Livraison" onchange="this.form.requestSubmit()">
+            </form>
+        </div>
+        {% elif commande.statut == 'LIVREE' %}
+        <div class="text-center">
+            <div class="icon-box bg-success text-white rounded-circle mb-3 mx-auto">
+                <i class="bi bi-check-lg display-6"></i>
             </div>
-        </form>
-    {% elif commande.statut == 'CONFIRME_ARC' %}
-        <h5 class="fw-bold mb-3 text-purple-600">🚚 En attente de Livraison</h5>
-        <div class="mb-3">
-            <strong>Date Prévue :</strong>
-            {% if commande.date_livraison_prevue %}
-                {{ commande.date_livraison_prevue|date:"d/m/Y" }}
-            {% else %}
-                <span class="text-muted">-</span>
-            {% endif %}
+            <h6 class="fw-bold text-success mb-1">Livraison Effectuée</h6>
+            <p class="small text-muted">La commande est clôturée.</p>
         </div>
-        <form hx-post="{% url 'upload_document_commande' commande.id %}"
-              hx-encoding="multipart/form-data"
-              hx-target="#status-area"
-              class="dropzone-area p-4 border-2 border-dashed border-info rounded text-center bg-info-subtle cursor-pointer position-relative">
-            {% csrf_token %}
-            <input type="hidden" name="doc_type" value="BL">
-            <i class="bi bi-box-seam fs-1 text-info opacity-50"></i>
-            <p class="fw-bold mb-1 mt-2 text-info">Glissez le BL ici</p>
-            <p class="small text-muted mb-0">Confirmer la réception</p>
-            <input type="file"
-                   name="document"
-                   title="Sélectionner le BL"
-                   class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer"
-                   onchange="htmx.trigger(this.closest('form'), 'submit')">
-            <div class="htmx-indicator position-absolute top-0 start-0 w-100 h-100 bg-white opacity-75 d-flex align-items-center justify-content-center">
-                <div class="spinner-border text-info" role="status"></div>
-            </div>
-        </form>
-    {% elif commande.statut == 'LIVREE' %}
-        <div class="text-center py-4">
-            <i class="bi bi-check-circle-fill fs-1 text-success mb-3"></i>
-            <h5 class="fw-bold text-success">Commande Livrée</h5>
-            <p class="text-muted">Le processus est terminé.</p>
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
 </div>

@@ -1,85 +1,79 @@
 {% for client in clients %}
-    <tr class="cursor-pointer"
-        onclick="handleRowClick(event, this)"
-        hx-get="{% url 'client_edit' client.pk %}"
-        hx-target="#detailSidebarContent"
-        hx-swap="innerHTML">
-        <!-- Client Name -->
-        <td>
-            <div class="d-flex align-items-center gap-3">
-                <div class="avatar-circle-sm bg-primary-subtle text-primary fw-bold">{{ client.nom|slice:":2"|upper }}</div>
-                <div>
-                    <div class="fw-bold text-body">{{ client.nom }} {{ client.prenom|default:"" }}</div>
-                    <div class="text-muted small fs-075">
-                        {% if client.code_client %}ref: {{ client.code_client }}{% endif %}
-                    </div>
+<tr class="cursor-pointer" onclick="handleRowClick(event, this)" hx-get="{% url 'tiers:client_edit' client.pk %}"
+    hx-target="#detailSidebarContent" hx-swap="innerHTML">
+    <!-- Client Name -->
+    <td>
+        <div class="d-flex align-items-center gap-3">
+            <div class="avatar-circle-sm bg-primary-subtle text-primary fw-bold">{{ client.nom|slice:":2"|upper }}</div>
+            <div>
+                <div class="fw-bold text-body">{{ client.nom }} {{ client.prenom|default:"" }}</div>
+                <div class="text-muted small fs-075">
+                    {% if client.code_client %}ref: {{ client.code_client }}{% endif %}
                 </div>
             </div>
-        </td>
-        <!-- Type Badge -->
-        <td>
-            {% if client.type_tiers == 'PROFESSIONNEL' %}
-                <span class="badge bg-purple-subtle text-purple border border-purple-subtle badge-pill-text badge-pro">PRO</span>
-            {% else %}
-                <span class="badge bg-success-subtle text-success border border-success-subtle badge-pill-text">PARTICULIER</span>
-            {% endif %}
-        </td>
-        <!-- Contact -->
-        <td>
-            {% if client.email_client %}
-                <div class="d-flex align-items-center gap-2 mb-1">
-                    <i class="bi bi-envelope text-muted small"></i>
-                    <span class="text-body small">{{ client.email_client }}</span>
-                </div>
-            {% endif %}
-            {% if client.telephone_client %}
-                <div class="d-flex align-items-center gap-2">
-                    <i class="bi bi-telephone text-muted small"></i>
-                    <span class="text-muted small">{{ client.telephone_client }}</span>
-                </div>
-            {% endif %}
-        </td>
-        <!-- Address -->
-        <td>
-            {% if client.adresse_facturation %}
-                <div class="d-flex align-items-center gap-2 text-muted small">
-                    <i class="bi bi-geo-alt"></i>
-                    <span class="text-truncate max-w-200"
-                          title="{{ client.adresse_facturation }}">
-                        {{ client.adresse_facturation|truncatechars:40 }}
-                    </span>
-                </div>
-            {% else %}
-                <span class="text-muted small italic">-</span>
-            {% endif %}
-        </td>
-        <!-- Actions -->
-        <td class="text-end">
-            <div class="row-actions">
-                <button class="btn btn-sm btn-icon action-btn"
-                        title="Modifier"
-                        hx-get="{% url 'client_edit' client.pk %}"
-                        hx-target="#detailSidebarContent"
-                        hx-swap="innerHTML"
-                        onclick="event.stopPropagation(); toggleDetailPanel(true);">
-                    <i class="bi bi-pencil-fill"></i>
-                </button>
-                <button class="btn btn-sm btn-icon action-btn text-danger"
-                        title="Supprimer"
-                        onclick="event.stopPropagation(); alert('Désactivé')">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
-        </td>
-    </tr>
+        </div>
+    </td>
+    <!-- Type Badge -->
+    <td>
+        {% if client.type_tiers == 'PROFESSIONNEL' %}
+        <span
+            class="badge bg-purple-subtle text-purple border border-purple-subtle badge-pill-text badge-pro">PRO</span>
+        {% else %}
+        <span
+            class="badge bg-success-subtle text-success border border-success-subtle badge-pill-text">PARTICULIER</span>
+        {% endif %}
+    </td>
+    <!-- Contact -->
+    <td>
+        {% if client.email_client %}
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-envelope text-muted small"></i>
+            <span class="text-body small">{{ client.email_client }}</span>
+        </div>
+        {% endif %}
+        {% if client.telephone_client %}
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-telephone text-muted small"></i>
+            <span class="text-muted small">{{ client.telephone_client }}</span>
+        </div>
+        {% endif %}
+    </td>
+    <!-- Address -->
+    <td>
+        {% if client.adresse_facturation %}
+        <div class="d-flex align-items-center gap-2 text-muted small">
+            <i class="bi bi-geo-alt"></i>
+            <span class="text-truncate max-w-200" title="{{ client.adresse_facturation }}">
+                {{ client.adresse_facturation|truncatechars:40 }}
+            </span>
+        </div>
+        {% else %}
+        <span class="text-muted small italic">-</span>
+        {% endif %}
+    </td>
+    <!-- Actions -->
+    <td class="text-end">
+        <div class="row-actions">
+            <button class="btn btn-sm btn-icon action-btn" title="Modifier"
+                hx-get="{% url 'tiers:client_edit' client.pk %}" hx-target="#detailSidebarContent" hx-swap="innerHTML"
+                onclick="event.stopPropagation(); toggleDetailPanel(true);">
+                <i class="bi bi-pencil-fill"></i>
+            </button>
+            <button class="btn btn-sm btn-icon action-btn text-danger" title="Supprimer"
+                onclick="event.stopPropagation(); alert('Désactivé')">
+                <i class="bi bi-trash"></i>
+            </button>
+        </div>
+    </td>
+</tr>
 {% empty %}
-    <tr>
-        <td colspan="5" class="text-center py-5">
-            <div class="d-flex flex-column align-items-center justify-content-center opacity-50">
-                <i class="bi bi-people fs-1 mb-3"></i>
-                <p class="mb-0 fw-medium">Aucun client trouvé.</p>
-                <p class="small">Essayez de modifier vos filtres.</p>
-            </div>
-        </td>
-    </tr>
+<tr>
+    <td colspan="5" class="text-center py-5">
+        <div class="d-flex flex-column align-items-center justify-content-center opacity-50">
+            <i class="bi bi-people fs-1 mb-3"></i>
+            <p class="mb-0 fw-medium">Aucun client trouvé.</p>
+            <p class="small">Essayez de modifier vos filtres.</p>
+        </div>
+    </td>
+</tr>
 {% endfor %}

@@ -1,7 +1,21 @@
-<!-- Empty response to remove the row -->
-<!-- OOB Update for Totals Footer -->
-<tr id="commande-footer-totals" hx-swap-oob="true">
-    <td colspan="3" class="text-end">Total HT</td>
-    <td class="text-end fw-bold fs-6">{{ commande.total_ht|floatformat:2 }} €</td>
+<!-- This template is returned when a line is deleted. It produces nothing (removing the row) and triggers OOB updates for totals. -->
+
+<!-- Return empty string to remove the TR -->
+
+<!-- OOB Footer Update -->
+<tr id="commande-footer" hx-swap-oob="true">
+    <td colspan="3" class="text-end text-muted small text-uppercase ls-1 align-middle pt-3">Total HT</td>
+    <td class="text-end fw-bold fs-5 align-middle pt-3 text-dark">{{ commande.total_ht|floatformat:2 }} €</td>
     <td></td>
+</tr>
+<tr id="commande-footer-ttc" hx-swap-oob="true">
+    <td colspan="3" class="text-end text-muted small text-uppercase ls-1 align-middle border-0">TVA (20%)</td>
+    <td class="text-end text-muted align-middle border-0">{{ commande.tva|floatformat:2 }} €</td>
+    <td class="border-0"></td>
+</tr>
+<tr id="commande-footer-total" hx-swap-oob="true">
+    <td colspan="3" class="text-end fw-bold small text-uppercase ls-1 align-middle border-0 pb-4">Total TTC</td>
+    <td class="text-end fw-bold text-primary fs-5 align-middle border-0 pb-4">{{ commande.total_ttc|floatformat:2 }} €
+    </td>
+    <td class="border-0 pb-4"></td>
 </tr>

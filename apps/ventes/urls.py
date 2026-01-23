@@ -1,10 +1,11 @@
 from django.urls import path
 from . import views
 
-# app_name = 'ventes'
+app_name = 'ventes'
 
 urlpatterns = [
     # Besoins Management
+    path('affaires/quick-entry/', views.besoins_affaire, {'pk': '1'}, name='besoins_quick'),
     path('affaires/<uuid:pk>/besoins/', views.besoins_affaire, name='besoins_affaire'),
     path('besoins/<uuid:pk>/delete/', views.delete_besoin, name='delete_besoin'),
     

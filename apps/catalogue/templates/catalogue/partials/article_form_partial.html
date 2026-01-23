@@ -1,17 +1,16 @@
 {% load custom_filters %}
 <form method="post"
-      action="{% if form.instance.pk %}{% url 'article_edit' form.instance.pk %}{% else %}{% url 'article_create' %}{% endif %}"
-      class="h-100 d-flex flex-column"
-      novalidate>
+    action="{% if form.instance.pk %}{% url 'catalogue:article_edit' form.instance.pk %}{% else %}{% url 'catalogue:article_create' %}{% endif %}"
+    class="h-100 d-flex flex-column" novalidate>
     {% csrf_token %}
     <!-- SCROLLABLE CONTENT -->
     <div class="flex-grow-1 overflow-y-auto px-3 py-3">
         <!-- HEADER (If new or edit) -->
         <h5 class="fw-bold mb-3 text-dark">
             {% if form.instance.pk %}
-                <i class="bi bi-pencil-square me-2 text-primary"></i>Modifier {{ form.instance.designation }}
+            <i class="bi bi-pencil-square me-2 text-primary"></i>Modifier {{ form.instance.designation }}
             {% else %}
-                <i class="bi bi-plus-circle me-2 text-success"></i>Nouvel Article
+            <i class="bi bi-plus-circle me-2 text-success"></i>Nouvel Article
             {% endif %}
         </h5>
         <!-- SECTION 1: IDENTIFICATION -->
@@ -67,10 +66,8 @@
                 <div class="col-12">
                     <label class="form-label small fw-bold text-secondary text-uppercase">Notes Internes</label>
                     <!-- Check if 'notes' field exists, otherwise generic textarea -->
-                    <textarea name="notes"
-                              class="form-control bg-body-tertiary border-0"
-                              rows="3"
-                              placeholder="Informations techniques, contraintes logistiques..."></textarea>
+                    <textarea name="notes" class="form-control bg-body-tertiary border-0" rows="3"
+                        placeholder="Informations techniques, contraintes logistiques..."></textarea>
                 </div>
             </div>
         </div>
@@ -79,11 +76,10 @@
     <div class="p-3 bg-body-tertiary border-top sticky-bottom d-flex align-items-center shadow-lg z-3">
         <!-- Delete Button (Left) -->
         {% if form.instance.pk %}
-            <button type="button"
-                    class="btn btn-outline-danger px-3 me-auto"
-                    onclick="if(confirm('Supprimer cet article ?')) alert('Action désactivée pour la démo')">
-                <i class="bi bi-trash3-fill me-2"></i>Supprimer
-            </button>
+        <button type="button" class="btn btn-outline-danger px-3 me-auto"
+            onclick="if(confirm('Supprimer cet article ?')) alert('Action désactivée pour la démo')">
+            <i class="bi bi-trash3-fill me-2"></i>Supprimer
+        </button>
         {% endif %}
         <!-- Save/Cancel Buttons (Right) -->
         <div class="d-flex gap-2 ms-auto">

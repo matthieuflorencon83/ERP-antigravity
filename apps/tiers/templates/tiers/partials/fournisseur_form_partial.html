@@ -1,27 +1,27 @@
 {% load custom_filters %}
 <form method="post"
-      action="{% if form.instance.pk %}{% url 'fournisseur_edit' form.instance.pk %}{% else %}{% url 'fournisseur_create' %}{% endif %}"
-      class="h-100 d-flex flex-column"
-      novalidate>
+    action="{% if form.instance.pk %}{% url 'tiers:fournisseur_edit' form.instance.pk %}{% else %}{% url 'tiers:fournisseur_create' %}{% endif %}"
+    class="h-100 d-flex flex-column" novalidate>
     {% csrf_token %}
     <!-- SCROLLABLE CONTENT -->
     <div class="flex-grow-1 overflow-y-auto px-3 py-3">
         <!-- HEADER -->
         <h5 class="fw-bold mb-3 text-dark d-flex align-items-center">
             {% if form.instance.pk %}
-                <div class="avatar-circle bg-info text-white d-flex align-items-center justify-content-center rounded-circle me-3 avatar-circle-md">
-                    {{ form.instance.nom_fournisseur|slice:":1"|upper }}
-                </div>
-                <div>
-                    <div class="fs-6">Modifier Fournisseur</div>
-                    <div class="text-info small fw-normal">{{ form.instance.nom_fournisseur }}</div>
-                </div>
+            <div
+                class="avatar-circle bg-info text-white d-flex align-items-center justify-content-center rounded-circle me-3 avatar-circle-md">
+                {{ form.instance.nom_fournisseur|slice:":1"|upper }}
+            </div>
+            <div>
+                <div class="fs-6">Modifier Fournisseur</div>
+                <div class="text-info small fw-normal">{{ form.instance.nom_fournisseur }}</div>
+            </div>
             {% else %}
-                <i class="bi bi-truck-front-fill me-3 text-info fs-3"></i>
-                <div>
-                    <div class="fs-6">Nouveau Fournisseur</div>
-                    <div class="text-muted small fw-normal">Création d'un partenaire</div>
-                </div>
+            <i class="bi bi-truck-front-fill me-3 text-info fs-3"></i>
+            <div>
+                <div class="fs-6">Nouveau Fournisseur</div>
+                <div class="text-muted small fw-normal">Création d'un partenaire</div>
+            </div>
             {% endif %}
         </h5>
         <!-- SECTION 1: IDENTITÉ -->
@@ -95,16 +95,13 @@
     <!-- STICKY FOOTER -->
     <div class="p-3 bg-body-tertiary border-top sticky-bottom d-flex align-items-center shadow-lg z-3">
         {% if form.instance.pk %}
-            <button type="button"
-                    class="btn btn-light text-danger border-0 px-3 me-auto"
-                    title="Supprimer">
-                <i class="bi bi-trash"></i>
-            </button>
+        <button type="button" class="btn btn-light text-danger border-0 px-3 me-auto" title="Supprimer">
+            <i class="bi bi-trash"></i>
+        </button>
         {% endif %}
         <div class="d-flex gap-2 ms-auto">
-            <button type="button"
-                    class="btn btn-outline-secondary px-4 border-0"
-                    onclick="toggleDetailPanel(false)">Annuler</button>
+            <button type="button" class="btn btn-outline-secondary px-4 border-0"
+                onclick="toggleDetailPanel(false)">Annuler</button>
             <button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm">Enregistrer</button>
         </div>
     </div>

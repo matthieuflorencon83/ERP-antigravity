@@ -4,25 +4,24 @@
     <div class="p-4 border-bottom bg-body-tertiary">
         <h5 class="mb-1 fw-bold text-dark">
             {% if form.instance.pk %}
-                <i class="bi bi-pencil-square me-2 text-primary"></i>Commande {{ form.instance.numero_bdc }}
+            <i class="bi bi-pencil-square me-2 text-primary"></i>Commande {{ form.instance.numero_bdc }}
             {% else %}
-                <i class="bi bi-plus-circle me-2 text-success"></i>Nouvelle Commande
+            <i class="bi bi-plus-circle me-2 text-success"></i>Nouvelle Commande
             {% endif %}
         </h5>
         <div class="small text-muted">
             {% if form.instance.pk %}
-                ID: {{ form.instance.pk }}
+            ID: {{ form.instance.pk }}
             {% else %}
-                Créez une nouvelle commande manuelle.
+            Créez une nouvelle commande manuelle.
             {% endif %}
         </div>
     </div>
     <!-- Scrollable Form Body -->
     <div class="flex-grow-1 overflow-y-auto p-4">
         <form id="commande-form"
-              hx-post="{% if form.instance.pk %} {% url 'commande_edit' form.instance.pk %} {% else %} {% url 'commande_create' %} {% endif %}"
-              hx-target="#detailSidebarContent"
-              hx-swap="innerHTML">
+            hx-post="{% if form.instance.pk %} {% url 'achats:commande_edit' form.instance.pk %} {% else %} {% url 'achats:commande_create' %} {% endif %}"
+            hx-target="#detailSidebarContent" hx-swap="innerHTML">
             {% csrf_token %}
             <!-- SECTION 1: ENTÊTE -->
             <h6 class="text-uppercase text-secondary fw-bold fs-xs mb-3 ls-1">Informations Principales</h6>
@@ -46,102 +45,94 @@
                 </div>
             </div>
             <!-- SECTION 2: LIGNES DE COMMANDE -->
-            <h6 class="text-uppercase text-secondary fw-bold fs-xs mb-3 ls-1 d-flex justify-content-between align-items-center">
+            <h6
+                class="text-uppercase text-secondary fw-bold fs-xs mb-3 ls-1 d-flex justify-content-between align-items-center">
                 Lignes de commande
                 {% if form.instance.pk %}
-                    <span class="badge bg-secondary-subtle text-secondary rounded-pill">{{ lines|length }}</span>
+                <span class="badge bg-secondary-subtle text-secondary rounded-pill">{{ lines|length }}</span>
                 {% endif %}
             </h6>
             {% if form.instance.pk %}
-                {% if lines %}
-                    <div class="table-responsive border rounded bg-body">
-                        <table class="table table-sm table-striped mb-0 small">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Article</th>
-                                    <th class="text-center">Qté</th>
-                                    <th class="text-end">P.U.</th>
-                                    <th class="text-end">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for line in lines %}
-                                    {% include 'achats/partials/commande_line_row.html' with line=line %}
-                                {% endfor %}
-                            </tbody>
-                            <tfoot class="table-light fw-bold">
-                                <tr id="commande-footer-totals">
-                                    <td colspan="3" class="text-end">Total HT</td>
-                                    <td class="text-end fw-bold fs-6">{{ form.instance.total_ht|floatformat:2 }} €</td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                {% else %}
-                    <div class="text-muted small fst-italic border rounded p-3 text-center bg-body-tertiary">
-                        Aucune ligne de commande.
-                    </div>
-                {% endif %}
+            {% if lines %}
+            <div class="table-responsive border rounded bg-body">
+                <table class="table table-sm table-striped mb-0 small">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Article</th>
+                            <th class="text-center">Qté</th>
+                            <th class="text-end">P.U.</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for line in lines %}
+                        {% include 'achats/partials/commande_line_row.html' with line=line %}
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="table-light fw-bold">
+                        <tr id="commande-footer-totals">
+                            <td colspan="3" class="text-end">Total HT</td>
+                            <td class="text-end fw-bold fs-6">{{ form.instance.total_ht|floatformat:2 }} €</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
             {% else %}
-                <div class="alert alert-info small">
-                    <i class="bi bi-info-circle me-1"></i> Enregistrez la commande pour ajouter des lignes.
-                </div>
+            <div class="text-muted small fst-italic border rounded p-3 text-center bg-body-tertiary">
+                Aucune ligne de commande.
+            </div>
+            {% endif %}
+            {% else %}
+            <div class="alert alert-info small">
+                <i class="bi bi-info-circle me-1"></i> Enregistrez la commande pour ajouter des lignes.
+            </div>
             {% endif %}
             <!-- Hidden generic error display -->
-            {% if form.non_field_errors %}<div class="alert alert-danger small mt-3">{{ form.non_field_errors }}</div>{% endif %}
+            {% if form.non_field_errors %}<div class="alert alert-danger small mt-3">{{ form.non_field_errors }}</div>{%
+            endif %}
         </form>
     </div>
     <!-- Stick Footer -->
     <div class="p-3 bg-body-tertiary border-top d-flex gap-2 justify-content-between align-items-center">
         <!-- Delete Button (Left) -->
         {% if form.instance.pk %}
-            <button type="button"
-                    class="btn btn-sm btn-outline-danger"
-                    title="Supprimer"
-                    hx-delete="{% url 'commande_edit' form.instance.pk %}"
-                    hx-confirm="Supprimer cette commande ?"
-                    hx-target="body"
-                    hx-swap="outerHTML">
-                <i class="bi bi-trash"></i>
-            </button>
+        <button type="button" class="btn btn-sm btn-outline-danger" title="Supprimer"
+            hx-delete="{% url 'achats:commande_edit' form.instance.pk %}" hx-confirm="Supprimer cette commande ?"
+            hx-target="body" hx-swap="outerHTML">
+            <i class="bi bi-trash"></i>
+        </button>
         {% else %}
-            <div></div>
+        <div></div>
         {% endif %}
         <!-- Lifecycle Actions (Center/Right) -->
         <div class="d-flex gap-2">
             {% if form.instance.pk %}
-                <a href="{% url 'commande_print' form.instance.pk %}"
-                   target="_blank"
-                   class="btn btn-sm btn-outline-dark fw-bold">
-                    <i class="bi bi-printer me-1"></i> Imprimer / PDF
-                </a>
+            <a href="{% url 'achats:commande_print' form.instance.pk %}" target="_blank"
+                class="btn btn-sm btn-outline-dark fw-bold">
+                <i class="bi bi-printer me-1"></i> Imprimer / PDF
+            </a>
             {% endif %}
-            <button type="button"
-                    class="btn btn-sm btn-outline-secondary"
-                    onclick="toggleDetailPanel(false)">Fermer</button>
-            <button type="submit"
-                    form="commande-form"
-                    class="btn btn-sm btn-primary fw-bold">
+            <button type="button" class="btn btn-sm btn-outline-secondary"
+                onclick="toggleDetailPanel(false)">Fermer</button>
+            <button type="submit" form="commande-form" class="btn btn-sm btn-primary fw-bold">
                 <i class="bi bi-save me-1"></i> Enregistrer
             </button>
             {% if form.instance.pk %}
-                <div class="vr mx-2"></div>
-                {% if form.instance.statut == 'BROUILLON' %}
-                    <button type="button"
-                            class="btn btn-sm btn-success fw-bold"
-                            hx-post="{% url 'htmx_update_statut_commande' form.instance.pk 'ENVOYEE' %}"
-                            hx-target="#detailSidebarContent">
-                        <i class="bi bi-send me-1"></i> Envoyer
-                    </button>
-                {% elif form.instance.statut == 'ENVOYEE' %}
-                    <button type="button"
-                            class="btn btn-sm btn-secondary fw-bold"
-                            hx-post="{% url 'htmx_update_statut_commande' form.instance.pk 'CONFIRME_ARC' %}"
-                            hx-target="#detailSidebarContent">
-                        <i class="bi bi-file-earmark-check me-1"></i> Confirmer ARC
-                    </button>
-                {% endif %}
+            <div class="vr mx-2"></div>
+            {% if form.instance.statut == 'BROUILLON' %}
+            <button type="button" class="btn btn-sm btn-success fw-bold"
+                hx-post="{% url 'achats:htmx_update_statut_commande' form.instance.pk 'ENVOYEE' %}"
+                hx-target="#detailSidebarContent">
+                <i class="bi bi-send me-1"></i> Envoyer
+            </button>
+            {% elif form.instance.statut == 'ENVOYEE' %}
+            <button type="button" class="btn btn-sm btn-secondary fw-bold"
+                hx-post="{% url 'achats:htmx_update_statut_commande' form.instance.pk 'CONFIRME_ARC' %}"
+                hx-target="#detailSidebarContent">
+                <i class="bi bi-file-earmark-check me-1"></i> Confirmer ARC
+            </button>
+            {% endif %}
             {% endif %}
         </div>
     </div>
