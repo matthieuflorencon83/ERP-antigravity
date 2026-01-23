@@ -1,0 +1,19 @@
+Creating test database for alias 'default'...
+..E..
+======================================================================
+ERROR: test_commande_list (tests.test_ui_pages.AchatsPagesTest.test_commande_list)
+Test the list view
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_ui_pages.py", line 43, in test_commande_list
+    self.commande.date_commande = timezone.now()
+                                  ^^^^^^^^
+NameError: name 'timezone' is not defined
+
+----------------------------------------------------------------------
+Ran 5 tests in 7.199s
+
+FAILED (errors=1)
+Destroying test database for alias 'default'...
+Found 5 test(s).
+System check identified no issues (0 silenced).

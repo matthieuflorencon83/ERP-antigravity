@@ -1,0 +1,59 @@
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content shadow-lg border-0">
+        <div class="modal-header bg-warning-subtle text-warning-emphasis border-bottom-0">
+            <h5 class="modal-title fw-bold">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>ARC Partiel Détecté
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body p-4">
+            <p class="mb-3">
+                L'analyse de l'ARC montre que tous les articles ne sont pas confirmés.
+                Certains articles semblent manquants ou en attente.
+            </p>
+
+            <div class="alert alert-light border mb-4">
+                <div class="d-flex align-items-center mb-2">
+                    <strong class="text-dark">Articles dans l'ARC :</strong>
+                    <span class="badge bg-success ms-2">{{ arc_lines_count }} lignes</span>
+                </div>
+                <div class="d-flex align-items-center">
+                    <strong class="text-dark">Articles manquants :</strong>
+                    <span class="badge bg-danger ms-2">{{ missing_lines_count }} lignes</span>
+                </div>
+            </div>
+
+            <p class="small text-muted mb-4">
+                Quelle action souhaitez-vous entreprendre pour gérer ce décalage ?
+            </p>
+
+            <div class="d-grid gap-3">
+                <!-- OPTION A: SCINDER (Recommandé) -->
+                <form method="POST" action="{% url 'achats:htmx_split_commande_arc' commande.id %}" class="w-100">
+                    {% csrf_token %}
+                    <!-- On passe les IDs des lignes trouvées dans l'ARC -->
+                    {% for id in found_ids %}
+                    <input type="hidden" name="found_lines[]" value="{{ id }}">
+                    {% endfor %}
+
+                    <button type="submit"
+                        class="btn btn-primary w-100 p-3 text-start d-flex align-items-center justify-content-between shadow-sm card-hover">
+                        <div>
+                            <div class="fw-bold"><i class="bi bi-diagram-2 me-2"></i>SCINDER LA COMMANDE</div>
+                            <div class="small opacity-75 fw-normal">Créer une nouvelle commande "Reliquat" pour les
+                                articles manquants.</div>
+                        </div>
+                        <i class="bi bi-arrow-right fs-5"></i>
+                    </button>
+                </form>
+
+                <!-- OPTION B: IGNORER (Risqué) -->
+                <button type="button" class="btn btn-outline-secondary w-100 text-start" data-bs-dismiss="modal">
+                    <div class="fw-bold"><i class="bi bi-x-circle me-2"></i>Ignorer et continuer</div>
+                    <div class="small text-muted">Garder tous les articles dans cette commande (Statut mixte).</div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

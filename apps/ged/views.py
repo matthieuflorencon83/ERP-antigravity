@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponse
+from django.urls import reverse
+from django.views.decorators.http import require_POST
 from apps.ged.models import Document
 from apps.tiers.models import Client, Fournisseur
 from apps.catalogue.models import Article
@@ -161,3 +164,71 @@ def document_detail(request, pk):
         'existing_clients': existing_clients,
         'existing_fournisseurs': existing_fournisseurs
     })
+@login_required
+@require_POST
+def dashboard_quick_scan(request):
+    if 'document' not in request.FILES:
+        return HttpResponse(status=400)
+        
+    uploaded_file = request.FILES['document']
+    
+    # 1. Create Document (Pending Type)
+    doc = Document.objects.create(fichier=uploaded_file, type_document='AUTRE')
+    
+    try:
+        # 2. Analyze
+        ai_result = analyze_document(doc.fichier)
+        doc.ai_response = ai_result
+        
+        # 3. Detect Type & Update
+        detected_type = ai_result.get('type_document', 'AUTRE')
+        doc.type_document = detected_type
+        
+        date_doc = ai_result.get('date_document')
+        if date_doc:
+            doc.date_document = date_doc
+            
+        doc.save()
+        
+        # 4. Intelligent Routing
+        refs = ai_result.get('references', {})
+        num_bdc = refs.get('num_commande')  # Common link key
+        
+        # ROUTE: ARC or BL -> Check for existing Order
+        if detected_type in ['ARC_FOURNISSEUR', 'BON_LIVRAISON'] and num_bdc:
+            commande = Commande.objects.filter(numero_bdc=num_bdc).first()
+            if commande:
+                # Link Doc to Commande
+                if detected_type == 'ARC_FOURNISSEUR':
+                    commande.document_arc = doc.fichier
+                    commande.json_data_arc = ai_result
+                    commande.statut = 'CONFIRME_ARC'
+                    commande.statut_verification = 'PENDING'
+                else: 
+                    commande.document_bl = doc.fichier
+                    commande.json_data_bl = ai_result
+                    commande.statut = 'LIVREE'
+                    commande.statut_verification = 'PENDING'
+                
+                commande.save()
+                doc.commande = commande
+                doc.save()
+                
+                messages.success(request, f"Document lié à la commande {num_bdc}. Redirection vers verification.")
+                # HTMX Redirect
+                response = HttpResponse()
+                response['HX-Redirect'] = reverse('achats:commande_verification', args=[commande.id])
+                return response
+        
+        # ROUTE: Default -> Document Detail
+        messages.info(request, f"Document analysé ({doc.get_type_document_display()}). Veuillez valider les données.")
+        response = HttpResponse()
+        response['HX-Redirect'] = reverse('ged:document_detail', args=[doc.id])
+        return response
+        
+    except Exception as e:
+        logger.exception("Dashboard scan failed")
+        messages.error(request, "Erreur lors de l'analyse du document.")
+        response = HttpResponse()
+        response['HX-Redirect'] = reverse('ged:upload_document')
+        return response

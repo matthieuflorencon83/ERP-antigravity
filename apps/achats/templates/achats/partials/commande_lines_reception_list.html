@@ -1,0 +1,71 @@
+{% for line in lines %}
+<div
+    class="d-flex align-items-center justify-content-between p-2 border-bottom {% if line.statut_ligne == 'RELIQUAT' %}bg-danger-subtle border-danger-subtle{% endif %}">
+    <div class="d-flex align-items-center gap-3">
+        <!-- Status Icon -->
+        {% if line.statut_ligne == 'LIVREE' %}
+        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+        {% elif line.statut_ligne == 'RELIQUAT' %}
+        <i class="bi bi-exclamation-circle-fill text-danger fs-5 animate-pulse"></i>
+        {% else %}
+        <i class="bi bi-circle text-muted fs-5"></i>
+        {% endif %}
+
+        <div>
+            <div class="fw-bold text-dark">{{ line.designation }}</div>
+            <div class="small text-muted">Ref: {{ line.article.ref_fournisseur|default:"-" }}</div>
+            {% if line.statut_ligne == 'RELIQUAT' %}
+            <div class="small text-danger fw-bold mt-1">⚠️ RELIQUAT À LIVRER</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Action / Status -->
+    <div class="text-end" id="line-action-{{ line.id }}">
+
+        <!-- DISPLAY MODE -->
+        <div class="d-flex align-items-center gap-3">
+            <span
+                class="fw-bold fs-6 badge bg-light text-dark border {% if line.statut_ligne == 'RELIQUAT' %}border-danger text-danger bg-white{% endif %}">
+                x {{ line.quantite|floatformat:0 }}
+            </span>
+
+            {% if line.statut_ligne == 'ATTENTE' or line.statut_ligne == 'RELIQUAT' %}
+            <!-- RECEPTION BUTTON (Toggle Mode) -->
+            <button class="btn btn-sm btn-outline-primary rounded-pill"
+                onclick="document.getElementById('reception-form-{{ line.id }}').classList.remove('d-none'); this.parentElement.classList.add('d-none');">
+                <i class="bi bi-box-seam me-1"></i> Réception
+            </button>
+            {% else %}
+            <span class="badge bg-success-subtle text-success rounded-pill">Reçu</span>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+
+<!-- HIDDEN FORM (Outside flex to avoid breaking layout, but effectively replaces the row content via swap if we target 'outerHTML' of the whole block. 
+     Actually, simpler to keep it inline for this 'list' view context) -->
+
+{% if line.statut_ligne != 'LIVREE' %}
+<div id="reception-form-{{ line.id }}" class="d-none bg-light p-2 border-bottom">
+    <form hx-post="{% url 'achats:htmx_receptionner_ligne' line.id %}" hx-target="closest .line-container-reception"
+        hx-swap="innerHTML">
+        <div class="input-group input-group-sm">
+            <span class="input-group-text">Qte Reçue</span>
+            <input type="number" name="qte_recue" class="form-control" value="{{ line.quantite|floatformat:0 }}" min="0"
+                max="{{ line.quantite|floatformat:0 }}" step="1" aria-label="Quantité reçue">
+            <button class="btn btn-success" type="submit">Valider</button>
+            <button class="btn btn-outline-secondary" type="button"
+                onclick="document.getElementById('reception-form-{{ line.id }}').classList.add('d-none'); document.getElementById('line-action-{{ line.id }}').querySelector('.d-flex').classList.remove('d-none');">
+                Annuler
+            </button>
+        </div>
+        <div class="form-text fs-xs mt-1">
+            Si la quantité est inférieure à {{ line.quantite|floatformat:0 }}, un reliquat sera créé automatiquement.
+        </div>
+    </form>
+</div>
+{% endif %}
+
+{% endfor %}

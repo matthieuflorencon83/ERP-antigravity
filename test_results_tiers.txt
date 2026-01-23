@@ -1,0 +1,35 @@
+Creating test database for alias 'default'...
+E
+======================================================================
+ERROR: test_client_list (tests.test_tiers_ui.ClientUIFlowTest.test_client_list)
+Test the client list view
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_tiers_ui.py", line 13, in setUp
+    self.client_obj = Client.objects.create(
+                      ~~~~~~~~~~~~~~~~~~~~~^
+        nom="Client Test UI",
+        ^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        type_tiers="PROFESSIONNEL"
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\query.py", line 667, in create
+    obj = self.model(**kwargs)
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\base.py", line 590, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: Client() got unexpected keyword arguments: 'code_client'
+
+----------------------------------------------------------------------
+Ran 1 test in 1.341s
+
+FAILED (errors=1)
+Destroying test database for alias 'default'...
+Found 1 test(s).
+System check identified no issues (0 silenced).

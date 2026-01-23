@@ -1,0 +1,104 @@
+Creating test database for alias 'default'...
+EEEEE
+======================================================================
+ERROR: test_affaire_cockpit (tests.test_ui_pages.AchatsPagesTest.test_affaire_cockpit)
+Test the affaire detail cockpit
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_ui_pages.py", line 22, in setUp
+    self.article = Article.objects.create(reference="REF01", designation="Art 1", prix_unitaire_ht=10, fournisseur=self.fournisseur)
+                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\query.py", line 667, in create
+    obj = self.model(**kwargs)
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\base.py", line 590, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: Article() got unexpected keyword arguments: 'reference'
+
+======================================================================
+ERROR: test_commande_detail_timeline (tests.test_ui_pages.AchatsPagesTest.test_commande_detail_timeline)
+Test detail view and timeline rendering
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_ui_pages.py", line 22, in setUp
+    self.article = Article.objects.create(reference="REF01", designation="Art 1", prix_unitaire_ht=10, fournisseur=self.fournisseur)
+                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\query.py", line 667, in create
+    obj = self.model(**kwargs)
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\base.py", line 590, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: Article() got unexpected keyword arguments: 'reference'
+
+======================================================================
+ERROR: test_commande_list (tests.test_ui_pages.AchatsPagesTest.test_commande_list)
+Test the list view
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_ui_pages.py", line 22, in setUp
+    self.article = Article.objects.create(reference="REF01", designation="Art 1", prix_unitaire_ht=10, fournisseur=self.fournisseur)
+                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\query.py", line 667, in create
+    obj = self.model(**kwargs)
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\base.py", line 590, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: Article() got unexpected keyword arguments: 'reference'
+
+======================================================================
+ERROR: test_portfolio_rendering (tests.test_ui_pages.AchatsPagesTest.test_portfolio_rendering)
+Test the optimized 'Satellite' view
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_ui_pages.py", line 22, in setUp
+    self.article = Article.objects.create(reference="REF01", designation="Art 1", prix_unitaire_ht=10, fournisseur=self.fournisseur)
+                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\query.py", line 667, in create
+    obj = self.model(**kwargs)
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\base.py", line 590, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: Article() got unexpected keyword arguments: 'reference'
+
+======================================================================
+ERROR: test_verification_page (tests.test_ui_pages.AchatsPagesTest.test_verification_page)
+Test verification page
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_ui_pages.py", line 22, in setUp
+    self.article = Article.objects.create(reference="REF01", designation="Art 1", prix_unitaire_ht=10, fournisseur=self.fournisseur)
+                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\query.py", line 667, in create
+    obj = self.model(**kwargs)
+  File "C:\Users\utopi\AppData\Roaming\Python\Python314\site-packages\django\db\models\base.py", line 590, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: Article() got unexpected keyword arguments: 'reference'
+
+----------------------------------------------------------------------
+Ran 5 tests in 6.290s
+
+FAILED (errors=5)
+Destroying test database for alias 'default'...
+Found 5 test(s).
+System check identified no issues (0 silenced).

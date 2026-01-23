@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .verification-container {
+        min-height: calc(100vh - 60px);
+    }
+
+    .doc-viewer-img {
+        max-height: 100%;
+        object-fit: contain;
+    }
+</style>
+<div class="container-fluid p-0 h-100 d-flex flex-column verification-container">
+    <div class="row g-0 flex-grow-1">
+        <!-- LEFT PANE: Document Viewer -->
+        <div class="col-md-6 border-end bg-secondary bg-opacity-10 d-flex flex-column position-relative">
+            <div class="p-2 bg-white border-bottom shadow-sm d-flex justify-content-between align-items-center z-1">
+                <h6 class="mb-0 fw-bold text-secondary">
+                    <i class="bi bi-file-earmark-pdf text-danger me-2"></i>
+                    {% if verification_type == 'ARC' %}ARC{% else %}BL{% endif %}
+                </h6>
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="rotateViewer(-90)"
+                        title="Pivoter gauche"><i class="bi bi-arrow-counterclockwise"></i></button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="rotateViewer(90)"
+                        title="Pivoter droite"><i class="bi bi-arrow-clockwise"></i></button>
+                    <a href="{{ document_url }}" target="_blank" class="btn btn-sm btn-outline-primary"
+                        title="Ouvrir"><i class="bi bi-box-arrow-up-right"></i></a>
+                </div>
+            </div>
+
+            <div
+                class="flex-grow-1 position-relative overflow-hidden bg-dark d-flex align-items-center justify-content-center">
+                {% if document_url %}
+                {% if document_type == 'image' %}
+                <img src="{{ document_url }}" class="img-fluid doc-viewer-img" id="doc-viewer" alt="Document scanné">
+                {% else %}
+                <iframe src="{{ document_url }}" class="w-100 h-100 border-0" id="doc-viewer"
+                    title="Visualiseur de document"></iframe>
+                {% endif %}
+                {% else %}
+                <div class="text-white-50 text-center">
+                    <i class="bi bi-file-earmark-x display-1"></i>
+                    <p class="mt-2">Aucun document à afficher</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- RIGHT PANE: Verification Form -->
+        <div class="col-md-6 d-flex flex-column bg-light">
+            <div class="p-3 bg-white border-bottom shadow-sm">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0 fw-bold">Vérification IA</h5>
+                        <small class="text-muted">Commande #{{ commande.id }} - <span class="fw-bold">{{
+                                commande.fournisseur.nom }}</span></small>
+                    </div>
+                    <span class="badge bg-warning text-dark border border-warning">
+                        <i class="bi bi-lightning-fill me-1"></i>IA Active
+                    </span>
+                </div>
+            </div>
+
+            <div class="flex-grow-1 overflow-auto p-4">
+                <!-- Discrepancies Summary -->
+                {% if discrepancies_count > 0 %}
+                <div class="alert alert-warning border-start border-warning border-4 shadow-sm mb-4" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill text-warning fs-4 me-3"></i>
+                        <div>
+                            <h6 class="alert-heading fw-bold mb-0">Attention requise</h6>
+                            <p class="mb-0 small">L'IA a détecté <strong>{{ discrepancies_count }} écart(s)</strong>
+                                entre le document et la commande.</p>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="alert alert-success border-start border-success border-4 shadow-sm mb-4" role="alert">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill text-success fs-4 me-3"></i>
+                        <div>
+                            <h6 class="alert-heading fw-bold mb-0">Tout semble correct</h6>
+                            <p class="mb-0 small">L'IA n'a détecté aucune anomalie majeure.</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Comparison Table -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3 border-bottom">
+                        <h6 class="mb-0 fw-bold text-primary">Comparaison des Lignes</h6>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 text-sm">
+                            <thead class="bg-light text-muted text-uppercase small">
+                                <tr>
+                                    <th>Article</th>
+                                    <th class="text-center">Qté Cmd</th>
+                                    <th class="text-center">Qté Doc</th>
+                                    <th class="text-center">Prix Cmd</th>
+                                    <th class="text-center">Prix Doc</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for line in verification_lines %}
+                                {% include 'achats/partials/verification_line_row.html' %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="p-3 bg-white border-top shadow-sm d-flex justify-content-end gap-2 sticky-bottom">
+                <button class="btn btn-light border" onclick="history.back()">Revenir</button>
+                <button class="btn btn-success px-4 py-2 fw-bold shadow-sm">
+                    <i class="bi bi-check-all me-2"></i>Valider la Vérification
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function rotateViewer(deg) {
+        const viewer = document.getElementById('doc-viewer');
+        let currentRotation = viewer.dataset.rotation ? parseInt(viewer.dataset.rotation) : 0;
+        currentRotation += deg;
+        viewer.style.transform = `rotate(${currentRotation}deg)`;
+        viewer.dataset.rotation = currentRotation;
+    }
+</script>
+{% endblock %}

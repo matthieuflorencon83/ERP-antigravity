@@ -3,6 +3,23 @@
 {% load humanize %}
 {% block extra_css %}<!-- Styles loaded from static/css/styles.css -->{% endblock %}
 {% block content %}
+<style>
+    .home-drop-zone {
+        border: 2px dashed #a5d8ff;
+        transition: all 0.2s;
+    }
+
+    .icon-lg {
+        width: 64px;
+        height: 64px;
+        font-size: 1.5rem;
+    }
+
+    .circle-decoration {
+        width: 150px;
+        height: 150px;
+    }
+</style>
 <div class="container-fluid p-4 bg-body-tertiary min-vh-100">
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -19,6 +36,43 @@
             </button>
         </div>
     </div>
+    <!-- AI GLOBAL DROP Zone -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm rounded-4 bg-gradient-primary-subtle overflow-hidden position-relative">
+                <div class="card-body p-4 text-center file-drop-zone home-drop-zone" id="dashboard-drop-zone">
+
+                    <!-- Default Content -->
+                    <div class="drop-content">
+                        <div class="icon-box bg-white text-primary rounded-circle mx-auto mb-3 shadow-sm icon-lg">
+                            <i class="bi bi-cloud-arrow-up-fill"></i>
+                        </div>
+                        <h5 class="fw-bold mb-1 text-primary">Déposez un document pour analyse IA</h5>
+                        <p class="text-muted small mb-3">ARC, BL, Devis, Facture... L'IA détecte et classe
+                            automatiquement.</p>
+
+                        <form hx-post="{% url 'ged:dashboard_quick_scan' %}" hx-encoding="multipart/form-data"
+                            hx-indicator="#upload-spinner">
+                            <label for="quick-scan-file" class="btn btn-primary shadow-sm rounded-pill px-4">
+                                <i class="bi bi-folder2-open me-2"></i> Choisir un fichier
+                            </label>
+                            <input type="file" id="quick-scan-file" name="document" class="d-none"
+                                onchange="this.form.requestSubmit()">
+                        </form>
+                    </div>
+
+                    <!-- Loading Indicator (Hidden by default) -->
+                    <div id="upload-spinner" class="htmx-indicator mt-3">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Analyse en cours...</span>
+                        </div>
+                        <p class="mt-2 text-primary fw-bold small animate-pulse">Analyse IA et routage en cours...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- KPI ROW -->
     <div class="row g-4 mb-5">
         <!-- KPI 1: Pipeline Ventes -->
@@ -153,11 +207,13 @@
                                                         class="avatar-circle small bg-primary-subtle text-primary fw-bold avatar-xs">
                                                         {{ cmd.fournisseur.nom_fournisseur|slice:":1" }}
                                                     </div>
-                                                    <span class="fw-medium text-dark">{{ cmd.fournisseur.nom_fournisseur }}</span>
+                                                    <span class="fw-medium text-dark">{{ cmd.fournisseur.nom_fournisseur
+                                                        }}</span>
                                                 </div>
                                             </td>
                                             <td>
-                                                <span class="badge bg-light text-dark border">{{ cmd.affaire.nom_affaire|truncatechars:20 }}</span>
+                                                <span class="badge bg-light text-dark border">{{
+                                                    cmd.affaire.nom_affaire|truncatechars:20 }}</span>
                                             </td>
                                             <td class="text-end fw-bold">{{ cmd.total_ht|floatformat:2 }} €</td>
                                             <td class="text-end">
@@ -171,7 +227,8 @@
                                                 <span
                                                     class="badge bg-success-subtle text-success rounded-pill">Livrée</span>
                                                 {% else %}
-                                                <span class="badge bg-info-subtle text-info rounded-pill">{{ cmd.get_statut_display }}</span>
+                                                <span class="badge bg-info-subtle text-info rounded-pill">{{
+                                                    cmd.get_statut_display }}</span>
                                                 {% endif %}
                                             </td>
                                         </tr>
@@ -209,7 +266,8 @@
                                                 {% if aff.statut == 'EN_COURS' %}
                                                 <span class="badge bg-primary-subtle text-primary">En Cours</span>
                                                 {% else %}
-                                                <span class="badge bg-secondary-subtle text-secondary">{{ aff.get_statut_display }}</span>
+                                                <span class="badge bg-secondary-subtle text-secondary">{{
+                                                    aff.get_statut_display }}</span>
                                                 {% endif %}
                                             </td>
                                             <td class="text-end fw-bold">{{ aff.total_vente_ht|floatformat:0 }} €</td>
@@ -271,7 +329,8 @@
                 <div class="card-body p-4 position-relative z-1">
                     <h5 class="fw-bold mb-1">Système Opérationnel</h5>
                     <p class="opacity-75 small mb-4">Dernière sauvegarde : Aujourd'hui 04:00</p>
-                    <button class="btn btn-sm btn-white text-primary fw-bold shadow-sm" hx-get="{% url 'core:settings' %}" hx-push-url="true">
+                    <button class="btn btn-sm btn-white text-primary fw-bold shadow-sm"
+                        hx-get="{% url 'core:settings' %}" hx-push-url="true">
                         <i class="bi bi-gear-fill me-1"></i> Configuration
                     </button>
                 </div>

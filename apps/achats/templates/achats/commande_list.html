@@ -212,7 +212,7 @@
                     </tr>
                 </thead>
                 <tbody id="commande-table-body">
-                    {% include 'achats/partials/commande_table_body.html' %}
+                    {% include 'achats/partials/commande_table_body.html' with object_list=page_obj %}
                 </tbody>
             </table>
         </div>

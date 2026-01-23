@@ -1,0 +1,215 @@
+<!-- Timeline Component (HTMX Target) -->
+<style>
+    .timeline-card {
+        overflow: hidden;
+    }
+
+    .timeline-track {
+        height: 4px;
+        z-index: 0;
+        transform: translateY(-50%);
+    }
+
+    .timeline-steps {
+        z-index: 1;
+    }
+
+    .timeline-icon-box {
+        width: 40px;
+        height: 40px;
+    }
+
+    .timeline-action-zone {
+        width: 140px;
+        margin-left: -50px;
+    }
+</style>
+<div class="card border-0 shadow-sm rounded-4 mb-3 timeline-card" id="timeline-row-{{ commande.id }}">
+
+    <div class="card-body p-0">
+        <div class="row g-0">
+            <!-- Left: Info Commande -->
+            <div class="col-md-3 bg-light border-end p-3 d-flex flex-column justify-content-center">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-white text-dark border">{{ commande.numero_bdc|default:"Brouillon" }}</span>
+                    <small class="text-muted">{{ commande.date_creation|date:"d/m/Y" }}</small>
+                </div>
+                <h6 class="fw-bold mb-1">{{ commande.fournisseur.nom_fournisseur }}</h6>
+                <div class="small text-muted mb-2">{{ commande.total_ht }} € HT</div>
+
+                <a href="{% url 'achats:commande_edit' commande.id %}" class="btn btn-sm btn-outline-dark w-100">
+                    <i class="bi bi-eye"></i> Ouvrir
+                </a>
+            </div>
+
+            <!-- Right: Timeline Visualization -->
+            <div class="col-md-9 p-4 bg-white position-relative">
+
+                <!-- Timeline Track -->
+                <div class="position-absolute top-50 start-0 w-100 bg-secondary-subtle timeline-track"></div>
+
+                <!-- Steps Container -->
+                <div class="d-flex justify-content-between position-relative timeline-steps">
+
+                    <!-- STEP 1: PREPARATION (Brouillon) -->
+                    <div class="text-center timeline-step">
+                        <div
+                            class="icon-box rounded-circle mx-auto mb-2 timeline-icon-box
+                            {% if commande.statut == 'BROUILLON' %}bg-secondary text-white shadow ring-2{% else %}bg-success text-white{% endif %}">
+                            <i class="bi bi-pencil"></i>
+                        </div>
+                        <span class="fs-xs fw-bold text-uppercase text-muted">Préparation</span>
+                    </div>
+
+                    <!-- STEP 2: ENVOI (BDC) -->
+                    <div class="text-center timeline-step">
+                        <div
+                            class="icon-box rounded-circle mx-auto mb-2 timeline-icon-box
+                            {% if commande.statut == 'BROUILLON' %}bg-white border text-muted{% elif commande.statut == 'ENVOYEE' %}bg-warning text-dark shadow ring-2{% else %}bg-success text-white{% endif %}">
+                            <i class="bi bi-send"></i>
+                        </div>
+                        <span class="fs-xs fw-bold text-uppercase text-muted">Envoi</span>
+
+                        <!-- ACTION ZONE: Upload BDC -->
+                        {% if commande.statut == 'BROUILLON' %}
+                        <div class="mt-2 timeline-action-zone">
+                            <form hx-post="{% url 'achats:upload_document_workflow' commande.id %}"
+                                hx-encoding="multipart/form-data" hx-target="#timeline-row-{{ commande.id }}"
+                                hx-swap="outerHTML" hx-indicator="#loading-bdc-{{ commande.id }}">
+                                <input type="hidden" name="doc_type" value="BDC">
+                                <label
+                                    class="btn btn-xs btn-outline-primary rounded-pill w-100 shadow-sm uploader-label">
+                                    <i class="bi bi-upload me-1"></i> Signer BDC
+                                    <input type="file" name="document" class="d-none"
+                                        onchange="this.closest('.uploader-label').style.display='none'; this.form.requestSubmit()"
+                                        aria-label="Upload Bon de Commande signé">
+                                </label>
+                                <!-- Loader -->
+                                <div id="loading-bdc-{{ commande.id }}" class="htmx-indicator text-center mt-1">
+                                    <span class="spinner-border spinner-border-sm text-primary" role="status"></span>
+                                    <span class="fs-xs text-primary">Traitement...</span>
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- STEP 2: CONFIRMATION (ARC) -->
+                    <div class="text-center timeline-step">
+                        <div
+                            class="icon-box rounded-circle mx-auto mb-2 timeline-icon-box
+                        {% if commande.statut in 'BROUILLON,ENVOYEE' %}bg-white border text-muted{% elif commande.statut == 'CONFIRME_ARC' %}bg-primary text-white shadow ring-2{% else %}bg-success text-white{% endif %}">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <span class="fs-xs fw-bold text-uppercase text-muted">ARC</span>
+
+                        <!-- ACTION ZONE: Upload ARC -->
+                        {% if commande.statut == 'ENVOYEE' %}
+                        <div class="mt-2 timeline-action-zone">
+                            <div class="d-flex flex-column gap-1">
+                                <button
+                                    class="btn btn-xs btn-warning text-dark rounded-pill w-100 fw-bold animate-pulse"
+                                    disabled>
+                                    <i class="bi bi-clock-history me-1"></i> En Attente
+                                </button>
+                                <form hx-post="{% url 'achats:upload_document_workflow' commande.id %}"
+                                    hx-encoding="multipart/form-data" hx-target="#timeline-row-{{ commande.id }}"
+                                    hx-indicator="#loading-arc-{{ commande.id }}" hx-swap="outerHTML">
+                                    <input type="hidden" name="doc_type" value="ARC">
+                                    <label
+                                        class="btn btn-xs btn-primary rounded-pill w-100 shadow-sm cursor-pointer uploader-label">
+                                        <i class="bi bi-cloud-upload me-1"></i> Déposer ARC
+                                        <input type="file" name="document" class="d-none"
+                                            onchange="this.closest('.uploader-label').style.display='none'; this.form.requestSubmit()"
+                                            aria-label="Upload Accusé de Réception">
+                                    </label>
+                                    <!-- Loader -->
+                                    <div id="loading-arc-{{ commande.id }}" class="htmx-indicator text-center mt-1">
+                                        <span class="spinner-border spinner-border-sm text-primary"
+                                            role="status"></span>
+                                        <span class="fs-xs text-primary">Analyse IA (10s)...</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- VIEW ARC -->
+                        {% for doc in commande.documents.all %}
+                        {% if doc.type_document == 'ARC_FOURNISSEUR' and doc.est_actif %}
+                        <div class="mt-1">
+                            <a href="{{ doc.fichier.url }}" target="_blank"
+                                class="fs-xs text-decoration-none text-primary">
+                                <i class="bi bi-paperclip"></i> Voir ARC
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <!-- STEP 4: LIVRAISON (BL) -->
+                    <div class="text-center timeline-step">
+                        <div
+                            class="icon-box rounded-circle mx-auto mb-2 timeline-icon-box
+                        {% if commande.statut == 'LIVREE' %}bg-success text-white shadow ring-2{% else %}bg-white border text-muted{% endif %}">
+                            <i class="bi bi-box-seam"></i>
+                        </div>
+                        <span class="fs-xs fw-bold text-uppercase text-muted">Livraison</span>
+
+                        <!-- ACTION ZONE: Upload BL -->
+                        {% if commande.statut == 'CONFIRME_ARC' %}
+                        <div class="mt-2 timeline-action-zone">
+                            <form hx-post="{% url 'achats:upload_document_workflow' commande.id %}"
+                                hx-encoding="multipart/form-data" hx-target="#timeline-row-{{ commande.id }}"
+                                hx-indicator="#loading-bl-{{ commande.id }}" hx-swap="outerHTML">
+                                <input type="hidden" name="doc_type" value="BL">
+                                <label
+                                    class="btn btn-xs btn-success rounded-pill w-100 shadow-sm cursor-pointer border-0 uploader-label">
+                                    <i class="bi bi-box-arrow-in-down me-1"></i> Déposer BL
+                                    <input type="file" name="document" class="d-none"
+                                        onchange="this.closest('.uploader-label').style.display='none'; this.form.requestSubmit()">
+                                </label>
+                                <!-- Loader -->
+                                <div id="loading-bl-{{ commande.id }}" class="htmx-indicator text-center mt-1">
+                                    <span class="spinner-border spinner-border-sm text-success" role="status"></span>
+                                    <span class="fs-xs text-success">Analyse IA (10s)...</span>
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+
+                        <!-- VIEW BL -->
+                        {% for doc in commande.documents.all %}
+                        {% if doc.type_document == 'BON_LIVRAISON' and doc.est_actif %}
+                        <div class="mt-1">
+                            <a href="{{ doc.fichier.url }}" target="_blank"
+                                class="fs-xs text-decoration-none text-success">
+                                <i class="bi bi-paperclip"></i> Voir BL
+                            </a>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- LINES SECTION (Expandable for Reception) -->
+                <div class="mt-4 border-top pt-3">
+                    <button
+                        class="btn btn-sm btn-link text-decoration-none text-muted p-0 d-flex align-items-center gap-2"
+                        type="button" data-bs-toggle="collapse" data-bs-target="#lines-{{ commande.id }}">
+                        <i class="bi bi-chevron-down"></i> Détail des lignes & Réception
+                    </button>
+
+                    <div class="collapse mt-2" id="lines-{{ commande.id }}">
+                        <div class="card card-body bg-light border-0 p-0 overflow-hidden line-container-reception">
+                            <!-- Helper: Include the list partial initially -->
+                            {% include 'achats/partials/commande_lines_reception_list.html' with
+                            lines=commande.lignes.all %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+Creating test database for alias 'default'...
+EEEEE
+======================================================================
+ERROR: test_affaire_cockpit (tests.test_ui_pages.AchatsPagesTest.test_affaire_cockpit)
+Test the affaire detail cockpit
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_ui_pages.py", line 22, in setUp
+    self.client_tiers = ventes_models.Client.objects.create(nom="Client Test")
+                        ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'apps.ventes.models' has no attribute 'Client'
+
+======================================================================
+ERROR: test_commande_detail_timeline (tests.test_ui_pages.AchatsPagesTest.test_commande_detail_timeline)
+Test detail view and timeline rendering
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_ui_pages.py", line 22, in setUp
+    self.client_tiers = ventes_models.Client.objects.create(nom="Client Test")
+                        ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'apps.ventes.models' has no attribute 'Client'
+
+======================================================================
+ERROR: test_commande_list (tests.test_ui_pages.AchatsPagesTest.test_commande_list)
+Test the list view
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_ui_pages.py", line 22, in setUp
+    self.client_tiers = ventes_models.Client.objects.create(nom="Client Test")
+                        ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'apps.ventes.models' has no attribute 'Client'
+
+======================================================================
+ERROR: test_portfolio_rendering (tests.test_ui_pages.AchatsPagesTest.test_portfolio_rendering)
+Test the optimized 'Satellite' view
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_ui_pages.py", line 22, in setUp
+    self.client_tiers = ventes_models.Client.objects.create(nom="Client Test")
+                        ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'apps.ventes.models' has no attribute 'Client'
+
+======================================================================
+ERROR: test_verification_page (tests.test_ui_pages.AchatsPagesTest.test_verification_page)
+Test verification page
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Antigravity\Matt Dev\ERP\tests\test_ui_pages.py", line 22, in setUp
+    self.client_tiers = ventes_models.Client.objects.create(nom="Client Test")
+                        ^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'apps.ventes.models' has no attribute 'Client'
+
+----------------------------------------------------------------------
+Ran 5 tests in 6.437s
+
+FAILED (errors=5)
+Destroying test database for alias 'default'...
+Found 5 test(s).
+System check identified no issues (0 silenced).

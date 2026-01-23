@@ -1,0 +1,37 @@
+<tr id="line-{{ line.id }}"
+    class="{% if line.has_error %}table-danger border-start border-danger border-4{% endif %} fade-in">
+    <td>
+        <div class="fw-bold">{{ line.reference }}</div>
+        <div class="small text-muted text-truncate mw-150">{{ line.designation }}</div>
+    </td>
+    <td class="text-center fw-bold">{{ line.qte_cmd }}</td>
+    <td class="text-center {% if line.qte_match %}text-success{% else %}text-danger fw-bold{% endif %}">
+        {{ line.qte_doc|default:"-" }}
+    </td>
+    <td class="text-center">{{ line.prix_cmd }} €</td>
+    <td class="text-center {% if line.prix_match %}text-success{% else %}text-danger fw-bold{% endif %}">
+        {{ line.prix_doc|default:"-" }} €
+    </td>
+    <td class="text-center">
+        {% if line.has_error %}
+        <div class="dropdown">
+            <button class="btn btn-sm btn-outline-danger dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Action
+            </button>
+            <ul class="dropdown-menu">{% if line.qte_doc %}<li><a class="dropdown-item text-success" href="#"
+                        hx-post="{% url 'achats:htmx_update_line_verification' line.id %}"
+                        hx-vals='{"quantite": "{{ line.qte_doc }}"}' hx-target="#line-{{ line.id }}"
+                        hx-swap="outerHTML"><i class="bi bi-check-circle me-2"></i>Accepter Qté Doc ({{ line.qte_doc
+                        }})</a></li>{% endif %}{% if line.prix_doc %}<li><a class="dropdown-item text-success" href="#"
+                        hx-post="{% url 'achats:htmx_update_line_verification' line.id %}"
+                        hx-vals='{"prix_unitaire": "{{ line.prix_doc }}"}' hx-target="#line-{{ line.id }}"
+                        hx-swap="outerHTML"><i class="bi bi-currency-euro me-2"></i>Accepter Prix Doc ({{ line.prix_doc
+                        }})</a></li>{% endif %}<li><a class="dropdown-item text-danger" href="#"><i
+                            class="bi bi-x-circle me-2"></i>Ignorer</a></li>
+            </ul>
+        </div>
+        {% else %}
+        <i class="bi bi-check-lg text-success fs-5"></i>
+        {% endif %}
+    </td>
+</tr>

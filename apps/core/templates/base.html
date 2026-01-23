@@ -363,9 +363,9 @@
                         </nav>
                     </div>
                 </div>
-                <a class="nav-link {% if 'commandes' in request.path %}active{% endif %}"
-                    href="{% url 'achats:commande_list' %}">
-                    <i class="bi bi-cart"></i> Commandes
+                <a class="nav-link {% if 'portfolio' in request.path or 'commandes' in request.path %}active{% endif %}"
+                    href="{% url 'achats:portfolio_achats' %}">
+                    <i class="bi bi-cart"></i> Pilotage Achats
                 </a>
                 <!-- Affaires / Besoins (Demo) -->
                 <div class="nav-item mt-3">

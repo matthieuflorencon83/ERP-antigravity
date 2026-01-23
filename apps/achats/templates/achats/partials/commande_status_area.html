@@ -1,29 +1,48 @@
 <div class="card-body p-4">
     <!-- STEPPER TIMELINE -->
+    <style>
+        .progress-dynamic {
+            width: var(--progress-width, 0%);
+        }
+    </style>
     <div class="position-relative mb-5 mx-4">
         <div class="progress" style="height: 2px;">
-            <div class="progress-bar bg-primary" role="progressbar"
-                style="width: {{ commande.progression_pourcentage }}%;"
-                aria-valuenow="{{ commande.progression_pourcentage|default:'0'|floatformat:0 }}" aria-valuemin="0"
+            <div class="progress-bar bg-primary progress-dynamic" role="progressbar"
+                style="--progress-width: {{ commande.progression_pourcentage|floatformat:0 }}%;"
+                aria-valuenow="{{ commande.progression_pourcentage|default:0|floatformat:0 }}" aria-valuemin="0"
                 aria-valuemax="100" aria-label="Progression de la commande">
             </div>
         </div>
 
+        <!-- Step 1: Brouillon -->
         <div class="position-absolute top-0 start-0 translate-middle btn btn-sm rounded-pill 
-            {{ commande.statut == 'BROUILLON'|yesno:'btn-primary,btn-secondary' }} top-0">
+            {% if commande.statut == 'BROUILLON' %}btn-primary{% else %}btn-secondary{% endif %} top-0">
             1
         </div>
-        <div class="position-absolute top-0 start-33 translate-middle btn btn-sm rounded-pill 
-            {{ commande.statut == 'ENVOYEE'|yesno:'btn-primary,btn-secondary' }} left-33">
+
+        <!-- Step 2: Envoyée -->
+        <div class="position-absolute top-0 start-25 translate-middle btn btn-sm rounded-pill 
+            {% if commande.statut == 'ENVOYEE' %}btn-primary{% else %}btn-secondary{% endif %} left-25">
             2
         </div>
-        <div class="position-absolute top-0 start-66 translate-middle btn btn-sm rounded-pill 
-            {{ commande.statut == 'CONFIRME_ARC'|yesno:'btn-primary,btn-secondary' }} left-66">
+
+        <!-- Step 3: Vérification (IA) -->
+        <div class="position-absolute top-0 start-50 translate-middle btn btn-sm rounded-pill 
+            {% if commande.statut == 'CONFIRME_ARC' or commande.statut == 'LIVREE' %}btn-primary{% else %}btn-secondary{% endif %} left-50"
+            title="Vérification ARC">
             3
         </div>
-        <div class="position-absolute top-0 start-100 translate-middle btn btn-sm rounded-pill 
-            {{ commande.statut == 'LIVREE'|yesno:'btn-primary,btn-secondary' }} left-100">
+
+        <!-- Step 4: Confirmée -->
+        <div class="position-absolute top-0 start-75 translate-middle btn btn-sm rounded-pill 
+            {% if commande.statut == 'CONFIRME_ARC' %}btn-primary{% else %}btn-secondary{% endif %} left-75">
             4
+        </div>
+
+        <!-- Step 5: Livrée -->
+        <div class="position-absolute top-0 start-100 translate-middle btn btn-sm rounded-pill 
+            {% if commande.statut == 'LIVREE' %}btn-primary{% else %}btn-secondary{% endif %} left-100">
+            5
         </div>
 
         <!-- Labels -->
@@ -31,7 +50,8 @@
             class="d-flex justify-content-between mt-2 small fw-bold text-uppercase ls-1 text-muted pixel-perfect-labels">
             <span>Brouillon</span>
             <span>Envoyée</span>
-            <span>ARC Reçu</span>
+            <span>Vérif.</span>
+            <span>Confirmée</span>
             <span>Livrée</span>
         </div>
     </div>

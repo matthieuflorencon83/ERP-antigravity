@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid p-4 min-vh-100 bg-body-tertiary">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{% url 'achats:portfolio_achats' %}">Satellite</a></li>
+                    <li class="breadcrumb-item active">{{ affaire.nom_affaire }}</li>
+                </ol>
+            </nav>
+            <h1 class="h3 fw-bold mb-1 ls-tight">Cockpit Approvisionnements</h1>
+            <p class="text-muted small">Gestion chronologique des commandes pour <strong>{{ affaire.nom_affaire
+                    }}</strong>.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'ventes:besoins_affaire' affaire.id %}" class="btn btn-white border shadow-sm">
+                <i class="bi bi-cart-plus me-2"></i> Gérer Besoins
+            </a>
+            <a href="{% url 'achats:commande_list' %}?affaire={{ affaire.nom_affaire }}"
+                class="btn btn-primary shadow-sm">
+                <i class="bi bi-list-check me-2"></i> Tous les détails
+            </a>
+        </div>
+    </div>
+
+    <!-- Timeline Gantt Container -->
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+
+            {% for commande in commandes %}
+            {% include 'achats/partials/commande_timeline.html' with commande=commande %}
+            {% empty %}
+            <div class="text-center py-5 border rounded-4 bg-white shadow-sm">
+                <div class="icon-box bg-light text-muted rounded-circle mx-auto mb-3" style="width:64px; height:64px;">
+                    <i class="bi bi-file-earmark-x fs-2"></i>
+                </div>
+                <h5 class="fw-bold">Pas encore de commande.</h5>
+                <p class="text-muted">Commencez par générer des commandes depuis les <a
+                        href="{% url 'ventes:besoins_affaire' affaire.id %}">Besoins</a>.</p>
+            </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

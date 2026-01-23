@@ -1,6 +1,7 @@
 {% for client in page_obj %}
-<tr class="cursor-pointer" onclick="handleRowClick(event, this)" hx-get="{% url 'tiers:client_edit' client.pk %}"
-    hx-target="#detailSidebarContent" hx-swap="innerHTML">
+<tr class="cursor-pointer" onclick="handleRowClick(event, this)"
+    hx-get="{% if client.pk %}{% url 'tiers:client_edit' client.pk %}{% endif %}" hx-target="#detailSidebarContent"
+    hx-swap="innerHTML">
     <!-- Client Name -->
     <td>
         <div class="d-flex align-items-center gap-3">
@@ -8,7 +9,7 @@
             <div>
                 <div class="fw-bold text-body">{{ client.nom }} {{ client.prenom|default:"" }}</div>
                 <div class="text-muted small fs-075">
-                    {% if client.code_client %}ref: {{ client.code_client }}{% endif %}
+                    {% if client.pk %}ref: {{ client.pk }}{% endif %}
                 </div>
             </div>
         </div>
@@ -54,11 +55,17 @@
     <!-- Actions -->
     <td class="text-end">
         <div class="row-actions">
+            {% if client.pk %}
             <button class="btn btn-sm btn-icon action-btn" title="Modifier"
                 hx-get="{% url 'tiers:client_edit' client.pk %}" hx-target="#detailSidebarContent" hx-swap="innerHTML"
                 onclick="event.stopPropagation(); toggleDetailPanel(true);">
                 <i class="bi bi-pencil-fill"></i>
             </button>
+            {% else %}
+            <button class="btn btn-sm btn-icon action-btn text-muted disabled" title="ID Invalide">
+                <i class="bi bi-pencil-fill"></i>
+            </button>
+            {% endif %}
             <button class="btn btn-sm btn-icon action-btn text-danger" title="Supprimer"
                 onclick="event.stopPropagation(); alert('Désactivé')">
                 <i class="bi bi-trash"></i>

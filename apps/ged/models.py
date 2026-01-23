@@ -1,10 +1,11 @@
 import uuid
 from django.db import models
 from django.core.validators import FileExtensionValidator
+from apps.core.utils import generate_filename
 
 class Document(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    fichier = models.FileField(upload_to='documents/', validators=[
+    fichier = models.FileField(upload_to=generate_filename, validators=[
         FileExtensionValidator(allowed_extensions=['pdf', 'jpg', 'jpeg', 'png', 'msg', 'eml'])
     ])
     ai_response = models.JSONField(null=True, blank=True)
@@ -23,7 +24,10 @@ class Document(models.Model):
     # FK -> Ventes
     affaire = models.ForeignKey('ventes.Affaire', models.SET_NULL, blank=True, null=True)
     # FK -> Achats
-    commande = models.ForeignKey('achats.Commande', models.SET_NULL, blank=True, null=True)
+    commande = models.ForeignKey('achats.Commande', models.SET_NULL, blank=True, null=True, related_name='documents')
+    
+    # Versioning / Active
+    est_actif = models.BooleanField(default=True, help_text="Est la version courante de ce type de doc")
 
     class Meta:
         managed = True

@@ -4,6 +4,19 @@
 
 {% block content %}
 <div class="container-fluid p-4 bg-body-tertiary min-vh-100">
+    <style>
+        .w-40 {
+            width: 40%;
+        }
+
+        .w-15 {
+            width: 15%;
+        }
+
+        .w-5 {
+            width: 5%;
+        }
+    </style>
     <!-- Header: Title & Supplier -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -49,11 +62,11 @@
                         <table class="table table-hover align-middle mb-0">
                             <thead class="bg-light">
                                 <tr>
-                                    <th class="ps-4" style="width: 40%;">Désignation</th>
-                                    <th style="width: 15%;">Quantité</th>
-                                    <th style="width: 15%;">Prix Unitaire</th>
-                                    <th class="text-end" style="width: 15%;">Total HT</th>
-                                    <th class="text-end pe-4" style="width: 5%;"></th>
+                                    <th class="ps-4 w-40">Désignation</th>
+                                    <th class="w-15">Quantité</th>
+                                    <th class="w-15">Prix Unitaire</th>
+                                    <th class="text-end w-15">Total HT</th>
+                                    <th class="text-end pe-4 w-5"></th>
                                 </tr>
                             </thead>
                             <tbody id="commande-lines-tbody">
@@ -101,27 +114,29 @@
                     <h6 class="mb-0 fw-bold">Documents Joints</h6>
                 </div>
                 <div class="list-group list-group-flush">
-                    {% if commande.document_arc %}
-                    <a href="{{ commande.document_arc.url }}" target="_blank"
-                        class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-3">
-                        <i class="bi bi-file-earmark-pdf text-danger"></i>
-                        <span class="small fw-medium">ARC Fournisseur</span>
-                        <i class="bi bi-download ms-auto text-muted"></i>
-                    </a>
-                    {% endif %}
-                    {% if commande.document_bl %}
-                    <a href="{{ commande.document_bl.url }}" target="_blank"
-                        class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-3">
-                        <i class="bi bi-file-earmark-pdf text-warning"></i>
-                        <span class="small fw-medium">Bon de Livraison</span>
-                        <i class="bi bi-download ms-auto text-muted"></i>
-                    </a>
-                    {% endif %}
-                    {% if not commande.document_arc and not commande.document_bl %}
+                    {% for doc in commande.documents.all %}
+                    <div class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-3">
+                        {% if 'ARC' in doc.type_document %}<i class="bi bi-file-earmark-pdf text-danger"></i>
+                        {% elif 'BON_LIVRAISON' in doc.type_document %}<i
+                            class="bi bi-file-earmark-pdf text-warning"></i>
+                        {% elif 'BON_COMMANDE' in doc.type_document %}<i
+                            class="bi bi-file-earmark-text text-primary"></i>
+                        {% else %}<i class="bi bi-file-earmark text-secondary"></i>{% endif %}
+
+                        <div class="d-flex flex-column">
+                            <span class="small fw-bold">{{ doc.get_type_document_display }}</span>
+                            <span class="fs-xs text-muted">{{ doc.created_at|date:"d/m H:i" }}</span>
+                        </div>
+                        <a href="{{ doc.fichier.url }}" target="_blank" class="ms-auto btn btn-sm btn-light"
+                            aria-label="Télécharger {{ doc.get_type_document_display }}">
+                            <i class="bi bi-download"></i>
+                        </a>
+                    </div>
+                    {% empty %}
                     <div class="p-4 text-center text-muted small">
                         Aucun document joint.
                     </div>
-                    {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         </div>
