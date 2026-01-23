@@ -75,7 +75,7 @@
         <div class="col-md-4 h-100 d-flex flex-column bg-body-tertiary border-start shadow-lg position-relative z-3">
             <!-- STICKY HEADER: Search & Filters -->
             <div class="p-3 bg-body border-bottom shadow-sm z-2">
-                <form id="searchGridForm" hx-get="{% url 'htmx_search_articles' %}" hx-target="#searchResults"
+                <form id="searchGridForm" hx-get="{% url 'catalogue:htmx_search_articles' %}" hx-target="#searchResults"
                     hx-trigger="change, keyup delay:300ms from:#searchInput, search" hx-indicator="#searchIndicator">
                     <input type="hidden" name="affaire_id" value="{{ affaire.id }}">
                     <!-- Search Input -->
@@ -99,7 +99,8 @@
                             <!-- Cascade AND Search Trigger -->
                             <select name="fournisseur" id="id_fournisseur"
                                 class="form-select form-select-sm fw-bold border-secondary-subtle"
-                                aria-label="Fournisseur" hx-get="{% url 'htmx_load_familles' %}" hx-target="#id_famille"
+                                aria-label="Fournisseur" hx-get="{% url 'catalogue:htmx_load_familles' %}"
+                                hx-target="#id_famille"
                                 hx-on:change="document.getElementById('id_sous_famille').innerHTML = '<option value=\'\'>-- Sous-Famille --</option>'; htmx.trigger('#searchInput', 'search')">
                                 <option value="">-- Fournisseur --</option>
                                 {% for f in fournisseurs %}
@@ -111,7 +112,7 @@
                         <div class="d-flex gap-2 w-100">
                             <select name="famille" id="id_famille"
                                 class="form-select form-select-sm border-secondary-subtle"
-                                hx-get="{% url 'htmx_load_sous_familles' %}" hx-target="#id_sous_famille"
+                                hx-get="{% url 'catalogue:htmx_load_sous_familles' %}" hx-target="#id_sous_famille"
                                 hx-include="#id_fournisseur" aria-label="Famille"
                                 hx-on:change="htmx.trigger('#searchInput', 'search')">
                                 <option value="">-- Famille --</option>
