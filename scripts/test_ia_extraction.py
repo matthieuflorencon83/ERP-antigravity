@@ -90,7 +90,7 @@ def scan_and_test():
         # FOURNISSEUR
         fournisseur = result.get('fournisseur', {})
         if fournisseur and fournisseur.get('nom'):
-            print(f"\n🏢 Fournisseur :")
+            print("\n🏢 Fournisseur :")
             print(f"   • Nom : {fournisseur.get('nom', 'N/A')}")
             print(f"   • SIRET : {fournisseur.get('siret', 'N/A')}")
             print(f"   • Email : {fournisseur.get('email', 'N/A')}")
@@ -98,7 +98,7 @@ def scan_and_test():
         # CLIENT
         client = result.get('client', {})
         if client and client.get('nom'):
-            print(f"\n👤 Client :")
+            print("\n👤 Client :")
             print(f"   • Nom : {client.get('nom', 'N/A')}")
             print(f"   • Tél : {client.get('tel', 'N/A')}")
             print(f"   • Email : {client.get('email', 'N/A')}")
@@ -106,7 +106,7 @@ def scan_and_test():
         
         # TOTAUX
         totaux = result.get('totaux', {})
-        print(f"\n💰 Totaux :")
+        print("\n💰 Totaux :")
         print(f"   • Total HT : {totaux.get('ht', 'N/A')} €")
         print(f"   • Total TTC : {totaux.get('ttc', 'N/A')} €")
         
@@ -133,7 +133,7 @@ def scan_and_test():
                     total_ligne = qty * prix
                     print(f"  Total Ligne     : {total_ligne:.2f} €")
                 except (ValueError, TypeError):
-                    print(f"  Total Ligne     : N/A")
+                    print("  Total Ligne     : N/A")
         
         # 5. Raw JSON
         print("\n" + "-"*70)
@@ -148,7 +148,7 @@ def scan_and_test():
 
 if __name__ == "__main__":
     import sys
-    from io import StringIO
+    # from io import StringIO
     
     # Capture stdout to both console and file
     log_file = open('test_ia_output.log', 'w', encoding='utf-8')
@@ -172,4 +172,4 @@ if __name__ == "__main__":
     finally:
         sys.stdout = original_stdout
         log_file.close()
-        print(f"\n✅ Rapport complet sauvegardé dans: test_ia_output.log")
+        print("\n✅ Rapport complet sauvegardé dans: test_ia_output.log")
