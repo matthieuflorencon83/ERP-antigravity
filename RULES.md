@@ -22,9 +22,16 @@ L'utilisation du **JSON** est réservée aux propriétés variables ou complexes
 **Node.js gère les routes et la sécurité.**
 **Python** est appelé uniquement pour les calculs "cerveau" (moteur de calcul, optimisation de découpe, etc.) via un pont interne. point de contact unique entre Node et Python.
 
-## 5. Règle de Vigilance (MÉMOIRE)
+## 5. Règle de Vigilance (Protocole MCP Virtuel)
 
-**AVANT CHAQUE ACTION**, vous devez impérativement :
+Pour simuler l'analyse continue des serveurs MCP, vous devez appliquer ces vérifications strictes :
 
-1. Consulter le fichier `database/DATABASE_MEMO.md` (ou `schema.sql`) si l'action touche aux données.
-2. Relire ce fichier `RULES.md` pour vérifier que vous ne violez aucun principe architectural.
+* **MCP Database** :
+  * Avant toute écriture SQL, consulter `database/DATABASE_MEMO.md`.
+  * Ne jamais supposer qu'une table existe sans l'avoir vérifiée via `SHOW TABLES` ou en lisant `schema.sql`.
+* **MCP Python** :
+  * Tout code Python doit être validé syntaxiquement (Linting) avant build.
+  * Les types doivent être explicites (Type Hinting) pour faciliter la lecture par l'IA.
+* **MCP Node/Angular** :
+  * Respecter strictement les interfaces (`shared/interfaces.ts`).
+  * Vérifier la compatibilité des modèles avec la base de données avant de créer une API.
