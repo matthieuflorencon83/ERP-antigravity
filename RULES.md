@@ -35,3 +35,18 @@ Pour simuler l'analyse continue des serveurs MCP, vous devez appliquer ces véri
 * **MCP Node/Angular** :
   * Respecter strictement les interfaces (`shared/interfaces.ts`).
   * Vérifier la compatibilité des modèles avec la base de données avant de créer une API.
+
+## 6. Règle de Modularité (Anti-Monolithe)
+
+**Aucun fichier ne doit dépasser 300 lignes.**
+Si un fichier approche cette limite, il doit OBLIGATOIREMENT être découpé en sous-modules ou composants plus petits.
+*Objectif : Maintenabilité et lisibilité maximale.*
+
+## 7. Règle d'Analyse d'Impact (Think Before You Code)
+
+**INTERDICTION DE CODER SANS RÉFLÉCHIR.**
+Avant chaque modification de code (même mineure), vous devez :
+
+1. Identifier les fichiers impactés (dépendances, imports).
+2. Prédire les effets de bord potentiels (régression, casse de l'UI, erreur SQL).
+3. Si le risque est > 0, proposer un plan de rollback ou de test avant de valider.
