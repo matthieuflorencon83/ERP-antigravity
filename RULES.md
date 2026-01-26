@@ -50,3 +50,17 @@ Avant chaque modification de code (même mineure), vous devez :
 1. Identifier les fichiers impactés (dépendances, imports).
 2. Prédire les effets de bord potentiels (régression, casse de l'UI, erreur SQL).
 3. Si le risque est > 0, proposer un plan de rollback ou de test avant de valider.
+
+## 8. Standards "Clean Code 2026"
+
+En vous basant sur les meilleures pratiques actuelles, voici les règles supplémentaires :
+
+* **AI-Friendliness** : Le code doit être écrit pour être compris par une IA autant que par un humain.
+  * *Explicite* : Pas de types `any`, pas de "magie" implicite.
+  * *Docstring* : Les fonctions complexes doivent avoir une description de leur intention (pour le contexte de l'IA).
+* **Green-IT (Sobriété)** :
+  * *SQL* : Interdiction du `SELECT *` sur les grandes tables. Sélectionnez uniquement les colonnes nécessaires.
+  * *Algorithme* : Évitez les boucles imbriquées inutiles (Complexité O(n²)).
+* **Sécurité par Design (Shift-Left)** :
+  * Validation des entrées (Zod/Pydantic) obligatoire aux frontières (API).
+  * Aucun secret (API Key, pwd) en dur dans le code. Utilisation stricte de `.env`.
