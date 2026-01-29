@@ -222,9 +222,8 @@ test_*.py
 debug_*.py
 analyze_*.py
 
-# Installux/Arcelor data (fichiers sensibles)
-installux_arcelor/*.xlsx
-installux_arcelor/*.csv
+# Installux/Arcelor data (fichiers sensibles - images produits et données)
+installux_arcelor/*
 !installux_arcelor/.gitkeep
 
 # =============================================================================
