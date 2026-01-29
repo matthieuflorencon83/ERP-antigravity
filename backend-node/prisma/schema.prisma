@@ -1,0 +1,243 @@
+// Prisma Schema for Antigravity ERP
+// Generated from MySQL schema analysis - 2026-01-29
+// Database: erp_arts_alu
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+}
+
+// =============================================================================
+// CORE ENTITIES
+// =============================================================================
+
+/// Client - Customers of the ERP
+model Client {
+    code_cli   String    @id @db.VarChar(50)
+    nom_client String?   @db.VarChar(255)
+    adresse    String?   @db.Text
+    tel        String?   @db.VarChar(50)
+    mail       String?   @db.VarChar(255)
+    type       String?   @db.VarChar(50)
+    
+    // Relations
+    affaires   Affaire[]
+    
+    @@map("client")
+}
+
+/// Fournisseur - Suppliers
+model Fournisseur {
+    code_fou   String  @id @db.VarChar(50)
+    nom_client String? @db.VarChar(255) // Legacy naming from original schema
+    nom_court  String? @db.VarChar(100)
+    adresse    String? @db.Text
+    tel        String? @db.VarChar(50)
+    mail       String? @db.VarChar(255)
+    type       String? @db.VarChar(50)
+    remise     String? @db.VarChar(50) // Can be % or text
+    
+    // Relations
+    articlesFournisseur ArticleFournisseur[]
+    couleursFinition    CouleurFinition[]
+    commandes           Commande[]
+    
+    @@map("fournisseur")
+}
+
+/// Unite - Units of measurement
+model Unite {
+    code        String  @id @db.VarChar(50)
+    unite_1     String? @db.VarChar(50)
+    unite_2     String? @db.VarChar(50)
+    coeff_conv  Decimal? @db.Decimal(15, 6)
+    commentaire String? @db.Text
+    
+    // Relations
+    articles    Article[]
+    
+    @@map("unite")
+}
+
+/// Image - Product images
+model Image {
+    id            Int       @id @default(autoincrement())
+    chemin        String    @db.VarChar(255)
+    date_creation DateTime  @default(now()) @db.Timestamp(0)
+    
+    // Relations
+    articles      Article[]
+    
+    @@map("image")
+}
+
+// =============================================================================
+// PRODUCT CATALOG
+// =============================================================================
+
+/// Article - Products in catalog
+model Article {
+    code_art        String   @id @db.VarChar(100)
+    designation     String?  @db.VarChar(255)
+    desi_courte     String?  @db.VarChar(150)
+    type            String?  @db.VarChar(50)
+    famille         String?  @db.VarChar(100)
+    ssfamille       String?  @db.VarChar(100)
+    Fabricant       String?  @db.VarChar(100)
+    tenu_en_stock   Boolean?
+    Conditionnement String?  @db.VarChar(100)
+    unite           String?  @db.VarChar(50)
+    poid            Decimal? @db.Decimal(10, 3)
+    dimension       String?  @db.VarChar(100)
+    id_image        Int?
+    
+    // Relations
+    uniteRef             Unite?               @relation(fields: [unite], references: [code])
+    imageRef             Image?               @relation(fields: [id_image], references: [id], onDelete: SetNull)
+    prix                 PrixArticle[]
+    articlesFournisseur  ArticleFournisseur[]
+    
+    @@index([unite])
+    @@index([id_image])
+    @@map("article")
+}
+
+/// CouleurFinition - Colors and finishes
+model CouleurFinition {
+    ral       String @db.VarChar(50)
+    finition  String? @db.VarChar(100)
+    code_fou  String @db.VarChar(50)
+    
+    // Relations
+    fournisseur Fournisseur @relation(fields: [code_fou], references: [code_fou])
+    
+    @@id([ral, code_fou])
+    @@map("couleur_finition")
+}
+
+/// PrixArticle - Price history for articles
+model PrixArticle {
+    id            Int       @id @default(autoincrement())
+    code_art      String?   @db.VarChar(100)
+    prix_u_ht     Decimal?  @db.Decimal(15, 2)
+    date_validite DateTime? @db.Date
+    date_saisie   DateTime? @db.Date
+    commentaire   String?   @db.Text
+    
+    // Relations
+    article       Article?  @relation(fields: [code_art], references: [code_art])
+    
+    @@index([code_art])
+    @@map("prix_article")
+}
+
+/// ArticleFournisseur - Junction table: Article <-> Fournisseur with pricing
+model ArticleFournisseur {
+    code_art        String  @db.VarChar(100)
+    code_fou        String  @db.VarChar(50)
+    prix_u_ht       Decimal? @db.Decimal(15, 2)
+    code_art_fou    String? @db.VarChar(100) // Supplier's article code
+    Multiple_cde    String? @db.VarChar(50)
+    code_unite_qte  String? @db.VarChar(50)
+    code_unite_prix String? @db.VarChar(50)
+    
+    // Relations
+    article         Article      @relation(fields: [code_art], references: [code_art])
+    fournisseur     Fournisseur  @relation(fields: [code_fou], references: [code_fou])
+    
+    @@id([code_art, code_fou])
+    @@map("article_fournisseur")
+}
+
+// =============================================================================
+// BUSINESS OPERATIONS
+// =============================================================================
+
+/// Affaire - Sales order / Project
+model Affaire {
+    num_cde_vente String    @id @db.VarChar(100)
+    code_cli      String?   @db.VarChar(50)
+    Statut        String?   @db.VarChar(50)
+    date_creation DateTime? @db.Date
+    date_cde      DateTime? @db.Date
+    date_pose     DateTime? @db.Date
+    date_fin      DateTime? @db.Date
+    montant_ht    Decimal?  @db.Decimal(15, 2)
+    pr_theo       Decimal?  @db.Decimal(15, 2)
+    date_liv      DateTime? @db.Date
+    
+    // Relations
+    client        Client?   @relation(fields: [code_cli], references: [code_cli])
+    commandes     Commande[]
+    documents     GED[]
+    
+    @@index([code_cli])
+    @@map("affaire")
+}
+
+/// Commande - Purchase orders to suppliers
+model Commande {
+    num_oa        String    @id @db.VarChar(100)
+    num_cde_fou   String?   @db.VarChar(100)
+    num_cde_vente String?   @db.VarChar(100)
+    code_fou      String?   @db.VarChar(50)
+    designation   String?   @db.VarChar(255)
+    Statut        String?   @db.VarChar(50)
+    date_a_cde    DateTime? @db.Date
+    date_cde      DateTime? @db.Date
+    date_souh     DateTime? @db.Date
+    date_conf     DateTime? @db.Date
+    date_liv      DateTime? @db.Date
+    montant_ht    Decimal?  @db.Decimal(15, 2)
+    commentaire   String?   @db.Text
+    
+    // Relations
+    fournisseur   Fournisseur? @relation(fields: [code_fou], references: [code_fou])
+    affaire       Affaire?     @relation(fields: [num_cde_vente], references: [num_cde_vente])
+    
+    @@index([code_fou])
+    @@index([num_cde_vente])
+    @@map("commande")
+}
+
+// =============================================================================
+// DOCUMENT MANAGEMENT (GED)
+// =============================================================================
+
+/// GED - Electronic Document Management
+model GED {
+    id               String    @id @db.VarChar(100)
+    object_type      String?   @db.VarChar(50)
+    object_id        String?   @db.VarChar(100)
+    nom_fichier_org  String?   @db.VarChar(255)
+    nom_fichier_ged  String?   @db.VarChar(255)
+    chemin_complet   String?   @db.Text
+    categorie_doc    String?   @db.VarChar(100)
+    tags             String?   @db.Text
+    meta_donnee      Json?     // JSON column for metadata
+    date_ajout       DateTime? @db.Date
+    ref_affaire      String?   @db.VarChar(100)
+    
+    // Relations
+    affaire          Affaire?  @relation(fields: [ref_affaire], references: [num_cde_vente])
+    
+    @@index([ref_affaire])
+    @@map("GED")
+}
+
+// =============================================================================
+// CALCULATION MODULE
+// =============================================================================
+
+/// BesoinLigne - Needs calculation results from Python
+model BesoinLigne {
+    id            Int      @id @default(autoincrement())
+    groupe_calcul String?  @db.VarChar(255) // e.g., "7016_ALU"
+    date_calcul   DateTime @default(now()) @db.Timestamp(0)
+    config_calcul Json?    // JSON: Python calculation results
+    
+    @@map("besoin_ligne")
+}

@@ -1,0 +1,137 @@
+/* 
+ * Tailwind CSS v4 Entry Point
+ * Antigravity ERP - Slate Professional Theme
+ */
+@import "tailwindcss";
+
+/* ==========================================================================
+   THEME: Slate Professional (Light/Dark Hybrid)
+   ========================================================================== */
+
+@theme {
+    /* Colors - Primary */
+    --color-primary-50: oklch(97% 0.01 250);
+    --color-primary-100: oklch(93% 0.02 250);
+    --color-primary-200: oklch(86% 0.04 250);
+    --color-primary-300: oklch(76% 0.08 250);
+    --color-primary-400: oklch(64% 0.14 250);
+    --color-primary-500: oklch(54% 0.18 250);
+    --color-primary-600: oklch(46% 0.18 250);
+    --color-primary-700: oklch(40% 0.16 250);
+    --color-primary-800: oklch(35% 0.12 250);
+    --color-primary-900: oklch(30% 0.08 250);
+    --color-primary-950: oklch(22% 0.06 250);
+
+    /* Colors - Accent (Emerald) */
+    --color-accent-500: oklch(72% 0.18 165);
+    --color-accent-600: oklch(60% 0.18 165);
+
+    /* Surface Colors */
+    --color-surface-light: #ffffff;
+    --color-surface-dark: #1e293b;
+    --color-surface-muted: #f1f5f9;
+    --color-surface-elevated: #f8fafc;
+
+    /* Border Radius */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+    /* Typography */
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ==========================================================================
+   BASE STYLES
+   ========================================================================== */
+
+@layer base {
+    html {
+        font-family: var(--font-sans);
+        @apply antialiased;
+    }
+
+    body {
+        @apply bg-slate-50 text-slate-800;
+    }
+
+    /* Dark mode */
+    html.dark body {
+        @apply bg-slate-900 text-slate-100;
+    }
+}
+
+/* ==========================================================================
+   COMPONENT UTILITIES
+   ========================================================================== */
+
+@layer components {
+
+    /* Card component */
+    .card {
+        @apply bg-white rounded-lg shadow-md p-6;
+    }
+
+    html.dark .card {
+        @apply bg-slate-800 border border-slate-700;
+    }
+
+    /* Button primary */
+    .btn-primary {
+        @apply bg-primary-600 text-white px-4 py-2 rounded-md font-medium hover:bg-primary-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    }
+
+    /* Input styling */
+    .input {
+        @apply w-full px-3 py-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white text-slate-900 placeholder-slate-400;
+    }
+
+    html.dark .input {
+        @apply bg-slate-800 border-slate-600 text-slate-100;
+    }
+
+    /* Table styling for PrimeNG */
+    .p-datatable .p-datatable-thead>tr>th {
+        @apply bg-slate-100 text-slate-700 font-semibold border-b border-slate-200;
+    }
+
+    html.dark .p-datatable .p-datatable-thead>tr>th {
+        @apply bg-slate-800 text-slate-200 border-slate-700;
+    }
+
+    .p-datatable .p-datatable-tbody>tr {
+        @apply border-b border-slate-100 hover:bg-slate-50 transition-colors;
+    }
+
+    html.dark .p-datatable .p-datatable-tbody>tr {
+        @apply border-slate-700 hover:bg-slate-700/50;
+    }
+}
+
+/* ==========================================================================
+   LEGACY BOOTSTRAP OVERRIDES (Progressive removal)
+   ========================================================================== */
+
+/* These styles help transition from Bootstrap to Tailwind */
+.bg-dark {
+    @apply bg-slate-900 !important;
+}
+
+.bg-light {
+    @apply bg-slate-100 !important;
+}
+
+.text-muted {
+    @apply text-slate-500 !important;
+}
+
+.border-current {
+    @apply border-slate-200 dark:border-slate-700 !important;
+}
