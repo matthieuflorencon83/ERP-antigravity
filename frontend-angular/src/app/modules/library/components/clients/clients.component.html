@@ -1,0 +1,154 @@
+<div class="d-flex h-100 w-100 gap-3 overflow-hidden">
+
+    <!-- LEFT PANEL: LIST (Bento Box) -->
+    <div class="d-flex flex-column bg-panel bento-panel left-panel">
+
+        <!-- DataGrid Header (Filters Inline) -->
+        <div class="d-flex px-3 py-2 border-bottom border-current align-items-center gap-2 bg-glass">
+
+            <!-- Col 1: Code -->
+            <div style="width: 25%">
+                <input type="text"
+                    class="form-control form-control-sm bg-transparent border-0 fw-bold px-0 placeholder-uppercase"
+                    placeholder="CODE" [formControl]="codeControl">
+            </div>
+
+            <!-- Col 2: Nom -->
+            <div style="width: 75%">
+                <input type="text"
+                    class="form-control form-control-sm bg-transparent border-0 fw-bold px-0 placeholder-uppercase"
+                    placeholder="NOM DU CLIENT" [formControl]="nameControl">
+            </div>
+        </div>
+
+        <!-- List -->
+        <div class="flex-grow-1 overflow-auto custom-scrollbar">
+            @if (loading()) {
+            <div class="p-4 text-center text-muted">Chargement...</div>
+            } @else {
+            @for (cli of filteredClients(); track cli.code_cli) {
+            <div class="d-flex align-items-center px-3 py-2 border-bottom border-current cursor-pointer list-item small"
+                [class.active]="isSelected(cli)" (click)="selectClient(cli)">
+
+                <!-- Code -->
+                <div class="fw-bold text-primary text-truncate pe-2" style="width: 25%">
+                    {{ cli.code_cli }}
+                </div>
+
+                <!-- Nom -->
+                <div class="text-truncate ps-2" style="width: 75%">
+                    {{ cli.nom_client }}
+                </div>
+
+            </div>
+            }
+            }
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL: DETAILS (Bento Box) -->
+    <div class="flex-grow-1 d-flex flex-column bg-panel bento-panel">
+
+        @if (selectedClient(); as cli) {
+        <!-- Header -->
+        <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom border-current">
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-truncate">
+                    <div class="d-flex align-items-center gap-2">
+                        <h2 class="h5 mb-0 fw-bold text-truncate">{{ cli.nom_client }}</h2>
+                        <span class="badge bg-input text-muted fw-normal border border-current">Client</span>
+                    </div>
+                    <div class="text-muted small font-monospace mt-1">{{ cli.code_cli }}</div>
+                </div>
+            </div>
+            <button class="btn btn-icon text-muted" (click)="closeDetails()" aria-label="Fermer" title="Fermer">
+                <lucide-icon name="x" [size]="20"></lucide-icon>
+            </button>
+        </div>
+
+        <!-- Content: Form -->
+        <div class="flex-grow-1 overflow-auto custom-scrollbar w-100 p-4">
+
+            <h6 class="text-uppercase text-primary fw-bold mb-3 small border-bottom border-current pb-2">
+                <lucide-icon name="info" [size]="14" class="me-2 mb-1"></lucide-icon>Coordonnées
+            </h6>
+
+            <div class="row g-2 mb-4">
+                <div class="col-8">
+                    <label class="form-label text-muted small fw-bold mb-1">Nom / Raison Sociale</label>
+                    <input type="text" class="form-control form-control-sm bg-input fw-bold" [value]="cli.nom_client"
+                        aria-label="Nom / Raison Sociale">
+                </div>
+
+                <div class="col-4">
+                    <label class="form-label text-muted small fw-bold mb-1">Code Client</label>
+                    <input type="text" class="form-control form-control-sm bg-input font-monospace"
+                        [value]="cli.code_cli" readonly aria-label="Code Client">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label text-muted small fw-bold mb-1">Adresse</label>
+                    <input type="text" class="form-control form-control-sm bg-input" [value]="cli.adresse || '-'"
+                        aria-label="Adresse">
+                </div>
+            </div>
+
+            <h6 class="text-uppercase text-primary fw-bold mb-3 small border-bottom border-current pb-2">
+                <lucide-icon name="contact" [size]="14" class="me-2 mb-1"></lucide-icon>Contact
+            </h6>
+
+            <div class="row g-2 mb-4">
+                <div class="col-6">
+                    <label class="form-label text-muted small fw-bold mb-1">Téléphone</label>
+                    <input type="text" class="form-control form-control-sm bg-input" [value]="cli.tel || '-'"
+                        aria-label="Téléphone">
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label text-muted small fw-bold mb-1">Email</label>
+                    <input type="text" class="form-control form-control-sm bg-input" [value]="cli.mail || '-'"
+                        aria-label="Email">
+                </div>
+            </div>
+
+            <h6 class="text-uppercase text-primary fw-bold mb-3 small border-bottom border-current pb-2">
+                <lucide-icon name="settings-2" [size]="14" class="me-2 mb-1"></lucide-icon>Configuration
+            </h6>
+
+            <div class="row g-2">
+                <div class="col-6">
+                    <label class="form-label text-muted small fw-bold mb-1">Type</label>
+                    <input type="text" class="form-control form-control-sm bg-input" [value]="cli.type || '-'"
+                        aria-label="Type">
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div
+            class="p-3 border-top border-current d-flex justify-content-between align-items-center bg-panel-footer mt-auto">
+            <button class="btn btn-outline-danger btn-sm border-0 d-flex align-items-center gap-2"
+                (click)="deleteClient(cli)">
+                <lucide-icon name="trash-2" [size]="16"></lucide-icon>
+                <span>Supprimer</span>
+            </button>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-ghost text-muted" (click)="closeDetails()">Annuler</button>
+                <button class="btn btn-sm btn-primary px-4 fw-bold text-white">Enregistrer</button>
+            </div>
+        </div>
+
+        } @else {
+        <!-- Empty State -->
+        <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+            <div class="mb-4 p-4 rounded-circle bg-dark-lighter">
+                <lucide-icon name="users" [size]="48" class="opacity-50"></lucide-icon>
+            </div>
+            <h5 class="fw-normal">Sélectionnez un client</h5>
+            <p class="small opacity-75">Cliquez sur la liste à gauche pour voir les détails.</p>
+        </div>
+        }
+
+    </div>
+</div>

@@ -1,0 +1,236 @@
+<div class="d-flex h-100 w-100 gap-3 overflow-hidden">
+
+    <!-- LEFT PANEL: LIST (Bento Box) -->
+    <div class="d-flex flex-column bg-panel bento-panel left-panel">
+
+        <!-- DataGrid Header (Filters Inline) -->
+        <div class="d-flex px-3 py-2 border-bottom border-current align-items-center gap-2 bg-glass">
+
+            <!-- Col 1: Fournisseur -->
+            <div style="width: 20%">
+                <ng-select [items]="suppliers()" [ngModel]="supplierFilter()"
+                    (ngModelChange)="supplierFilter.set($event)" placeholder="FOURN." class="header-select">
+                </ng-select>
+            </div>
+
+            <!-- Col 2: Famille -->
+            <div style="width: 20%">
+                <ng-select [items]="families()" [ngModel]="familyFilter()" (ngModelChange)="familyFilter.set($event)"
+                    placeholder="FAMILLE" class="header-select">
+                </ng-select>
+            </div>
+
+            <!-- Col 3: Ref -->
+            <div style="width: 20%">
+                <input type="text"
+                    class="form-control form-control-sm bg-transparent border-0 fw-bold px-0 placeholder-uppercase"
+                    placeholder="RÉF" [formControl]="refControl">
+            </div>
+
+            <!-- Col 4: Designation -->
+            <div style="width: 40%">
+                <input type="text"
+                    class="form-control form-control-sm bg-transparent border-0 fw-bold px-0 placeholder-uppercase"
+                    placeholder="DÉSIGNATION" [formControl]="designationControl">
+            </div>
+        </div>
+
+        <!-- List -->
+        <div class="flex-grow-1 overflow-auto custom-scrollbar">
+            @if (loading()) {
+            <div class="p-4 text-center text-muted">Chargement...</div>
+            } @else {
+            @for (art of filteredArticles(); track art.code_art) {
+            <div class="d-flex align-items-center px-3 py-2 border-bottom border-current cursor-pointer list-item small"
+                [class.active]="isSelected(art)" (click)="selectArticle(art)">
+
+                <!-- Fournisseur -->
+                <div class="text-muted text-truncate pe-2" style="width: 20%">
+                    {{ art.fournisseur }}
+                </div>
+
+                <!-- Famille -->
+                <div class="text-muted text-truncate pe-2" style="width: 20%">
+                    {{ art.famille }}
+                </div>
+
+                <!-- Ref -->
+                <div class="fw-bold text-primary text-truncate pe-2" style="width: 20%">
+                    {{ art.code_art }}
+                </div>
+
+                <!-- Designation -->
+                <div class="text-truncate" style="width: 40%">
+                    {{ art.designation }}
+                </div>
+
+            </div>
+            }
+            }
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL: DETAILS (Bento Box) -->
+    <div class="flex-grow-1 d-flex flex-column bg-panel bento-panel">
+
+        @if (selectedArticle(); as article) {
+        <!-- Header -->
+        <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom border-current">
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-truncate">
+                    <div class="d-flex align-items-center gap-2">
+                        <h2 class="h5 mb-0 fw-bold text-truncate">{{ article.designation }}</h2>
+                        <span class="badge bg-input text-muted fw-normal border border-current">{{ article.fournisseur
+                            ||
+                            'Fournisseur Inconnu' }}</span>
+                    </div>
+                    <div class="text-muted small font-monospace mt-1">{{ article.code_art }}</div>
+                </div>
+            </div>
+            <button class="btn btn-icon text-muted" (click)="closeDetails()" aria-label="Fermer" title="Fermer">
+                <lucide-icon name="x" [size]="20"></lucide-icon>
+            </button>
+        </div>
+
+        <!-- Content: Product Card Grid (No Scroll intent) -->
+        <div class="flex-grow-1 d-flex overflow-hidden">
+
+            <!-- LEFT: Image (Reduced width to 25% ~ half height visual impact) -->
+            <div class="d-flex align-items-center justify-content-center p-4 bg-black bg-opacity-25"
+                style="width: 25%; min-width: 200px;">
+                @if (article.image_url) {
+                <img [src]="getImageUrl(article.image_url)" [alt]="article.designation" [title]="article.designation"
+                    class="img-fluid rounded shadow-sm" (error)="onImageError($event)" loading="lazy"
+                    style="max-height: 50vh; object-fit: contain;">
+                } @else {
+                <div class="d-flex flex-column align-items-center justify-content-center text-muted opacity-50">
+                    <lucide-icon name="image" [size]="48" strokeWidth="1"></lucide-icon>
+                    <span class="small mt-2">Aucune image</span>
+                </div>
+                }
+            </div>
+
+            <!-- RIGHT: Form (Expanded to 75%) -->
+            <div class="p-4 overflow-auto custom-scrollbar w-100" style="width: 75%;">
+
+                <h6 class="text-uppercase text-primary fw-bold mb-3 small border-bottom border-current pb-2">
+                    <lucide-icon name="info" [size]="14" class="me-2 mb-1"></lucide-icon>Informations
+                </h6>
+
+                <div class="row g-2 mb-4">
+                    <div class="col-8">
+                        <label class="form-label text-muted small fw-bold mb-1">Désignation</label>
+                        <input type="text" class="form-control form-control-sm bg-input fw-bold"
+                            [ngModel]="article.designation" readonly aria-label="Désignation">
+                    </div>
+
+                    <div class="col-4">
+                        <label class="form-label text-muted small fw-bold mb-1">Code Article</label>
+                        <input type="text" class="form-control form-control-sm bg-input font-monospace"
+                            [ngModel]="article.code_art" readonly aria-label="Code Article">
+                    </div>
+
+                    <div class="col-4">
+                        <label class="form-label text-muted small fw-bold mb-1">Famille</label>
+                        <input type="text" class="form-control form-control-sm bg-input" [ngModel]="article.famille"
+                            readonly aria-label="Famille">
+                    </div>
+
+                    <div class="col-4">
+                        <label class="form-label text-muted small fw-bold mb-1">Sous-Famille</label>
+                        <input type="text" class="form-control form-control-sm bg-input"
+                            [ngModel]="article.ssfamille || '-'" readonly aria-label="Sous-Famille">
+                    </div>
+
+                    <div class="col-2">
+                        <label class="form-label text-muted small fw-bold mb-1">Poids (kg)</label>
+                        <input type="text" class="form-control form-control-sm bg-input"
+                            [ngModel]="article.poids || '-'" readonly aria-label="Poids (kg)">
+                    </div>
+
+                    <div class="col-2">
+                        <label class="form-label text-muted small fw-bold mb-1">Superficie</label>
+                        <input type="text" class="form-control form-control-sm bg-input"
+                            [ngModel]="article.superficie || '-'" readonly aria-label="Superficie">
+                    </div>
+                </div>
+
+                <h6 class="text-uppercase text-primary fw-bold mb-3 small border-bottom border-current pb-2">
+                    <lucide-icon name="settings" [size]="14" class="me-2 mb-1"></lucide-icon>Logistique & Tarifs
+                </h6>
+
+                <div class="row g-2">
+                    <div class="col-3">
+                        <label class="form-label text-muted small fw-bold mb-1">Prix Actuel (HT)</label>
+                        <input type="text" class="form-control form-control-sm bg-input text-primary-custom fw-bold"
+                            [ngModel]="(article.prix_unitaire || 0) + ' €'" readonly aria-label="Prix Actuel (HT)">
+                    </div>
+
+                    <div class="col-3">
+                        <label class="form-label text-muted small fw-bold mb-1">Ancien Prix</label>
+                        <input type="text"
+                            class="form-control form-control-sm bg-input text-muted text-decoration-line-through"
+                            [ngModel]="(article.ancien_prix || 0) + ' €'" readonly aria-label="Ancien Prix">
+                    </div>
+
+                    <div class="col-3">
+                        <label class="form-label text-muted small fw-bold mb-1">Date Tarif</label>
+                        <input type="text" class="form-control form-control-sm bg-input"
+                            [ngModel]="article.date_prix || '-'" readonly aria-label="Date Tarif">
+                    </div>
+
+                    <div class="col-3">
+                        <label class="form-label text-muted small fw-bold mb-1">Unité</label>
+                        <input type="text" class="form-control form-control-sm bg-input"
+                            [ngModel]="article.libelle_unite || article.unite || 'U'" readonly aria-label="Unité">
+                    </div>
+
+                    <div class="col-3">
+                        <label class="form-label text-muted small fw-bold mb-1">Condit.</label>
+                        <input type="text" class="form-control form-control-sm bg-input"
+                            [ngModel]="article.Conditionnement || '-'" readonly aria-label="Conditionnement">
+                    </div>
+
+                    <div class="col-9">
+                        <div class="d-flex align-items-center justify-content-between p-1 px-3 mt-4 rounded border border-current bg-input"
+                            style="height: 31px;">
+                            <span class="text-muted small fw-bold">Tenue en Stock</span>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge rounded-pill" [class.bg-success]="article.tenu_en_stock"
+                                    [class.bg-secondary]="!article.tenu_en_stock">
+                                    {{ article.tenu_en_stock ? 'OUI' : 'NON' }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div
+            class="p-3 border-top border-current d-flex justify-content-between align-items-center bg-panel-footer mt-auto">
+            <button class="btn btn-outline-danger btn-sm border-0 d-flex align-items-center gap-2">
+                <lucide-icon name="trash-2" [size]="16"></lucide-icon>
+                <span>Supprimer</span>
+            </button>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-ghost text-muted" (click)="closeDetails()">Annuler</button>
+                <button class="btn btn-sm btn-primary px-4 fw-bold text-white">Enregistrer</button>
+            </div>
+        </div>
+
+        } @else {
+        <!-- Empty State -->
+        <div class="d-flex flex-column align-items-center justify-content-center h-100 text-muted">
+            <div class="mb-4 p-4 rounded-circle bg-dark-lighter">
+                <lucide-icon name="mouse-pointer-2" [size]="48" class="opacity-50"></lucide-icon>
+            </div>
+            <h5 class="fw-normal">Sélectionnez un article</h5>
+            <p class="small opacity-75">Cliquez sur la liste à gauche pour voir les détails.</p>
+        </div>
+        }
+
+    </div>
+</div>

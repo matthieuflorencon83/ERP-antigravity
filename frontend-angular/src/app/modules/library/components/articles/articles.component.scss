@@ -1,0 +1,143 @@
+/* Dark Mode Variables (Local Scope) */
+:host {
+    display: block;
+    height: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+    background-color: var(--bs-body-bg);
+}
+
+.bento-panel {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    // Removed transition for better performance
+
+    &:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    }
+}
+
+.bg-panel {
+    background-color: var(--card-bg);
+}
+
+.bg-input {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    border: 1px solid var(--border-color);
+
+    &:focus {
+        border-color: var(--primary-color);
+    }
+}
+
+.text-muted {
+    color: #71717a !important; // Zinc 500
+}
+
+/* Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #52525b; // Zinc 600
+    border-radius: 3px;
+}
+
+/* Left Panel Sizing */
+.left-panel {
+    width: 65%;
+    min-width: 650px;
+}
+
+// Increased for 4 columns
+
+/* List Item Animations */
+.list-item {
+    cursor: pointer;
+    border-color: var(--border-color);
+    // Removed transition for better scroll performance
+
+    &:hover {
+        background-color: rgba(59, 130, 246, 0.05);
+    }
+
+    &.active {
+        background-color: rgba(59, 130, 246, 0.1);
+        border-left: 3px solid var(--primary-color);
+    }
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Button Animations */
+.btn {
+    transition: all 0.2s ease;
+}
+
+.btn-icon {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--bs-body-color);
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    // Removed transition for instant feedback
+
+    &:hover {
+        background-color: rgba(59, 130, 246, 0.1);
+        border-color: var(--primary-color);
+    }
+}
+
+/* Header Inputs Styling */
+.placeholder-uppercase::placeholder {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.75rem; // small
+    color: #52525b; // Zinc 600
+}
+
+.placeholder-uppercase {
+    font-size: 0.85rem;
+    color: var(--body-color);
+    box-shadow: none !important;
+
+    &:focus::placeholder {
+        opacity: 0.5;
+    }
+}
+
+/* Header Ng-Select Styling */
+::ng-deep .header-select .ng-select-container {
+    background-color: transparent !important;
+    border: none !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+}
+
+::ng-deep .header-select .ng-value-container {
+    padding: 0 !important;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+::ng-deep .header-select .ng-placeholder {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 0.75rem;
+    color: #52525b; // Zinc 600
+}
+
+::ng-deep .header-select .ng-arrow-wrapper {
+    padding-left: 4px;
+}

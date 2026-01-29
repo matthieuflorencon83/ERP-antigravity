@@ -1,0 +1,158 @@
+// Import Bootstrap SCSS
+@import "bootstrap/scss/bootstrap";
+@import "@ng-select/ng-select/themes/default.theme.css";
+
+:root {
+    // Mode Clair "Soft Modern" (2026 Style)
+    // Fond: Slate 100 (Gris doux et froid)
+    // Cartes/Sidebar: Blanc Pur (Effet de lift)
+    // Texte: Slate 700 (Gris foncé, moins agressif que le noir)
+
+    --body-bg: #e2e8f0;
+    --body-color: #334155;
+    --sidebar-bg: #f8fafc;
+    --sidebar-color: #475569;
+    --card-bg: #f8fafc;
+    --border-color: #cbd5e1; // Slate 300
+    --primary-color: #0891b2; // Cyan 600
+
+    // List Interaction Colors (Light Mode) - High Contrast
+    --list-hover-bg: #cbd5e1; // Slate 300 (Visible grey)
+    --list-active-bg: #bae6fd; // Sky 200 (Strong selection)
+    --list-active-bg: #bae6fd; // Sky 200
+    --list-active-border: #0284c7; // Sky 600
+
+    --footer-bg: #f8fafc; // Matches Card BG for seamless look
+}
+
+[data-bs-theme="dark"] {
+    // Palette Strategy: Modern Zinc (Linear/Vercel Style)
+    // Base: Zinc 950 (#09090b) - Deepest Neutral
+    // Surface: Zinc 900 (#18181b) - Panels
+    // Border: Zinc 800 (#27272a) - Subtle
+    // Text: Zinc 50 (#fafafa) & Zinc 400 (#a1a1aa)
+
+    --body-bg: #09090b;
+    --body-color: #a1a1aa;
+    --sidebar-bg: #18181b;
+    --sidebar-color: #d4d4d8; // Zinc 300
+    --card-bg: #18181b;
+    --border-color: #3f3f46; // Zinc 700 - More visible
+    --border-subtle: #27272a; // Zinc 800 - Subtle dividers
+    --primary-color: #c3002f; // Angular Red
+
+    // List Interaction Colors (Dark Mode)
+    --list-hover-bg: #27272a; // Zinc 800
+    --list-active-bg: rgba(195, 0, 47, 0.1); // Angular Red Tint
+    --list-active-border: #c3002f; // Angular Red
+
+    --footer-bg: #09090b; // Matches body
+
+    // Bootstrap Variable Overrides for Native Dark Mode
+    --bs-body-bg: var(--body-bg);
+    --bs-body-color: var(--body-color);
+    --bs-card-bg: var(--card-bg);
+    --bs-border-color: var(--border-color);
+    --bs-primary: var(--primary-color);
+
+    // Text Contrast Fixes
+    .text-muted {
+        color: #71717a !important; // Zinc 500
+    }
+
+    // Table Overrides
+    .table {
+        --bs-table-bg: transparent;
+        --bs-table-color: var(--body-color);
+        --bs-table-hover-bg: rgba(255, 255, 255, 0.05);
+        color: var(--body-color);
+
+        thead th {
+            background-color: var(--card-bg);
+            border-bottom-color: var(--border-color);
+            color: #fafafa; // High contrast
+        }
+    }
+
+    // Input Fields - Enhanced Contrast
+    .form-control,
+    .form-select {
+        background-color: #000000; // Pure black for maximum depth
+        border-color: #3f3f46; // Zinc 700 - More visible
+        color: #fafafa;
+        transition: all 0.2s ease;
+
+        &::placeholder {
+            color: #71717a; // Zinc 500 - Brighter placeholder
+        }
+
+        &:focus {
+            background-color: #09090b;
+            border-color: #c3002f; // Angular Red
+            box-shadow: 0 0 0 0.25rem rgba(195, 0, 47, 0.25);
+        }
+
+        &:disabled {
+            background-color: #09090b;
+            color: #52525b;
+            opacity: 0.6;
+        }
+    }
+
+    // Background Helper
+    .bg-input {
+        background-color: #09090b !important;
+        border-color: #27272a !important;
+    }
+
+    // Ng-Select Dark Mode
+    .ng-select .ng-select-container {
+        background-color: #09090b; // Input style
+        color: #fafafa;
+        border-color: #27272a;
+    }
+
+    .ng-select .ng-select-container .ng-value-container .ng-input>input {
+        color: #fafafa;
+    }
+
+    .ng-dropdown-panel {
+        background-color: #18181b;
+        border-color: #27272a;
+    }
+
+    .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+        background-color: #18181b;
+        color: #a1a1aa;
+    }
+
+    .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+        background-color: #c3002f;
+        color: #fff;
+    }
+}
+
+body {
+    background-color: var(--body-bg);
+    color: var(--body-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--body-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
