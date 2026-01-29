@@ -1,0 +1,133 @@
+<div class="container-fluid" *ngIf="commande">
+    <!-- Header -->
+    <div class="row align-items-center mb-4">
+        <div class="col">
+            <h6 class="text-uppercase text-muted mb-1">Commande Fournisseur</h6>
+            <h2 class="text-primary fw-bold">{{ commande.num_oa }}</h2>
+            <span class="badge bg-light text-dark border">{{ commande.designation }}</span>
+        </div>
+        <div class="col-auto">
+            <div class="text-end">
+                <h4 class="mb-0">{{ commande.montant_ht | currency:'EUR' }}</h4>
+                <small class="text-muted">Montant HT</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stepper -->
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between position-relative z-1">
+                <!-- Step 1: BDC -->
+                <div class="step-item" [class.completed]="isStepCompleted('BDC')" [class.active]="isActive('BDC')">
+                    <div class="step-circle">1</div>
+                    <div class="step-label fw-bold">Emission BDC</div>
+                    <small class="text-muted d-block">{{ commande.date_a_cde | date:'dd/MM' }}</small>
+                </div>
+
+                <!-- Step 2: ARC -->
+                <div class="step-item" [class.completed]="isStepCompleted('ARC')" [class.active]="isActive('ARC')">
+                    <div class="step-circle">2</div>
+                    <div class="step-label fw-bold">Confirmation (ARC)</div>
+                    <small class="text-muted d-block" *ngIf="commande.date_conf">{{ commande.date_conf | date:'dd/MM'
+                        }}</small>
+                </div>
+
+                <!-- Step 3: Livraison -->
+                <div class="step-item" [class.completed]="isStepCompleted('LIV')" [class.active]="isActive('LIV')">
+                    <div class="step-circle">3</div>
+                    <div class="step-label fw-bold">Livraison</div>
+                    <small class="text-muted d-block" *ngIf="commande.date_liv">{{ commande.date_liv | date:'dd/MM'
+                        }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Forms -->
+    <div class="row g-4">
+        <!-- Info Panel -->
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-light fw-bold">Informations</div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Fournisseur</span>
+                        <span class="fw-bold">{{ commande.nom_fournisseur || commande.code_fou }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Affaire</span>
+                        <span>{{ commande.num_cde_vente || '-' }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Ref ARC</span>
+                        <span>{{ commande.num_cde_fou || '-' }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Action Logic -->
+        <div class="col-md-8">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-header bg-primary text-white fw-bold">Actions Requises</div>
+                <div class="card-body">
+
+                    <!-- ACTION: BROUILLON -> ENVOYEE -->
+                    <div *ngIf="commande.Statut === 'BROUILLON'" class="text-center py-4">
+                        <p class="mb-3">La commande est prête à être envoyée.</p>
+                        <button class="btn btn-primary btn-lg" (click)="setEnvoyee()">
+                            <i class="bi bi-send me-2"></i> Marquer comme Envoyée
+                        </button>
+                    </div>
+
+                    <!-- ACTION: ENVOYEE -> CONFIRMEE -->
+                    <div *ngIf="commande.Statut === 'ENVOYEE'">
+                        <h6 class="mb-3">Saisir l'Accusé de Réception (ARC)</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Référence Fournisseur (ARC)</label>
+                                <input type="text" class="form-control" [(ngModel)]="arcRef"
+                                    placeholder="Ex: ARC-2024-001" aria-label="Référence Fournisseur (ARC)">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Date Confirmation</label>
+                                <input type="date" class="form-control" [(ngModel)]="arcDate"
+                                    aria-label="Date Confirmation">
+                            </div>
+                            <div class="col-12 text-end">
+                                <button class="btn btn-warning" (click)="setConfirmee()">
+                                    <i class="bi bi-check-circle me-2"></i> Valider ARC
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ACTION: CONFIRMEE -> LIVREE -->
+                    <div *ngIf="commande.Statut === 'CONFIRMEE'">
+                        <h6 class="mb-3">Réceptionner la commande</h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Date Livraison</label>
+                                <input type="date" class="form-control" [(ngModel)]="livDate"
+                                    aria-label="Date Livraison">
+                            </div>
+                            <div class="col-12 text-end">
+                                <button class="btn btn-success text-white" (click)="setLivree()">
+                                    <i class="bi bi-box-seam me-2"></i> Valider Livraison
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DONE -->
+                    <div *ngIf="commande.Statut === 'LIVREE'" class="text-center py-4 text-success">
+                        <i class="bi bi-check-circle-fill fs-1 mb-2"></i>
+                        <h4 class="fw-bold">Commande Clôturée</h4>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

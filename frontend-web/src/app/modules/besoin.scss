@@ -1,0 +1,44 @@
+.split-pane {
+    height: calc(100vh - 100px);
+}
+
+.scrollable-list {
+    height: calc(100vh - 240px);
+    overflow-y: auto;
+}
+
+.avatar-sm {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    font-size: 0.8rem;
+}
+
+.bg-soft-success {
+    background-color: rgba(25, 135, 84, 0.1);
+}
+
+tr.selected {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.action-column {
+    width: 50px;
+}
+
+.number-input {
+    width: 80px;
+}
+
+.data-column {
+    width: 100px;
+}
+
+.opt-results-box {
+    max-height: 100px;
+    overflow-y: auto;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

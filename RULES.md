@@ -1,66 +1,53 @@
-# Les Règles d'Or du Projet (ERP Arts alu)
+# Les Règles d'Or du Projet ANTIGRAVITY (v2.0 - 2026)
 
-Ces règles sont impératives et doivent être respectées par tous les agents intervenant sur le projet.
+Ces règles sont impératives. Tout manquement entraînera un rejet immédiat du code.
 
-## 1. Règle de Séparation (Briques)
+## 1. Règle de Séparation & "Frontend Stupide"
 
-**Aucun code de logique métier (calculs, calepinage) ne doit se trouver dans Angular.**
-Le Frontend est "stupide" : il ne fait qu'afficher les données et capturer les entrées utilisateur. Toute intelligence de calcul doit être déportée au backend.
+* **Isolation Totale** : Aucun calcul métier (calepinage, prix, taxes, géométrie) dans Angular.
+* **Rôle du Front** : Affichage pur, capture d'événements, validation de format (ex: email valide).
+* **Rôle du Back** : Seul garant de la vérité métier et des données.
 
-## 2. Règle du Contrat d'Interface
+## 2. Contrat d'Interface & Typage de Fer
 
-**Toute communication entre le Front et le Back doit passer par des interfaces TypeScript strictes.**
-Cela garantit une cohérence totale des données et facilite la maintenance et le refactoring.
+* **Partage de Source** : Utilisation obligatoire de `shared/interfaces.ts`.
+* **Strict-Type** : Interdiction totale du type `any`. Chaque objet doit être typé à 100%.
+* **Synchronisation** : Toute modification d'un modèle en DB doit être immédiatement répercutée dans les interfaces TypeScript.
 
-## 3. Règle de l'Hybride SQL/JSON
+## 3. Architecture Hybride SQL/JSON (Performance & Flexibilité)
 
-**Priorité aux colonnes SQL pour les données de recherche et de jointure (ID, prix, stock).**
-L'utilisation du **JSON** est réservée aux propriétés variables ou complexes (fiches techniques, RAL spécifiques, configurations dynamiques).
+* **SQL (Rigide)** : Colonnes indexées pour : Recherche, Jointures, Tris, Prix, Stocks, Dates.
+* **JSON (Souple)** : Uniquement pour les fiches techniques variables, méta-données IA, et configurations spécifiques à un article.
 
-## 4. Règle du Dual-Back
+## 4. Protocole Dual-Back (Le Pont)
 
-**Node.js gère les routes et la sécurité.**
-**Python** est appelé uniquement pour les calculs "cerveau" (moteur de calcul, optimisation de découpe, etc.) via un pont interne. point de contact unique entre Node et Python.
+* **Node.js** : Maître de l'orchestration, de la sécurité (JWT), de la validation des entrées et de la base de données.
+* **Python** : Moteur de calcul pur. Ne doit JAMAIS accéder directement à MySQL.
+* **Standard I/O** : Communication Node <-> Python via flux JSON sur stdin/stdout (ou HTTP internal).
 
-## 5. Règle de Vigilance (Protocole MCP Virtuel)
+## 5. Règle de Double Analyse (Double Check Protocol)
 
-Pour simuler l'analyse continue des serveurs MCP, vous devez appliquer ces vérifications strictes :
+AVANT de générer le moindre code, l'agent DOIT :
 
-* **MCP Database** :
-  * Avant toute écriture SQL, consulter `database/DATABASE_MEMO.md`.
-  * Ne jamais supposer qu'une table existe sans l'avoir vérifiée via `SHOW TABLES` ou en lisant `schema.sql`.
-* **MCP Python** :
-  * Tout code Python doit être validé syntaxiquement (Linting) avant build.
-  * Les types doivent être explicites (Type Hinting) pour faciliter la lecture par l'IA.
-* **MCP Node/Angular** :
-  * Respecter strictement les interfaces (`shared/interfaces.ts`).
-  * Vérifier la compatibilité des modèles avec la base de données avant de créer une API.
+1. **Phase 1 (Analyse)** : Lire le code existant et identifier les dépendances.
+2. **Phase 2 (Audit)** : Vérifier la conformité avec `DATABASE_MEMO.md` et `shared/interfaces.ts`.
+3. **Phase 3 (Proposition)** : Si une amélioration ou un changement d'architecture est nécessaire, l'agent doit s'arrêter et dire : "Je propose le changement suivant : [Détails]. Attends-je votre confirmation ?"
 
-## 6. Règle de Modularité (Anti-Monolithe)
+## 6. Standard "Anti-Spaghetti" (Modularité)
 
-**Aucun fichier ne doit dépasser 300 lignes.**
-Si un fichier approche cette limite, il doit OBLIGATOIREMENT être découpé en sous-modules ou composants plus petits.
-*Objectif : Maintenabilité et lisibilité maximale.*
+* **Limite de 300 lignes** : Un fichier dépassant 300 lignes est une erreur de conception. Découpage immédiat en sous-composants ou services.
+* **Responsabilité Unique (SRP)** : Une fonction = une seule action claire.
 
-## 7. Règle d'Analyse d'Impact (Think Before You Code)
+## 7. Standards "Clean Code 2026" & Performance
 
-**INTERDICTION DE CODER SANS RÉFLÉCHIR.**
-Avant chaque modification de code (même mineure), vous devez :
+* **AI-Friendliness** : Commentaires explicatifs sur le "Pourquoi" (l'intention) et non le "Comment".
+* **Sobriété SQL** : Interdiction du `SELECT *`. On ne récupère que le strict nécessaire (Green-IT).
+* **Sécurité Shift-Left** : Validation des schémas de données obligatoire avec Zod (Node) ou Pydantic (Python).
 
-1. Identifier les fichiers impactés (dépendances, imports).
-2. Prédire les effets de bord potentiels (régression, casse de l'UI, erreur SQL).
-3. Si le risque est > 0, proposer un plan de rollback ou de test avant de valider.
+## 8. Processus de Validation (Workflow)
 
-## 8. Standards "Clean Code 2026"
-
-En vous basant sur les meilleures pratiques actuelles, voici les règles supplémentaires :
-
-* **AI-Friendliness** : Le code doit être écrit pour être compris par une IA autant que par un humain.
-  * *Explicite* : Pas de types `any`, pas de "magie" implicite.
-  * *Docstring* : Les fonctions complexes doivent avoir une description de leur intention (pour le contexte de l'IA).
-* **Green-IT (Sobriété)** :
-  * *SQL* : Interdiction du `SELECT *` sur les grandes tables. Sélectionnez uniquement les colonnes nécessaires.
-  * *Algorithme* : Évitez les boucles imbriquées inutiles (Complexité O(n²)).
-* **Sécurité par Design (Shift-Left)** :
-  * Validation des entrées (Zod/Pydantic) obligatoire aux frontières (API).
-  * Aucun secret (API Key, pwd) en dur dans le code. Utilisation stricte de `.env`.
+1. L'IA analyse la demande.
+2. L'IA identifie les risques d'effets de bord.
+3. L'IA propose le plan d'action.
+4. **ATTENTE DE CONFIRMATION ÉCRITE DE L'UTILISATEUR.**
+5. Génération du code après validation du plan.

@@ -1,0 +1,55 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="text-primary fw-bold">Commandes Fournisseurs</h2>
+            <p class="text-muted">Suivi des ordres d'achat</p>
+        </div>
+        <button class="btn btn-primary">
+            <i class="bi bi-plus-lg me-2"></i> Nouvelle Cde
+        </button>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">N° OA / Date</th>
+                        <th>Fournisseur</th>
+                        <th>Désignation</th>
+                        <th>Statut</th>
+                        <th>Montant HT</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let cmd of commandes">
+                        <td class="ps-4">
+                            <div class="fw-bold">{{ cmd.num_oa }}</div>
+                            <small class="text-muted">{{ cmd.date_a_cde | date:'dd/MM/yyyy' }}</small>
+                        </td>
+                        <td>{{ cmd.nom_fournisseur || cmd.code_fou }}</td>
+                        <td>{{ cmd.designation }}</td>
+                        <td>
+                            <span class="badge" [ngClass]="getStatusClass(cmd.Statut)">
+                                {{ cmd.Statut }}
+                            </span>
+                        </td>
+                        <td class="fw-bold">{{ cmd.montant_ht | currency:'EUR' }}</td>
+                        <td class="text-end pe-4">
+                            <a [routerLink]="['/commandes', cmd.num_oa]" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i> Voir
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div *ngIf="loading" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+        </div>
+        <div *ngIf="!loading && commandes.length === 0" class="text-center py-5 text-muted">
+            Aucune commande trouvée.
+        </div>
+    </div>
+</div>

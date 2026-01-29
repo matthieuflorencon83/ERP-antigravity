@@ -1,0 +1,165 @@
+<div class="row mb-5">
+    <div class="col-12">
+        <h1 class="fw-bold fs-2 gradient-text mb-2">Tableau de Bord</h1>
+        <p class="text-muted">Bienvenue, voici un aperçu de l'activité du jour.</p>
+    </div>
+</div>
+
+<!-- KPI Cards Cards -->
+<div class="row g-4 mb-5">
+    <!-- Card 1: Commandes -->
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="glass-panel p-4 rounded-4 h-100 position-relative overflow-hidden">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="icon-box bg-primary-subtle text-primary rounded-3">
+                    <i class="bi bi-cart3"></i>
+                </div>
+                <span class="badge glass-badge">+12%</span>
+            </div>
+            <h2 class="fw-bold mb-1">{{ stats.commandes }}</h2>
+            <p class="text-muted small mb-0">Commandes en cours</p>
+            <!-- Sparkline decor -->
+            <div class="sparkline-decor bg-primary"></div>
+        </div>
+    </div>
+
+    <!-- Card 2: CA -->
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="glass-panel p-4 rounded-4 h-100 position-relative overflow-hidden">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="icon-box bg-success-subtle text-success rounded-3">
+                    <i class="bi bi-currency-euro"></i>
+                </div>
+                <span class="badge glass-badge">+5%</span>
+            </div>
+            <h2 class="fw-bold mb-1">{{ stats.ca }}</h2>
+            <p class="text-muted small mb-0">Chiffre d'Affaires</p>
+            <div class="sparkline-decor bg-success"></div>
+        </div>
+    </div>
+
+    <!-- Card 3: Besoins -->
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="glass-panel p-4 rounded-4 h-100 position-relative overflow-hidden">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="icon-box bg-warning-subtle text-warning rounded-3">
+                    <i class="bi bi-calculator"></i>
+                </div>
+                <span class="badge glass-badge text-warning">Urgent</span>
+            </div>
+            <h2 class="fw-bold mb-1">{{ stats.besoins }}</h2>
+            <p class="text-muted small mb-0">Calculs en attente</p>
+            <div class="sparkline-decor bg-warning"></div>
+        </div>
+    </div>
+
+    <!-- Card 4: Bibliothèque -->
+    <div class="col-12 col-md-6 col-xl-3">
+        <div class="glass-panel p-4 rounded-4 h-100 position-relative overflow-hidden">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div class="icon-box bg-info-subtle text-info rounded-3">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+            </div>
+            <h2 class="fw-bold mb-1">{{ stats.bibliotheque }}</h2>
+            <p class="text-muted small mb-0">Articles référencés</p>
+            <div class="sparkline-decor bg-info"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Section: Recent Orders & Quick Actions -->
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="glass-panel rounded-4 p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0">Commandes Récentes</h5>
+                <button class="btn btn-sm btn-outline-light" routerLink="/commandes">Tout voir</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th class="text-muted fw-normal ps-0">Réf.</th>
+                            <th class="text-muted fw-normal">Fournisseur</th>
+                            <th class="text-muted fw-normal">Date</th>
+                            <th class="text-muted fw-normal">Statut</th>
+                            <th class="text-muted fw-normal text-end pe-0">Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="ps-0 fw-bold">CMD-2024-042</td>
+                            <td>Installux</td>
+                            <td>27 Jan.</td>
+                            <td><span class="badge bg-warning-subtle text-warning border border-warning-subtle">EN
+                                    COURS</span></td>
+                            <td class="text-end pe-0 fw-bold">1 240 €</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-0 fw-bold">CMD-2024-041</td>
+                            <td>Saint-Gobain</td>
+                            <td>26 Jan.</td>
+                            <td><span
+                                    class="badge bg-success-subtle text-success border border-success-subtle">LIVRÉE</span>
+                            </td>
+                            <td class="text-end pe-0 fw-bold">850 €</td>
+                        </tr>
+                        <tr>
+                            <td class="ps-0 fw-bold">CMD-2024-039</td>
+                            <td>Wurth</td>
+                            <td>25 Jan.</td>
+                            <td><span
+                                    class="badge bg-primary-subtle text-primary border border-primary-subtle">ENVOYÉE</span>
+                            </td>
+                            <td class="text-end pe-0 fw-bold">320 €</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="glass-panel rounded-4 p-4 h-100">
+            <h5 class="fw-bold mb-4">Actions Rapides</h5>
+
+            <div class="d-grid gap-3">
+                <button
+                    class="btn btn-primary p-3 text-start d-flex align-items-center justify-content-between group-hover">
+                    <span>
+                        <i class="bi bi-plus-lg me-2"></i> Nouvelle Commande
+                    </span>
+                    <i class="bi bi-arrow-right opacity-0 transition-all"></i>
+                </button>
+
+                <button
+                    class="btn glass-panel text-white p-3 text-start d-flex align-items-center justify-content-between group-hover">
+                    <span>
+                        <i class="bi bi-calculator me-2"></i> Nouveau Calcul
+                    </span>
+                    <i class="bi bi-arrow-right opacity-0 transition-all"></i>
+                </button>
+
+                <button
+                    class="btn glass-panel text-white p-3 text-start d-flex align-items-center justify-content-between group-hover">
+                    <span>
+                        <i class="bi bi-person-plus me-2"></i> Créer Client
+                    </span>
+                    <i class="bi bi-arrow-right opacity-0 transition-all"></i>
+                </button>
+            </div>
+
+            <div class="mt-5 p-3 rounded-3 bg-gradient-dark border border-secondary">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-lightbulb text-warning me-2"></i>
+                    <span class="fw-bold small text-warning">Conseil IA</span>
+                </div>
+                <p class="small text-muted mb-0">
+                    Le stock de <strong>Joints EPDM</strong> est bas. Pensez à recommander avant vendredi.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

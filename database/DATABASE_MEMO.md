@@ -47,6 +47,12 @@ Il doit être consulté avant toute modification SQL.
   - Liaison : `ref_affaire` -> `affaire`
   - **Spécificité** : Utilise une colonne `meta_donnee` (JSON) pour la flexibilité.
 
+### 3. Module 2 (Besoins)
+
+- **`besoin_ligne`** : Stockage des résultats de calepinage (Optimisation).
+  - Clé : `id`
+  - Colonnes : `groupe_calcul` (RAL_Matière), `config_calcul` (JSON - Plan de coupe).
+
 ## Règles d'Implémentation
 
 1. **Hybride SQL/JSON** : Les champs fixes (prix, dates, status) sont en colonnes SQL. Les données variables (configs techniques) vont dans des champs JSON.

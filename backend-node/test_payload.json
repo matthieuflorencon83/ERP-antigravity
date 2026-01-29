@@ -1,0 +1,22 @@
+{
+    "needs": [
+        {
+            "ral": "7016",
+            "material": "ALU",
+            "length": 1200,
+            "quantity": 2
+        },
+        {
+            "ral": "9010",
+            "material": "ALU",
+            "length": 500,
+            "quantity": 1
+        },
+        {
+            "ral": "7016",
+            "material": "ALU",
+            "length": 2500,
+            "quantity": 1
+        }
+    ]
+}

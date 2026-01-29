@@ -1,0 +1,84 @@
+#wrapper {
+    overflow-x: hidden;
+    display: flex;
+    height: 100vh;
+}
+
+#sidebar-wrapper {
+    width: 280px;
+    height: 100vh;
+    transition: margin 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+
+    .list-group-item {
+        background: transparent;
+        color: var(--ag-text-muted);
+        border: none;
+        margin: 4px 12px;
+        border-radius: 8px;
+        transition: all 0.2s;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        &.active {
+            background: var(--ag-primary-gradient);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        i {
+            font-size: 1.1rem;
+        }
+    }
+}
+
+.gradient-text {
+    background: var(--ag-primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.letter-spacing-2 {
+    letter-spacing: 2px;
+}
+
+.btn-icon {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-1px);
+    }
+}
+
+/* Mobile Toggling */
+@media (max-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: -280px;
+        position: fixed;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: 0;
+    }
+}
+
+@media (min-width: 769px) {
+    #sidebar-wrapper.toggled {
+        margin-left: -280px;
+    }
+}

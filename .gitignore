@@ -1,0 +1,234 @@
+# =============================================================================
+# ANTIGRAVITY ERP - .gitignore
+# Stack: Angular 19 + Node.js + Python + MySQL
+# =============================================================================
+
+# =============================================================================
+# NODE.JS / NPM / YARN
+# =============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.npm/
+.yarn/
+package-lock.json.bak
+
+# =============================================================================
+# ANGULAR / FRONTEND
+# =============================================================================
+# Build outputs
+dist/
+.angular/
+out-tsc/
+bazel-out/
+
+# Testing
+/coverage/
+/.nyc_output/
+
+# IDE - Angular Language Service
+*.ngfactory.*
+*.ngsummary.*
+
+# =============================================================================
+# PYTHON
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+.env.local
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pytype/
+.pyre/
+
+# =============================================================================
+# ENVIRONMENT & SECRETS (CRITICAL!)
+# =============================================================================
+.env
+.env.*
+!.env.example
+*.local
+.secret
+secrets/
+credentials/
+
+# API Keys (si jamais échappés)
+*api_key*
+*API_KEY*
+*.pem
+*.key
+
+# =============================================================================
+# DATABASE
+# =============================================================================
+*.sql.bak
+*.dump
+mysql_data/
+data/mysql/
+
+# Prisma
+prisma/migrations/**/migration_lock.toml
+
+# =============================================================================
+# IDE & EDITORS
+# =============================================================================
+# VS Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# JetBrains (WebStorm, PyCharm)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# =============================================================================
+# OS GENERATED
+# =============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Linux
+*~
+
+# =============================================================================
+# LOGS & TEMPORARY FILES
+# =============================================================================
+logs/
+*.log
+*.logs
+npm-debug.log*
+yarn-debug.log*
+
+# Temp
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# =============================================================================
+# BUILD & COMPILED
+# =============================================================================
+*.dll
+*.exe
+*.o
+*.obj
+*.class
+
+# TypeScript
+*.tsbuildinfo
+
+# =============================================================================
+# TESTING & COVERAGE
+# =============================================================================
+coverage/
+.coverage
+*.cover
+*.py,cover
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.coveragerc
+
+# =============================================================================
+# DOCKER (optionnel)
+# =============================================================================
+# Décommenter si vous utilisez Docker localement
+# docker-compose.override.yml
+
+# =============================================================================
+# PROJECT SPECIFIC
+# =============================================================================
+# Fichiers Excel temporaires
+~$*.xlsx
+~$*.xls
+*.xlk
+
+# PDF générés (si stockés localement)
+# generated_pdfs/
+
+# Fichiers de test manuels
+test_*.py
+!backend-python/tests/
+debug_*.py
+analyze_*.py
+
+# Installux/Arcelor data (fichiers sensibles)
+installux_arcelor/*.xlsx
+installux_arcelor/*.csv
+!installux_arcelor/.gitkeep
+
+# =============================================================================
+# GEMINI / AI ASSISTANT
+# =============================================================================
+.gemini/
+.antigravity/
