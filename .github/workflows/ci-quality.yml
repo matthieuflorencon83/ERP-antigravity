@@ -1,7 +1,7 @@
 # =============================================================================
 # ANTIGRAVITY ERP - CI Quality Pipeline
 # Triggered on: push to main, pull requests to main
-# Jobs: Angular Build, Node TypeScript Check, Python Lint
+# Jobs: Angular Build, Node Backend Check, Python Lint
 # =============================================================================
 
 name: CI Quality
@@ -36,8 +36,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: frontend-angular/package-lock.json
 
       - name: 📚 Install dependencies
         run: npm ci --legacy-peer-deps
@@ -72,11 +70,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: backend-node/package-lock.json
 
       - name: 📚 Install dependencies
         run: npm ci
+
+      - name: 🔍 Install Prisma Client
+        run: npm install @prisma/client
 
       - name: 🔍 Prisma generate
         run: npx prisma generate
@@ -105,8 +104,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
-          cache-dependency-path: backend-python/requirements.txt
 
       - name: 📚 Install dependencies
         run: |
